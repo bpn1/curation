@@ -19,6 +19,7 @@
     "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
+    "autoprefixer": "^6.6.1",
     "babel-core": "6.13.2",
     "babel-loader": "6.2.4",
     "babel-plugin-__coverage__": "11.0.0",
@@ -29,18 +30,23 @@
     "css-loader": "0.23.1",
     "eslint": "3.2.2",
     "eslint-config-kentcdodds": "^9.0.0",
+    "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "^0.9.0",
     "http-server": "0.9.0",
+    "lost": "^8.0.0",
     "npm-run-all": "2.3.0",
     "opt-cli": "1.5.1",
-    "progress-bar-webpack-plugin": "1.9.0",
+    "postcss-cssnext": "^2.9.0",
+    "postcss-load-config": "^1.0.0",
+    "postcss-loader": "^1.2.1",
+    "precss": "^1.4.0",
+    "progress-bar-webpack-plugin": "1.9.2",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
     "url-loader": "^0.5.7",
-    "webpack": "2.1.0-beta.20",
-    "webpack-config-utils": "2.0.0",
-    "webpack-dev-server": "2.1.0-beta.0",
-    "webpack-validator": "2.2.7"
+    "webpack": "2.2.0-rc.3",
+    "webpack-config-utils": "2.3.0",
+    "webpack-dev-server": "2.2.0-rc.0"
   },
   "scripts": {
     "prebuild": "rimraf dist",
