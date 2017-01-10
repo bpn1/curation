@@ -19,7 +19,9 @@ class Sidebar extends Component{
       position: '',
       borderRightStyle: 'solid',
       borderRightWidth: 1,
-      borderRightColor: '#CDCDCD'
+      borderRightColor: '#CDCDCD',
+      minWidth: '190px',
+      maxWidth: '230px'
     };
 
     const style = {
