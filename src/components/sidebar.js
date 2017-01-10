@@ -11,19 +11,23 @@ import Divider from 'material-ui/Divider';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 
 class Sidebar extends Component{  
-  
-  
+
   render() {
-    const style = {
+    const cstyle = {
       width: 'auto',
       backgroundColor: '#EEEEEE',
       position: '',
-      height: 'inherit'
+      borderRightStyle: 'solid',
+      borderRightWidth: 1,
+      borderRightColor: '#CDCDCD'
+    };
 
+    const style = {
+      height: 'inherit',
     };
     
     return (
-      <Drawer open={this.props.showSideNav} zDepth={this.props.zDepth} style={style} containerStyle={style}>
+      <Drawer open={this.props.showSideNav} zDepth={this.props.zDepth} style={style} containerStyle={cstyle}>
         <List>
           <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
           <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />

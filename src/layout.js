@@ -71,19 +71,13 @@ class Layout extends Component {
 
           <div className="row" style={{height: 'inherit'}}>
             <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2"
-                 style={{
-                   paddingRight: 0,
-                   borderRightStyle: 'solid',
-                   borderRightWidth: 1,
-                   borderRightColor: '#CDCDCD'
-                 }}>
+                 style={{ paddingRight: 0 }}>
               <div style={flexContainer}>
                 <Sidebar zDepth={0}/>
               </div>
             </div>
 
-            <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10"
-                 style={{paddingLeft: 0, backgroundColor: "#EEEEEE"}}>
+            <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10" style={{paddingLeft: 0, backgroundColor: "#EEEEEE"}}>
               <AnnoView />
             </div>
           </div>
