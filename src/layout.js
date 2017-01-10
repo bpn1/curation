@@ -6,11 +6,17 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import AppBar from 'material-ui/AppBar';
 import Paper from 'material-ui/Paper';
-import Sidebar from './components/sidebar'
 import AnnoView from './components/annotate'
-import SvgIcon from 'material-ui/SvgIcon';
+import SideBar from './components/sidebar'
 import Avatar from 'material-ui/Avatar';
 import image from './images/kolage.jpg';
+import {List, ListItem} from 'material-ui/List';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import ContentSend from 'material-ui/svg-icons/content/send';
+import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+import Divider from 'material-ui/Divider';
+import ActionInfo from 'material-ui/svg-icons/action/info';
 //import MyCard from './components/myCard'
 //import FlatButton from 'material-ui/FloatingActionButton';
 //import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -73,7 +79,22 @@ class Layout extends Component {
             <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2"
                  style={{ paddingRight: 0 }}>
               <div style={flexContainer}>
-                <Sidebar zDepth={0}/>
+                <SideBar zDepth={0}>
+                  <List>
+                    <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
+                    <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
+                    <ListItem primaryText="Foo" leftIcon={<ActionGrade />} />
+                    <ListItem primaryText="Data" leftIcon={<ContentSend />} />
+                    <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
+                  </List>
+                  <Divider style={{backgroundColor:'#CDCDCD'}}/>
+                  <List>
+                    <ListItem primaryText="All mail" rightIcon={<ActionInfo />} />
+                    <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
+                    <ListItem primaryText="Spam" rightIcon={<ActionInfo />} />
+                    <ListItem primaryText="Follow up" rightIcon={<ActionInfo />} />
+                  </List>
+                </SideBar>
               </div>
             </div>
 
