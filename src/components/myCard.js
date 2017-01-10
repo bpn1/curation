@@ -4,8 +4,13 @@ import FlatButton from 'material-ui/FlatButton';
 
 class MyCard extends Component{
   render() {
+
+    const styles = {
+      margin: '10px'
+    };
+
     return (
-      <Card>
+      <Card style={styles}>
         <CardHeader
           title="Without Avatar"
           subtitle="Subtitle"

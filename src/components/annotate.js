@@ -5,16 +5,17 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';;
 class AnnotationView extends Component{
 
   render() {
-    const style = {
+    const styles = {
       width: 'auto',
-      backgroundColor: '#EEEEEE',
+      backgroundColor: 'white',
       position: '',
+      margin: '10px',
       height: 'inherit'
 
     };
 
     return (
-      <Card zDepth={1}>
+      <Card zDepth={1} style={styles}>
         <CardText>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
