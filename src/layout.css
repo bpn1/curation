@@ -1,0 +1,29 @@
+@lost flexbox flex;
+@lost rounder 100;
+
+
+
+header {
+    lost-flex-container: column;
+}
+
+header div {
+    lost-column: 1/1 0 0
+}
+
+section {
+    z-index: 1100;
+    height: 100vh;
+    display: flex;
+    background-color: #EEEEEE;
+    flex-direction: row;
+}
+
+.nav {
+    width: 220px;
+}
+
+section main {
+    background-color: gainsboro;
+    flex: 1;
+}
