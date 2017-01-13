@@ -6,12 +6,10 @@ class Sidebar extends Component {
   render() {
 
     const cstyle = {
-      width: 'auto',
       backgroundColor: '#EEEEEE',
       position: '',
       borderRight: '1px solid #CDCDCD',
-      minWidth: '190px',
-      maxWidth: '230px',
+      width: '220px',
     };
 
     const style = {

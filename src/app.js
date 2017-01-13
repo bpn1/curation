@@ -32,7 +32,7 @@ injectTapEventPlugin();
 //   //$on(window, 'hashchange', onLoad)
 // }
 
-const app = document.getElementById('app');
+const app = document.getElementById('container');
 render(
   <Provider store={Store}>
     <Layout />

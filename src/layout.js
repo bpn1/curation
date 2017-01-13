@@ -3,10 +3,12 @@ import {connect} from 'react-redux';
 import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import styles from './layout.css'
 
 import AppBar from 'material-ui/AppBar';
+import HeadBar from './components/HeadBar'
 import Paper from 'material-ui/Paper';
-import AnnoView from './components/annotate'
+import ContentCard from './components/annotate'
 import SideBar from './components/sidebar'
 import Avatar from 'material-ui/Avatar';
 import image from './images/kolage.jpg';
@@ -42,67 +44,58 @@ class Layout extends Component {
 
   render() {
 
-    const tool = (<Toolbar style={{backgroundColor: '#FAFAFA'}}>
+    const toolbar = (<Toolbar style={{backgroundColor: '#FAFAFA'}}>
       <ToolbarGroup>
         <ToolbarTitle text="Toolbar"/>
       </ToolbarGroup>
     </Toolbar>);
 
+    const rightMenu = (
+      <Avatar src={image} />
+    );
+
+    const leftMenu = (
+      <div>
+        <span style={{fontSize: "x-large"}}>ModelFlow</span>
+      </div>
+
+    );
+
     const flexContainer = {
       display: 'flex',
-      flexDirection: 'column',
-      height: '100%'
+      flexDirection: 'row',
+      height: '100%',
+      backgroundColor: '#EEEEEE'
     };
 
     return (
       <MuiThemeProvider>
-        <div style={{height: 'inherit'}}>
+        <div style={{width: '100%'}}>
+          <header>
+            <Paper zDepth={1} style={{zIndex:"1300"}}>
+              <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
+              {toolbar}
+            </Paper>
+          </header>
 
-          <div className="row">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{zIndex: 1300}}>
-              <Paper zDepth={1}>
-                <AppBar
-                  zDepth={0}
-                  iconStyleRight={{marginTop: 0, marginRight: 0}}
-                  showMenuIconButton={false}
-                  title="ModelFlow"
-                  iconElementRight={<Avatar src={image} style={{marginTop: 13, marginRight: -10}}/>}
-                  onRightIconButtonTouchTap={this.toggleSideNav}
-                />
-                {tool}
-              </Paper>
-            </div>
-          </div>
-
-
-          <div className="row" style={{height: 'inherit'}}>
-            <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2"
-                 style={{ paddingRight: 0 }}>
-              <div style={flexContainer}>
-                <SideBar zDepth={0}>
-                  <List>
-                    <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
-                    <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
-                    <ListItem primaryText="Foo" leftIcon={<ActionGrade />} />
-                    <ListItem primaryText="Data" leftIcon={<ContentSend />} />
-                    <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
-                  </List>
-                  <Divider style={{backgroundColor:'#CDCDCD'}}/>
-                  <List>
-                    <ListItem primaryText="All mail" rightIcon={<ActionInfo />} />
-                    <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
-                    <ListItem primaryText="Spam" rightIcon={<ActionInfo />} />
-                    <ListItem primaryText="Follow up" rightIcon={<ActionInfo />} />
-                  </List>
-                </SideBar>
-              </div>
-            </div>
-
-            <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10" style={{paddingLeft: 0, backgroundColor: "#EEEEEE"}}>
-              <AnnoView />
-            </div>
-          </div>
-
+          <section>
+            <SideBar zDepth={0} className={styles.nav}>
+              <List>
+                <ListItem primaryText="Services" leftIcon={<ContentInbox />}/>
+                <ListItem primaryText="Tasks" leftIcon={<ActionGrade />}/>
+                <ListItem primaryText="Data" leftIcon={<ContentSend />}/>
+                <ListItem primaryText="Models" leftIcon={<ContentDrafts />}/>
+              </List>
+              <Divider style={{backgroundColor: '#CDCDCD'}}/>
+              <List>
+                <ListItem primaryText="All mail" rightIcon={<ActionInfo />}/>
+                <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
+                <ListItem primaryText="Spam" rightIcon={<ActionInfo />}/>
+                <ListItem primaryText="Follow up" rightIcon={<ActionInfo />}/>
+              </List>
+            </SideBar>
+            <ContentCard/>
+          </section>
         </div>
       </MuiThemeProvider>
     );
