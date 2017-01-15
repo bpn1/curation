@@ -44,14 +44,19 @@ class Layout extends Component {
 
   render() {
 
-    const toolbar = (<Toolbar style={{backgroundColor: '#FAFAFA'}}>
+    const toolbarStyling = {
+      backgroundColor : '#FAFAFA',
+      heigth: '53px'
+    };
+
+    const toolbar = (<Toolbar style={toolbarStyling}>
       <ToolbarGroup>
         <ToolbarTitle text="Toolbar"/>
       </ToolbarGroup>
     </Toolbar>);
 
     const rightMenu = (
-      <Avatar src={image} />
+      <Avatar src={image}/>
     );
 
     const leftMenu = (
@@ -63,31 +68,32 @@ class Layout extends Component {
 
     return (
       <MuiThemeProvider>
-        <div style={{width: '100%'}}>
-          <header>
-            <Paper zDepth={1} style={{zIndex:"1300"}}>
-              <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
-              {toolbar}
-            </Paper>
+        <div className={styles.appLayout}>
+          <header className={styles.appHeader}>
+            <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
           </header>
 
-          <section>
-            <SideBar zDepth={0} className={styles.nav}>
-              <List>
-                <ListItem primaryText="Services" leftIcon={<ContentInbox />}/>
-                <ListItem primaryText="Tasks" leftIcon={<ActionGrade />}/>
-                <ListItem primaryText="Data" leftIcon={<ContentSend />}/>
-                <ListItem primaryText="Models" leftIcon={<ContentDrafts />}/>
-              </List>
-              <Divider style={{backgroundColor: '#CDCDCD'}}/>
-              <List>
-                <ListItem primaryText="All mail" rightIcon={<ActionInfo />}/>
-                <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
-                <ListItem primaryText="Spam" rightIcon={<ActionInfo />}/>
-                <ListItem primaryText="Follow up" rightIcon={<ActionInfo />}/>
-              </List>
-            </SideBar>
-            <ContentCard/>
+          <section className={styles.appBody}>
+            <Paper zDepth={1} className={styles.appToolbarContainer}>
+              {toolbar}
+            </Paper>
+            <div className={styles.appMainContainer}>
+              <SideBar zDepth={0} className={styles.sideNav}>
+                <List>
+                  <ListItem primaryText="Services" leftIcon={<ContentInbox />}/>
+                  <ListItem primaryText="Tasks" leftIcon={<ActionGrade />}/>
+                  <ListItem primaryText="Data" leftIcon={<ContentSend />}/>
+                  <ListItem primaryText="Models" leftIcon={<ContentDrafts />}/>
+                </List>
+                <Divider style={{backgroundColor: '#CDCDCD'}}/>
+                <List>
+                  <ListItem primaryText="All mail" rightIcon={<ActionInfo />}/>
+                  <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
+                  <ListItem primaryText="Spam" rightIcon={<ActionInfo />}/>
+                </List>
+              </SideBar>
+              <ContentCard/>
+            </div>
           </section>
         </div>
       </MuiThemeProvider>

@@ -2,28 +2,41 @@
 @lost rounder 100;
 
 
-
-header {
-    lost-flex-container: column;
+.appLayout {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
 }
 
-header div {
-    lost-column: 1/1 0 0
+.appHeader {
+    flex: 0 0 auto;
+    z-index: 10;
 }
 
-section {
-    z-index: 1100;
-    height: 100vh;
+/*header div {*/
+    /*lost-column: 1/1 0 0*/
+/*}*/
+
+.appBody {
+    flex-grow: 1;
     display: flex;
     background-color: #EEEEEE;
+    flex-direction: column;
+}
+
+.appToolbarContainer {
+    flex: 0 0 auto;
+    z-index: 10;
+}
+
+.appMainContainer {
+    z-index: 5;
+    display: flex;
+    flex-grow: 1;
     flex-direction: row;
 }
 
-.nav {
+.sideNav {
+    z-index: 0;
     width: 220px;
-}
-
-section main {
-    background-color: gainsboro;
-    flex: 1;
 }
