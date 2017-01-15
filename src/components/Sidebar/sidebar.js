@@ -9,7 +9,7 @@ class Sidebar extends Component {
       backgroundColor: '#EEEEEE',
       position: '',
       borderRight: '1px solid #CDCDCD',
-      width: '220px',
+      width: '205px',
     };
 
     const style = {

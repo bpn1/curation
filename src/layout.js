@@ -61,13 +61,6 @@ class Layout extends Component {
 
     );
 
-    const flexContainer = {
-      display: 'flex',
-      flexDirection: 'row',
-      height: '100%',
-      backgroundColor: '#EEEEEE'
-    };
-
     return (
       <MuiThemeProvider>
         <div style={{width: '100%'}}>
