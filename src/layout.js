@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {deepOrange500} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import styles from './layout.css'
 
-import AppBar from 'material-ui/AppBar';
 import HeadBar from './components/HeadBar'
 import Paper from 'material-ui/Paper';
 import ContentCard from './components/annotate'
@@ -87,9 +85,9 @@ class Layout extends Component {
                 </List>
                 <Divider style={{backgroundColor: '#CDCDCD'}}/>
                 <List>
-                  <ListItem primaryText="All mail" rightIcon={<ActionInfo />}/>
+                  <ListItem primaryText="Settings" rightIcon={<ActionInfo />}/>
                   <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
-                  <ListItem primaryText="Spam" rightIcon={<ActionInfo />}/>
+                  <ListItem primaryText="Info" rightIcon={<ActionInfo />}/>
                 </List>
               </SideBar>
               <ContentCard/>

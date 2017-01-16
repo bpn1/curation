@@ -1,23 +1,44 @@
-/* eslint no-console:"off" */
 const {resolve} = require('path');
+const webpack = require('webpack');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const {getIfUtils} = require('webpack-config-utils');
 
 module.exports = env => {
+
   const {ifProd, ifNotProd} = getIfUtils(env);
   const config = {
-    context: resolve('src'),
-    entry: './app.js',
+    context: resolve('./src'),
+    entry:{
+      vendor: [
+        'react-hot-loader/patch',
+        'webpack-dev-server/client',
+        'webpack/hot/only-dev-server',
+        'react-hot-loader',
+        './vendor'
+      ],
+      main: './bootstrap.js'
+    },
     output: {
-      filename: 'bundle.js',
-      path: resolve('dist'),
-      publicPath: '/dist/',
+      filename: '[name].bundle.js',
+      path: resolve('./dist'),
+      publicPath: '/./dist',
       pathinfo: ifNotProd(),
     },
     devtool: ifProd('source-map', 'eval'),
+    devServer: {
+      contentBase: '/./dist',
+      host: '0.0.0.0',
+      port: 8080
+    },
     module: {
       rules: [
-        {test: /\.js$/, use: ['babel-loader'], exclude: /node_modules/},
+        {
+          test: /\.(js|jsx)$/,
+          use: ['babel-loader'],
+          include: resolve('./src'),
+          exclude: /node_modules/
+        },
         {
           test: /\.css$/,
           use: [
@@ -35,13 +56,17 @@ module.exports = env => {
         {
           test: /\.(png|jpg)$/,
           use:[
-            'url-loader?limit=8192'
+            'url-loader?limit=4096'
           ]
         }
       ]
     },
     plugins: [
-      new ProgressBarPlugin()
+      new ProgressBarPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NamedModulesPlugin(),
+      new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
+      new HTMLWebpackPlugin()
     ],
   };
   if (env.debug) {
