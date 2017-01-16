@@ -47,6 +47,9 @@ jspm_packages
 # Yarn Integrity file
 .yarn-integrity
 
+# Ignore a simple scribble file
+notes.scribble
+
 ### JetBrains Configuration
 .idea
 
