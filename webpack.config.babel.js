@@ -6,6 +6,8 @@ const {getIfUtils} = require('webpack-config-utils');
 
 module.exports = env => {
 
+  console.log(resolve('./src/index.html'));
+
   const {ifProd, ifNotProd} = getIfUtils(env);
   const config = {
     context: resolve('./src'),
@@ -22,12 +24,12 @@ module.exports = env => {
     output: {
       filename: '[name].bundle.js',
       path: resolve('./dist'),
-      publicPath: '/./dist',
+      //publicPath: resolve('./dist'),
       pathinfo: ifNotProd(),
     },
     devtool: ifProd('source-map', 'eval'),
     devServer: {
-      contentBase: '/./dist',
+      contentBase: resolve('./dist'),
       host: '0.0.0.0',
       port: 8080
     },
@@ -66,7 +68,9 @@ module.exports = env => {
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NamedModulesPlugin(),
       new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
-      new HTMLWebpackPlugin()
+      new HTMLWebpackPlugin({
+        template: resolve('./src/index.html')
+      })
     ],
   };
   if (env.debug) {
