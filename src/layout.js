@@ -22,6 +22,7 @@ import ActionInfo from 'material-ui/svg-icons/action/info';
 //import ContentAdd from 'material-ui/svg-icons/content/add';
 //import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import RouteHandler from 'react-router';
 
 const theme = getMuiTheme({
   palette: {
@@ -90,7 +91,9 @@ class Layout extends Component {
                   <ListItem primaryText="Info" rightIcon={<ActionInfo />}/>
                 </List>
               </SideBar>
-              <ContentCard/>
+              <ContentCard>
+                Content goes here
+              </ContentCard>
             </div>
           </section>
         </div>
