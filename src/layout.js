@@ -60,7 +60,7 @@ class Layout extends Component {
 
     const leftMenu = (
       <div>
-        <span style={{fontSize: "x-large"}}>ModelFlow</span>
+        <span style={{fontSize: "x-large", fontFamily: "Roboto, sans-serif"}}>ModelFlow</span>
       </div>
 
     );
