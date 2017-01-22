@@ -33,7 +33,7 @@ const content = (
 // Render the App including Hot Module Replacement
 const renderRoot = () => ReactDOM.render(
   <HotReloader>{content}</HotReloader>,
-  document.getElementById('container')
+  document.getElementsByTagName('body')[0]
 );
 
 renderRoot();

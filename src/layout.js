@@ -17,10 +17,7 @@ import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import Divider from 'material-ui/Divider';
 import ActionInfo from 'material-ui/svg-icons/action/info';
-//import MyCard from './components/myCard'
-//import FlatButton from 'material-ui/FloatingActionButton';
-//import ContentAdd from 'material-ui/svg-icons/content/add';
-//import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import RouteHandler from 'react-router';
 
@@ -44,7 +41,7 @@ class Layout extends Component {
   render() {
 
     const toolbarStyling = {
-      backgroundColor : '#FAFAFA',
+      backgroundColor: '#FAFAFA',
       heigth: '53px'
     };
 
@@ -67,35 +64,37 @@ class Layout extends Component {
 
     return (
       <MuiThemeProvider>
-        <div className={styles.appLayout}>
-          <header className={styles.appHeader}>
-            <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
-          </header>
+        <div className={styles.container}>
+          <div className={styles.appLayout}>
+            <header className={styles.appHeader}>
+              <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
+            </header>
 
-          <section className={styles.appBody}>
-            <Paper zDepth={1} className={styles.appToolbarContainer}>
-              {toolbar}
-            </Paper>
-            <div className={styles.appMainContainer}>
-              <SideBar zDepth={0} className={styles.sideNav}>
-                <List>
-                  <ListItem primaryText="Services" leftIcon={<ContentInbox />}/>
-                  <ListItem primaryText="Tasks" leftIcon={<ActionGrade />}/>
-                  <ListItem primaryText="Data" leftIcon={<ContentSend />}/>
-                  <ListItem primaryText="Models" leftIcon={<ContentDrafts />}/>
-                </List>
-                <Divider style={{backgroundColor: '#CDCDCD'}}/>
-                <List>
-                  <ListItem primaryText="Settings" rightIcon={<ActionInfo />}/>
-                  <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
-                  <ListItem primaryText="Info" rightIcon={<ActionInfo />}/>
-                </List>
-              </SideBar>
-              <ContentCard>
-                Content goes here
-              </ContentCard>
-            </div>
-          </section>
+            <section className={styles.appBody}>
+              <Paper zDepth={1} className={styles.appToolbarContainer}>
+                {toolbar}
+              </Paper>
+              <div className={styles.appMainContainer}>
+                <SideBar zDepth={0} className={styles.sideNav}>
+                  <List>
+                    <ListItem primaryText="Services" leftIcon={<ContentInbox />}/>
+                    <ListItem primaryText="Tasks" leftIcon={<ActionGrade />}/>
+                    <ListItem primaryText="Data" leftIcon={<ContentSend />}/>
+                    <ListItem primaryText="Models" leftIcon={<ContentDrafts />}/>
+                  </List>
+                  <Divider style={{backgroundColor: '#CDCDCD'}}/>
+                  <List>
+                    <ListItem primaryText="Settings" rightIcon={<ActionInfo />}/>
+                    <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
+                    <ListItem primaryText="Info" rightIcon={<ActionInfo />}/>
+                  </List>
+                </SideBar>
+                <ContentCard>
+                  Something else
+                </ContentCard>
+              </div>
+            </section>
+          </div>
         </div>
       </MuiThemeProvider>
     );
