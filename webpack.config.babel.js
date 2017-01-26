@@ -34,6 +34,11 @@ module.exports = env => {
       host: '0.0.0.0',
       port: 8080
     },
+    stats: {
+      colors: true,
+      reasons: true,
+      chunks: true
+    },
     module: {
       rules: [
         {
