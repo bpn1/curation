@@ -78,7 +78,9 @@
   "jest": {
     "verbose": true,
     "rootDir": "src",
-    "setupFiles": ["../jest.config.js"],
+    "setupFiles": [
+      "../jest.config.js"
+    ],
     "moduleNameMapper": [
       [
         "^.+\\.(css)$",

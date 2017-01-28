@@ -1,31 +1,32 @@
 import React, {Component} from 'react';
-import {deepOrange500} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import styles from './layout.css'
-
-import HeadBar from './components/HeadBar'
-import Paper from 'material-ui/Paper';
-import ContentCard from './components/annotate'
-import SideBar from './components/sidebar'
-import Avatar from 'material-ui/Avatar';
-import image from './images/kolage.jpg';
+import {deepOrange500} from 'material-ui/styles/colors';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {List, ListItem} from 'material-ui/List';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import Divider from 'material-ui/Divider';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import Paper from 'material-ui/Paper';
+import Avatar from 'material-ui/Avatar';
 
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import RouteHandler from 'react-router';
+import styles from './layout.css';
+import InteractiveTable from './components/interactive_table'
+import HeadBar from './components/HeadBar'
+import ContentCard from './components/annotate';
+import SideBar from './components/Sidebar/sidebar';
+import image from './images/kolage.jpg';
 
 const theme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500
   }
 });
+//const theme = getMuiTheme(darkBaseTheme);
 
 class Layout extends Component {
 
@@ -59,11 +60,10 @@ class Layout extends Component {
       <div>
         <span style={{fontSize: "x-large", fontFamily: "Roboto, sans-serif"}}>ModelFlow</span>
       </div>
-
     );
 
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={theme}>
         <div className={styles.container}>
           <div className={styles.appLayout}>
             <header className={styles.appHeader}>
@@ -90,7 +90,7 @@ class Layout extends Component {
                   </List>
                 </SideBar>
                 <ContentCard>
-                  Something else
+                  <InteractiveTable />
                 </ContentCard>
               </div>
             </section>
