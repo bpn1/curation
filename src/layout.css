@@ -31,7 +31,7 @@ html, body {
     content: "\e603";
 }
 
-.container {
+div#container {
     height: 100%;
     display: flex;
     flex-direction: row;
@@ -69,6 +69,15 @@ html, body {
 }
 
 .sideNav {
-    z-index: 0;
-    width: 220px;
+    background-color: #EEEEEE !important;
+    border-right: 1px solid #CDCDCD !important;
+    position: static !important;
+    width: 205px !important;
+}
+
+/* Starting the first media query area */
+@media screen and (max-width: 500px) {
+    .sideNav{
+        display: none;
+    }
 }
