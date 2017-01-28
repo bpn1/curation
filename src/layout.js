@@ -66,7 +66,7 @@ class Layout extends Component {
       <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
           <header className={styles.appHeader}>
-            <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
+            <HeadBar showMiddle={false}  middle="Message" right={rightMenu} left={leftMenu}>Bla</HeadBar>
           </header>
 
           <section className={styles.appBody}>
