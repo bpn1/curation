@@ -5,7 +5,9 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {List, ListItem} from 'material-ui/List';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
@@ -41,14 +43,11 @@ class Layout extends Component {
 
   render() {
 
-    const toolbarStyling = {
-      backgroundColor: '#FAFAFA',
-      heigth: '53px'
-    };
-
-    const toolbar = (<Toolbar style={toolbarStyling}>
+    const toolbar = (<Toolbar className={styles.toolbar}>
       <ToolbarGroup>
-        <ToolbarTitle text="Toolbar"/>
+        <IconButton>
+          <MenuIcon />
+        </IconButton>
       </ToolbarGroup>
     </Toolbar>);
 
@@ -73,6 +72,7 @@ class Layout extends Component {
             <Paper zDepth={1} className={styles.appToolbarContainer}>
               {toolbar}
             </Paper>
+
             <div className={styles.appMainContainer}>
               <Drawer zDepth={0} containerClassName={styles.sideNav}>
                 <List>
