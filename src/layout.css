@@ -75,8 +75,8 @@ div#container {
     width: 205px !important;
 }
 
-/* Starting the first media query area */
-@media screen and (max-width: 500px) {
+/* iPad Section */
+@media screen and (max-width: 768px) {
     .sideNav{
         display: none;
     }
