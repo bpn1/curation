@@ -4,41 +4,41 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 
-const DateCell = ({rowIndex, data, col, ...props}) => (
-  <Cell {...props}>
-    {data[rowIndex][col].toLocaleString()}
-  </Cell>
-);
-
-const ImageCell = ({rowIndex, data, col, ...props}) => (
-  <ExampleImage
-    src={data[rowIndex][col]}
-  />
-);
-
-const LinkCell = ({rowIndex, data, col, ...props}) => (
-  <Cell {...props}>
-    <a href="#">{data[rowIndex][col]}</a>
-  </Cell>
-);
-
-const TextCell = ({rowIndex, data, col, ...props}) => (
-  <Cell {...props}>
-    {data[rowIndex][col]}
-  </Cell>
-);
-
 class InteractiveTable extends React.Component {
   constructor(props) {
     super(props);
+    this.tableData = [
+      {"id": 1, "name": "Test", "randomNumber": 1337},
+      {"id": 2, "name": "Testerino", "randomNumber": 42},
+      {"id": 3, "name": "Testung", "randomNumber": 18},
+      {"id": 4, "name": "Name", "randomNumber": "Random number"}
+    ];
     this.state = {
-      tableData: [{"id": 1, "name": "Test", "randomNumber": 1337},
-        {"id": 2, "name": "Testerino", "randomNumber": 42}]
+      filteredData: this.tableData
     };
   }
 
+  onFilterChange(column, event) {
+    if(!event.target.value) {
+      this.setState({
+        filteredData: this.tableData
+      });
+    }
+
+    const filterBy = event.target.value.toString().toLowerCase();
+    const filteredList = this.tableData.filter((row) => {
+      return row[column].toString().toLowerCase().indexOf(filterBy) !== -1
+    });
+
+    this.setState({
+      filteredData: filteredList
+    });
+
+    return true;
+  }
+
   render() {
-    let {tableData} = this.state;
+    let {filteredData} = this.state;
 
     return <div>
       <Table
@@ -48,22 +48,28 @@ class InteractiveTable extends React.Component {
         fixedHeader={true}>
         <TableHeader
           displaySelectAll={true}
-        adjustForCheckbox={true}>
+          adjustForCheckbox={true}>
           <TableRow>
-            <TableHeaderColumn tooltip="Identifier">ID</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Given name">Name</TableHeaderColumn>
-            <TableHeaderColumn tooltip="Just a random number">Random Number</TableHeaderColumn>
+            <TableHeaderColumn tooltip="Identifier">
+              <TextField hintText="ID" onChange={this.onFilterChange.bind(this, 'id')} />
+            </TableHeaderColumn>
+            <TableHeaderColumn tooltip="Given name">
+              <TextField hintText="Name" onChange={this.onFilterChange.bind(this, 'name')} />
+            </TableHeaderColumn>
+            <TableHeaderColumn tooltip="Just a random number">
+              <TextField hintText="Random number" onChange={this.onFilterChange.bind(this, 'randomNumber')} />
+            </TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody
           displayRowCheckbox={true}
           deselectOnClickaway={true}
           showRowHover={true}
-          stripedRows={true}>
+          stripedRows={false}>
           {
-            tableData.map((row, index) => (
+            filteredData.map((row, index) => (
               <TableRow key={index} selected={row.selected}>
-                <TableRowColumn>{index}</TableRowColumn>
+                <TableRowColumn>{row.id}</TableRowColumn>
                 <TableRowColumn>{row.name}</TableRowColumn>
                 <TableRowColumn>{row.randomNumber}</TableRowColumn>
               </TableRow>
