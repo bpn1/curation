@@ -40,13 +40,8 @@ class Layout extends Component {
   }
 
   render() {
-    const toolbarStyling = {
-      backgroundColor: '#FAFAFA',
-      heigth: '53px'
-    };
-
     const toolbar = (
-      <Toolbar style={toolbarStyling}>
+      <Toolbar>
         <ToolbarGroup>
           <ToolbarTitle text="Toolbar" />
         </ToolbarGroup>
@@ -63,7 +58,7 @@ class Layout extends Component {
 
     return (
       <MuiThemeProvider>
-        <div className={styles.container}>
+
           <div className={styles.appLayout}>
             <header className={styles.appHeader}>
               <HeadBar
@@ -100,7 +95,7 @@ class Layout extends Component {
               </div>
             </section>
           </div>
-        </div>
+
       </MuiThemeProvider>
     );
   }
