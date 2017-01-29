@@ -14,7 +14,7 @@ module.exports = env => {
     entry:{
       vendor: [
         'react-hot-loader/patch',
-        'webpack-hot-middleware/client',
+        //'webpack-hot-middleware/client',
         'webpack-dev-server/client',
         //'webpack/hot/only-dev-server',
         //'react-hot-loader',
