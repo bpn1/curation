@@ -1,31 +1,34 @@
-import React, {Component} from 'react';
-import {deepOrange500} from 'material-ui/styles/colors';
+import React, { Component } from 'react';
+import { deepOrange500 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import styles from './layout.css';
-
-import HeadBar from './components/HeadBar';
-import Paper from 'material-ui/Paper';
-import ContentCard from './components/annotate';
-import SideBar from './components/Sidebar';
-import Avatar from 'material-ui/Avatar';
-import image from './images/kolage.jpg';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import Divider from 'material-ui/Divider';
+import Drawer from 'material-ui/Drawer';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import Paper from 'material-ui/Paper';
+import Avatar from 'material-ui/Avatar';
 
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import RouteHandler from 'react-router';
+import styles from './layout.css';
+import InteractiveTable from './components/interactive_table'
+import HeadBar from './components/HeadBar';
+import ContentCard from './components/annotate';
+import image from './images/kolage.jpg';
 
 const theme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500
   }
 });
+//const theme = getMuiTheme(darkBaseTheme);
 
 class Layout extends Component {
   constructor() {
@@ -41,9 +44,11 @@ class Layout extends Component {
 
   render() {
     const toolbar = (
-      <Toolbar>
+      <Toolbar className={styles.toolbar}>
         <ToolbarGroup>
-          <ToolbarTitle text="Toolbar" />
+          <IconButton>
+            <MenuIcon />
+          </IconButton>
         </ToolbarGroup>
       </Toolbar>
     );
@@ -57,45 +62,54 @@ class Layout extends Component {
     );
 
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={theme}>
+        <div className={styles.appLayout}>
+          <header className={styles.appHeader}>
+            <HeadBar
+              showMiddle={false}
+              hasSearchBar={false}
+              right={rightMenu}
+              left={leftMenu}
+            />
+          </header>
 
-          <div className={styles.appLayout}>
-            <header className={styles.appHeader}>
-              <HeadBar
-                hasSearchBar={false}
-                right={rightMenu}
-                title={leftMenu}
-              >
-                Bla
-              </HeadBar>
-            </header>
+          <section className={styles.appBody}>
+            <Paper zDepth={1} className={styles.appToolbarContainer}>
+              {toolbar}
+            </Paper>
 
-            <section className={styles.appBody}>
-              <Paper zDepth={1} className={styles.appToolbarContainer}>
-                {toolbar}
-              </Paper>
-              <div className={styles.appMainContainer}>
-                <SideBar zDepth={0} className={styles.sideNav}>
-                  <List>
-                    <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
-                    <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
-                    <ListItem primaryText="Data" leftIcon={<ContentSend />} />
-                    <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
-                  </List>
-                  <Divider className={styles.sideDivider} />
-                  <List>
-                    <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
-                    <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
-                    <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
-                  </List>
-                </SideBar>
-                <ContentCard>
-                  Something else
-                </ContentCard>
-              </div>
-            </section>
-          </div>
-
+            <div className={styles.appMainContainer}>
+              <Drawer zDepth={0} containerClassName={styles.sideNav}>
+                <List>
+                  <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
+                  <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
+                  <ListItem primaryText="Data" leftIcon={<ContentSend />} />
+                  <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
+                </List>
+                <Divider className={styles.sideDivider} />
+                <List>
+                  <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
+                  <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
+                  <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
+                </List>
+              </Drawer>
+              <ContentCard>
+                <InteractiveTable
+                  headers={[
+                  {key: "id", name: "ID"},
+                  {key: "name", name: "Name"},
+                  {key: "importantNumber", name: "Important Number"}
+                ]} data={[
+                  {"id": 1, "name": "Test", "importantNumber": 1337},
+                  {"id": 2, "name": "Testerino", "importantNumber": 42},
+                  {"id": 3, "name": "Testung", "importantNumber": 18},
+                  {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
+                ]}
+                />
+              </ContentCard>
+            </div>
+          </section>
+        </div>
       </MuiThemeProvider>
     );
   }

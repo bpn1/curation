@@ -6,6 +6,10 @@ html, body {
     font-family: Roboto, sans-serif;
 }
 
+img, embed, object, video {
+    max-width: 100%;
+}
+
 .appLayout {
     display: flex;
     height: 100%;
@@ -41,20 +45,21 @@ html, body {
 }
 
 .sideNav {
-    width: 220px;
+    background-color: #EEEEEE !important;
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+    position: static !important;
+    width: 205px !important;
 }
 
 .sideDivider {
     background-color: #CDCDCD;
 }
 
-@media (max-width:960px) {
-    .sideNav {
-        position: absolute;
-        left: -100%;
-    }
+.toolbar {
+    background-color: #FAFAFA !important;
+    padding: 3px !important;
+    height: 53px !important;
 }
-
 
 @font-face {
     font-family: 'material-ui-icons';
@@ -80,4 +85,12 @@ html, body {
 
 .muidocs-icon-navigation-expand-more:before {
     content: "\e603";
+}
+
+
+/* iPad Section */
+@media screen and (max-width: 768px) {
+    .sideNav{
+        display: none;
+    }
 }

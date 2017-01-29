@@ -280,7 +280,7 @@ babel-code-frame@^6.20.0, babel-code-frame@^6.8.0:
     esutils "^2.0.2"
     js-tokens "^2.0.0"
 
-babel-core@6.13.2:
+babel-core@6.13.2, babel-core@^6.0.0:
   version "6.13.2"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.13.2.tgz#f761e1199361d5a6ed16f93ce801ad50acadb338"
   dependencies:
@@ -306,7 +306,7 @@ babel-core@6.13.2:
     slash "^1.0.0"
     source-map "^0.5.0"
 
-babel-core@^6.0.0, babel-core@^6.18.0:
+babel-core@^6.18.0:
   version "6.21.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-6.21.0.tgz#75525480c21c803f826ef3867d22c19f080a3724"
   dependencies:
@@ -2503,6 +2503,10 @@ find-up@^1.0.0, find-up@^1.1.2:
   dependencies:
     path-exists "^2.0.0"
     pinkie-promise "^2.0.0"
+
+fixed-data-table@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/fixed-data-table/-/fixed-data-table-0.6.3.tgz#e0bba85bc84a065dea71f0fb3a46d61441ad81e8"
 
 flat-cache@^1.2.1:
   version "1.2.2"
