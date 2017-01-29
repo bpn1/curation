@@ -89,7 +89,16 @@ class Layout extends Component {
                 </List>
               </Drawer>
               <ContentCard>
-                <InteractiveTable />
+                <InteractiveTable headers={[
+                  {key: "id", name: "ID"},
+                  {key: "name", name: "Name"},
+                  {key: "importantNumber", name: "Important Number"}
+                ]} data={[
+                  {"id": 1, "name": "Test", "importantNumber": 1337},
+                  {"id": 2, "name": "Testerino", "importantNumber": 42},
+                  {"id": 3, "name": "Testung", "importantNumber": 18},
+                  {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
+                ]} />
               </ContentCard>
             </div>
           </section>

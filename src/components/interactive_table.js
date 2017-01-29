@@ -6,17 +6,9 @@ import TextField from 'material-ui/TextField';
 class InteractiveTable extends React.Component {
   constructor(props) {
     super(props);
-    this.headers = [
-      {key: "id", name: "ID"},
-      {key: "name", name: "Name"},
-      {key: "randomNumber", name: "Random Number"}
-    ];
-    this.tableData = [
-      {"id": 1, "name": "Test", "randomNumber": 1337},
-      {"id": 2, "name": "Testerino", "randomNumber": 42},
-      {"id": 3, "name": "Testung", "randomNumber": 18},
-      {"id": 4, "name": "Name", "randomNumber": "Random number"}
-    ];
+    this.headers = props.headers;
+    this.tableData = props.data;
+
     this.state = {
       filteredData: this.tableData,
       sortBy: 'id',
@@ -117,21 +109,13 @@ class InteractiveTable extends React.Component {
           {
             filteredData.map((row, index) => (
               <TableRow key={index} selected={row.selected}>
-                <TableRowColumn>{row.id}</TableRowColumn>
-                <TableRowColumn>{row.name}</TableRowColumn>
-                <TableRowColumn>{row.randomNumber}</TableRowColumn>
+                { this.headers.map((header) => {
+                  return <TableRowColumn>{row[header.key]}</TableRowColumn>
+                }) }
               </TableRow>
             ))
           }
         </TableBody>
-        <TableFooter
-          adjustForCheckbox={true}>
-          <TableRow>
-            <TableRowColumn colSpan="3" style={{textAlign: 'center'}}>
-              Footer
-            </TableRowColumn>
-          </TableRow>
-        </TableFooter>
       </Table>
     </div>
   }
