@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import {deepOrange500} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import styles from './layout.css'
+import {deepOrange500} from 'material-ui/styles/colors';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import styles from './layout.css';
 
-import HeadBar from './components/HeadBar'
+import HeadBar from './components/HeadBar';
 import Paper from 'material-ui/Paper';
-import ContentCard from './components/annotate'
-import SideBar from './components/sidebar'
+import ContentCard from './components/annotate';
+import SideBar from './components/Sidebar';
 import Avatar from 'material-ui/Avatar';
 import image from './images/kolage.jpg';
 import {List, ListItem} from 'material-ui/List';
@@ -28,7 +28,6 @@ const theme = getMuiTheme({
 });
 
 class Layout extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -36,30 +35,30 @@ class Layout extends Component {
     }
   }
 
-  toggleSideNav = () => this.setState({showSideNav: !this.state.showSideNav});
+  toggleSideNav() {
+      this.setState({showSideNav: !this.state.showSideNav})
+  }
 
   render() {
-
     const toolbarStyling = {
       backgroundColor: '#FAFAFA',
       heigth: '53px'
     };
 
-    const toolbar = (<Toolbar style={toolbarStyling}>
-      <ToolbarGroup>
-        <ToolbarTitle text="Toolbar"/>
-      </ToolbarGroup>
-    </Toolbar>);
-
-    const rightMenu = (
-      <Avatar src={image}/>
+    const toolbar = (
+      <Toolbar style={toolbarStyling}>
+        <ToolbarGroup>
+          <ToolbarTitle text="Toolbar" />
+        </ToolbarGroup>
+      </Toolbar>
     );
+
+    const rightMenu = <Avatar src={image} />;
 
     const leftMenu = (
       <div>
-        <span style={{fontSize: "x-large", fontFamily: "Roboto, sans-serif"}}>ModelFlow</span>
+        <span className={styles.appHeaderText}>ModelFlow</span>
       </div>
-
     );
 
     return (
@@ -67,7 +66,13 @@ class Layout extends Component {
         <div className={styles.container}>
           <div className={styles.appLayout}>
             <header className={styles.appHeader}>
-              <HeadBar hasSearchBar={false} right={rightMenu} title={leftMenu}>Bla</HeadBar>
+              <HeadBar
+                hasSearchBar={false}
+                right={rightMenu}
+                title={leftMenu}
+              >
+                Bla
+              </HeadBar>
             </header>
 
             <section className={styles.appBody}>
@@ -77,16 +82,16 @@ class Layout extends Component {
               <div className={styles.appMainContainer}>
                 <SideBar zDepth={0} className={styles.sideNav}>
                   <List>
-                    <ListItem primaryText="Services" leftIcon={<ContentInbox />}/>
-                    <ListItem primaryText="Tasks" leftIcon={<ActionGrade />}/>
-                    <ListItem primaryText="Data" leftIcon={<ContentSend />}/>
-                    <ListItem primaryText="Models" leftIcon={<ContentDrafts />}/>
+                    <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
+                    <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
+                    <ListItem primaryText="Data" leftIcon={<ContentSend />} />
+                    <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
                   </List>
-                  <Divider style={{backgroundColor: '#CDCDCD'}}/>
+                  <Divider className={styles.sideDivider} />
                   <List>
-                    <ListItem primaryText="Settings" rightIcon={<ActionInfo />}/>
-                    <ListItem primaryText="Trash" rightIcon={<ActionInfo />}/>
-                    <ListItem primaryText="Info" rightIcon={<ActionInfo />}/>
+                    <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
+                    <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
+                    <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
                   </List>
                 </SideBar>
                 <ContentCard>
