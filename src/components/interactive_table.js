@@ -32,7 +32,7 @@ class InteractiveTable extends React.Component {
     this.headers.forEach((header) => {
       if(header.key == column)
         return;
-      // TODO Field clearing should be implemented by using a controlled TextField subclass instead of using getInputNode
+      // TODO Field clearing should be implemented by using a controlled TextField subclass (setState) instead of using getInputNode().value
       this.refs[header.key + "Header"].getInputNode().value = null;
     });
 
@@ -82,11 +82,11 @@ class InteractiveTable extends React.Component {
     let {filteredData} = this.state;
 
     let sortDirArrow = '';
-    if (this.state.sortDir !== null) {
+    if(this.state.sortDir !== null) {
       sortDirArrow = this.state.sortDir === 'DESC' ? '↓' : '↑';
     }
 
-    return <div>
+    return (
       <Table
         height={this.state.height}
         selectable={true}
@@ -96,9 +96,7 @@ class InteractiveTable extends React.Component {
           displaySelectAll={true}
           adjustForCheckbox={true}>
           <TableRow>
-            { this.headers.map((header) => {
-              return this.renderHeader(header.key, header.name, sortDirArrow);
-            }) }
+            { this.headers.map((header) => this.renderHeader(header.key, header.name, sortDirArrow)) }
           </TableRow>
         </TableHeader>
         <TableBody
@@ -106,18 +104,13 @@ class InteractiveTable extends React.Component {
           deselectOnClickaway={true}
           showRowHover={true}
           stripedRows={false}>
-          {
-            filteredData.map((row, index) => (
-              <TableRow key={index} selected={row.selected}>
-                { this.headers.map((header) => {
-                  return <TableRowColumn>{row[header.key]}</TableRowColumn>
-                }) }
-              </TableRow>
-            ))
-          }
+          { filteredData.map((row, index) =>
+            <TableRow key={index} selected={row.selected}>
+              { this.headers.map((header) => <TableRowColumn>{row[header.key]}</TableRowColumn>) }
+            </TableRow>
+          ) }
         </TableBody>
-      </Table>
-    </div>
+      </Table>);
   }
 }
 
