@@ -106,7 +106,7 @@ class InteractiveTable extends React.Component {
           stripedRows={false}>
           { filteredData.map((row, index) =>
             <TableRow key={index} selected={row.selected}>
-              { this.headers.map((header) => <TableRowColumn>{row[header.key]}</TableRowColumn>) }
+              { this.headers.map((header) => <TableRowColumn key={header.key}>{row[header.key]}</TableRowColumn>) }
             </TableRow>
           ) }
         </TableBody>
