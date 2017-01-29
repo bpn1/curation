@@ -2,11 +2,15 @@ import React from 'react';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
 
 class InteractiveTable extends React.Component {
   constructor(props) {
     super(props);
+    this.headers = [
+      {key: "id", name: "ID"},
+      {key: "name", name: "Name"},
+      {key: "randomNumber", name: "Random Number"}
+    ];
     this.tableData = [
       {"id": 1, "name": "Test", "randomNumber": 1337},
       {"id": 2, "name": "Testerino", "randomNumber": 42},
@@ -14,7 +18,9 @@ class InteractiveTable extends React.Component {
       {"id": 4, "name": "Name", "randomNumber": "Random number"}
     ];
     this.state = {
-      filteredData: this.tableData
+      filteredData: this.tableData,
+      sortBy: 'id',
+      sortDir: null
     };
   }
 
@@ -30,6 +36,14 @@ class InteractiveTable extends React.Component {
       return row[column].toString().toLowerCase().indexOf(filterBy) !== -1
     });
 
+    // clear other filter fields
+    this.headers.forEach((header) => {
+      if(header.key == column)
+        return;
+      // TODO Field clearing should be implemented by using a controlled TextField subclass instead of using getInputNode
+      this.refs[header.key + "Header"].getInputNode().value = null;
+    });
+
     this.setState({
       filteredData: filteredList
     });
@@ -37,8 +51,48 @@ class InteractiveTable extends React.Component {
     return true;
   }
 
+  sortRowsBy(column) {
+    let sortDir = this.state.sortDir;
+    let sortBy = column;
+    if(sortBy == this.state.sortBy) {
+      sortDir = this.state.sortDir === 'ASC' ? 'DESC' : 'ASC';
+    } else {
+      sortDir = 'DESC';
+    }
+
+    let rows = this.state.filteredData.slice();
+    rows.sort((a, b) => {
+      let sortVal = 0;
+
+      if(a[sortBy] > b[sortBy])
+        sortVal = 1;
+      if(a[sortBy] < b[sortBy])
+        sortVal = -1;
+      if(sortDir == 'DESC')
+        sortVal *= -1;
+
+      return sortVal;
+    });
+
+    this.setState({sortBy, sortDir, filteredData: rows});
+  }
+
+  renderHeader(key, name, sortDirArrow) {
+    return (
+      <TableHeaderColumn tooltip={name} key={key}>
+        <a onClick={this.sortRowsBy.bind(this, key)}><h2 style={{margin: 0}}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2></a>
+        <TextField ref={key+"Header"} hintText={"Filter by " + name + "..."} onChange={this.onFilterChange.bind(this, key)} />
+      </TableHeaderColumn>
+    )
+  }
+
   render() {
     let {filteredData} = this.state;
+
+    let sortDirArrow = '';
+    if (this.state.sortDir !== null) {
+      sortDirArrow = this.state.sortDir === 'DESC' ? '↓' : '↑';
+    }
 
     return <div>
       <Table
@@ -50,15 +104,9 @@ class InteractiveTable extends React.Component {
           displaySelectAll={true}
           adjustForCheckbox={true}>
           <TableRow>
-            <TableHeaderColumn tooltip="Identifier">
-              <TextField hintText="ID" onChange={this.onFilterChange.bind(this, 'id')} />
-            </TableHeaderColumn>
-            <TableHeaderColumn tooltip="Given name">
-              <TextField hintText="Name" onChange={this.onFilterChange.bind(this, 'name')} />
-            </TableHeaderColumn>
-            <TableHeaderColumn tooltip="Just a random number">
-              <TextField hintText="Random number" onChange={this.onFilterChange.bind(this, 'randomNumber')} />
-            </TableHeaderColumn>
+            { this.headers.map((header) => {
+              return this.renderHeader(header.key, header.name, sortDirArrow);
+            }) }
           </TableRow>
         </TableHeader>
         <TableBody
@@ -80,7 +128,7 @@ class InteractiveTable extends React.Component {
           adjustForCheckbox={true}>
           <TableRow>
             <TableRowColumn colSpan="3" style={{textAlign: 'center'}}>
-              &copy; 2016-17 Somebody etc. et al.
+              Footer
             </TableRowColumn>
           </TableRow>
         </TableFooter>
