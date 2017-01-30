@@ -48,7 +48,7 @@ class Layout extends Component {
     const toolbar = (
       <Toolbar
         className={styles.toolbar}
-        style={{'background-color': '#FAFAFA', 'padding': '3px', 'height': '53px'}}
+        style={{backgroundColor: '#FAFAFA', padding: '3px', height: '53px'}}
       >
         <ToolbarGroup>
           <IconButton>
@@ -84,40 +84,40 @@ class Layout extends Component {
             {toolbar}
           </Paper>
           <section className={styles.appMainContainer}>
-              <Drawer
-                docked={true}
-                open={this.state.showSideNav}
-                className={this.state.showSideNav? styles.sideBarOpen : styles.sideBarClosed}
-                containerClassName={styles.sideNav}
-                containerStyle={{'top': 'auto', 'position': 'relative', 'width': '100%'}}
-              >
-                <List>
-                  <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
-                  <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
-                  <ListItem primaryText="Data" leftIcon={<ContentSend />} />
-                  <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
-                </List>
-                <Divider className={styles.sideDivider} />
-                <List>
-                  <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
-                  <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
-                  <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
-                </List>
-              </Drawer>
-              <ContentCard>
-                <InteractiveTable
-                  headers={[
-                  {key: "id", name: "ID"},
-                  {key: "name", name: "Name"},
-                  {key: "importantNumber", name: "Important Number"}
+            <Drawer
+              docked={true}
+              open={this.state.showSideNav}
+              className={this.state.showSideNav? styles.sideBarOpen : styles.sideBarClosed}
+              containerClassName={styles.sideNav}
+              containerStyle={{'top': 'auto', 'position': 'relative', 'width': '100%'}}
+            >
+              <List>
+                <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
+                <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
+                <ListItem primaryText="Data" leftIcon={<ContentSend />} />
+                <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
+              </List>
+              <Divider className={styles.sideDivider} />
+              <List>
+                <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
+                <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
+                <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
+              </List>
+            </Drawer>
+            <ContentCard>
+              <InteractiveTable
+                headers={[
+                {key: "id", name: "ID"},
+                {key: "name", name: "Name"},
+                {key: "importantNumber", name: "Important Number"}
                 ]} data={[
-                  {"id": 1, "name": "Test", "importantNumber": 1337},
-                  {"id": 2, "name": "Testerino", "importantNumber": 42},
-                  {"id": 3, "name": "Testung", "importantNumber": 18},
-                  {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
+                {"id": 1, "name": "Test", "importantNumber": 1337},
+                {"id": 2, "name": "Testerino", "importantNumber": 42},
+                {"id": 3, "name": "Testung", "importantNumber": 18},
+                {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
                 ]}
-                />
-              </ContentCard>
+              />
+            </ContentCard>
           </section>
         </div>
       </MuiThemeProvider>

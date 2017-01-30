@@ -1,3 +1,4 @@
+/* Browser resets */
 html, body {
     height: 100%;
     width: 100%;
@@ -9,7 +10,7 @@ html, body {
 img, embed, object, video {
     max-width: 100%;
 }
-
+/* Page layout */
 .appLayout {
     display: flex;
     height: 100%;
@@ -39,7 +40,7 @@ img, embed, object, video {
 }
 
 .sideNav {
-    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 5px 6px, rgba(0, 0, 0, 0.117647) 0px 5px 4px;
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
@@ -58,7 +59,6 @@ img, embed, object, video {
 }
 
 .toolbar {
-
 }
 
 .rotate {
@@ -92,7 +92,7 @@ img, embed, object, video {
 }
 
 
-/* iPad Section */
+/* Tablet section */
 @media screen and (max-width: 768px) {
     .sideNav{
     }
