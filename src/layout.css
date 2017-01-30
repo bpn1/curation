@@ -26,13 +26,6 @@ img, embed, object, video {
     font-family: Roboto, sans-serif;
 }
 
-.appBody {
-    flex-grow: 1;
-    display: flex;
-    background-color: #EEEEEE;
-    flex-direction: column;
-}
-
 .appToolbarContainer {
     flex: 0 0 auto;
     z-index: 1;
@@ -41,16 +34,12 @@ img, embed, object, video {
 .appMainContainer {
     display: flex;
     flex-grow: 1;
+    background-color: #EEEEEE;
     flex-direction: row;
 }
 
 .sideNav {
-    background-color: #EEEEEE !important;
     box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    position: relative !important;
-    top: auto !important;
-    width: 100% !important;
-    z-index: 1 !important;
     border-top: 1px solid rgba(0,0,0,.1);
 }
 

@@ -77,16 +77,16 @@ class Layout extends Component {
               left={leftMenu}
             />
           </header>
-          <section className={styles.appBody}>
-            <Paper zDepth={1} className={styles.appToolbarContainer}>
-              {toolbar}
-            </Paper>
-            <div className={styles.appMainContainer}>
+          <Paper zDepth={1} className={styles.appToolbarContainer}>
+            {toolbar}
+          </Paper>
+          <section className={styles.appMainContainer}>
               <Drawer
                 docked={true}
                 open={this.state.showSideNav}
                 className={this.state.showSideNav? styles.sideBarOpen : styles.sideBarClosed}
                 containerClassName={styles.sideNav}
+                containerStyle={{'top': 'auto', 'position': 'relative', 'width': '100%'}}
               >
                 <List>
                   <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
@@ -115,7 +115,6 @@ class Layout extends Component {
                 ]}
                 />
               </ContentCard>
-            </div>
           </section>
         </div>
       </MuiThemeProvider>
