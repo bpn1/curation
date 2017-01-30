@@ -46,7 +46,10 @@ class Layout extends Component {
 
   render() {
     const toolbar = (
-      <Toolbar className={styles.toolbar}>
+      <Toolbar
+        className={styles.toolbar}
+        style={{'background-color': '#FAFAFA', 'padding': '3px', 'height': '53px'}}
+      >
         <ToolbarGroup>
           <IconButton>
             <MenuIcon
