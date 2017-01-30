@@ -1,3 +1,4 @@
+/* Browser resets */
 html, body {
     height: 100%;
     width: 100%;
@@ -9,7 +10,7 @@ html, body {
 img, embed, object, video {
     max-width: 100%;
 }
-
+/* Page layout */
 .appLayout {
     display: flex;
     height: 100%;
@@ -26,13 +27,6 @@ img, embed, object, video {
     font-family: Roboto, sans-serif;
 }
 
-.appBody {
-    flex-grow: 1;
-    display: flex;
-    background-color: #EEEEEE;
-    flex-direction: column;
-}
-
 .appToolbarContainer {
     flex: 0 0 auto;
     z-index: 1;
@@ -41,22 +35,39 @@ img, embed, object, video {
 .appMainContainer {
     display: flex;
     flex-grow: 1;
+    background-color: #EEEEEE;
     flex-direction: row;
 }
 
 .sideNav {
-    background-color: #EEEEEE !important;
-    box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
-    position: relative !important;
-    top: auto !important;
-    width: 100% !important;
-    z-index: 1 !important;
+    box-shadow: rgba(0, 0, 0, 0.117647) 0px 5px 6px, rgba(0, 0, 0, 0.117647) 0px 5px 4px;
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
-.sideBarOpen{
+.sideBarOpen {
     transition: width .45s cubic-bezier(0.23, 1, 0.32, 1);
     width: 240px;
+}
+
+.sideBarOpenMobile {
+    transition: width .45s cubic-bezier(0.23, 1, 0.32, 1);
+    width: 0px;
+}
+
+.transparentOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-color: transparent;
+}
+
+.shadowedOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.541176);
 }
 
 .sideBarClosed {
@@ -69,9 +80,6 @@ img, embed, object, video {
 }
 
 .toolbar {
-    background-color: #FAFAFA !important;
-    padding: 3px !important;
-    height: 53px !important;
 }
 
 .rotate {
@@ -102,11 +110,4 @@ img, embed, object, video {
 
 .muidocs-icon-navigation-expand-more:before {
     content: "\e603";
-}
-
-
-/* iPad Section */
-@media screen and (max-width: 768px) {
-    .sideNav{
-    }
 }

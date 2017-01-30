@@ -30,13 +30,19 @@ const theme = getMuiTheme({
 });
 //const theme = getMuiTheme(darkBaseTheme);
 
+const layoutBreakpoint = '(min-width: 768px)';
+
 class Layout extends Component {
   constructor() {
     super();
-    this.state = {
+    this.state = window.matchMedia(layoutBreakpoint).matches ? {
       showSideNav: true,
       rotate: false
-    }
+  } : {
+      showSideNav: false,
+      rotate: true
+  };
+
   }
 
   toggleSideNav() {
@@ -46,7 +52,10 @@ class Layout extends Component {
 
   render() {
     const toolbar = (
-      <Toolbar className={styles.toolbar}>
+      <Toolbar
+        className={styles.toolbar}
+        style={{backgroundColor: '#FAFAFA', padding: '3px', height: '53px'}}
+      >
         <ToolbarGroup>
           <IconButton>
             <MenuIcon
@@ -66,6 +75,12 @@ class Layout extends Component {
       </div>
     );
 
+    // responsive sidebar styling
+    const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
+                                {'top': 'auto', 'position': 'relative', 'width': '100%'} :
+                                {'position': 'absolute', 'top': 'auto'},
+          overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
+                                styles.shadowedOverlay : styles.transparentOverlay;
     return (
       <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
@@ -77,45 +92,46 @@ class Layout extends Component {
               left={leftMenu}
             />
           </header>
-          <section className={styles.appBody}>
-            <Paper zDepth={1} className={styles.appToolbarContainer}>
-              {toolbar}
-            </Paper>
-            <div className={styles.appMainContainer}>
-              <Drawer
-                docked={true}
-                open={this.state.showSideNav}
-                className={this.state.showSideNav? styles.sideBarOpen : styles.sideBarClosed}
-                containerClassName={styles.sideNav}
-              >
-                <List>
-                  <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
-                  <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
-                  <ListItem primaryText="Data" leftIcon={<ContentSend />} />
-                  <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
-                </List>
-                <Divider className={styles.sideDivider} />
-                <List>
-                  <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
-                  <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
-                  <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
-                </List>
-              </Drawer>
-              <ContentCard>
-                <InteractiveTable
-                  headers={[
-                  {key: "id", name: "ID"},
-                  {key: "name", name: "Name"},
-                  {key: "importantNumber", name: "Important Number"}
+          <Paper zDepth={1} className={styles.appToolbarContainer}>
+            {toolbar}
+          </Paper>
+          <section className={styles.appMainContainer}>
+            <div className={overlayClass} />
+            <Drawer
+              docked={true}
+              open={this.state.showSideNav}
+              className={this.state.showSideNav && window.matchMedia(layoutBreakpoint).matches ? // The sidebar should not
+                            styles.sideBarOpen : styles.sideBarClosed} // take any width in parent container on mobile devices
+              containerClassName={styles.sideNav}
+              containerStyle={sideBarStyle}
+            >
+              <List>
+                <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
+                <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
+                <ListItem primaryText="Data" leftIcon={<ContentSend />} />
+                <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
+              </List>
+              <Divider className={styles.sideDivider} />
+              <List>
+                <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
+                <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
+                <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
+              </List>
+            </Drawer>
+            <ContentCard>
+              <InteractiveTable
+                headers={[
+                {key: "id", name: "ID"},
+                {key: "name", name: "Name"},
+                {key: "importantNumber", name: "Important Number"}
                 ]} data={[
-                  {"id": 1, "name": "Test", "importantNumber": 1337},
-                  {"id": 2, "name": "Testerino", "importantNumber": 42},
-                  {"id": 3, "name": "Testung", "importantNumber": 18},
-                  {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
+                {"id": 1, "name": "Test", "importantNumber": 1337},
+                {"id": 2, "name": "Testerino", "importantNumber": 42},
+                {"id": 3, "name": "Testung", "importantNumber": 18},
+                {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
                 ]}
-                />
-              </ContentCard>
-            </div>
+              />
+            </ContentCard>
           </section>
         </div>
       </MuiThemeProvider>
