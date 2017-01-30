@@ -80,7 +80,6 @@ module.exports = env => {
     ],
   };
   if (env.debug) {
-    console.log(config);
     debugger; // eslint-disable-line
   }
   return config
