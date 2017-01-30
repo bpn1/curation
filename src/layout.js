@@ -30,13 +30,19 @@ const theme = getMuiTheme({
 });
 //const theme = getMuiTheme(darkBaseTheme);
 
+const layoutBreakpoint = '(min-width: 768px)';
+
 class Layout extends Component {
   constructor() {
     super();
-    this.state = {
+    this.state = window.matchMedia(layoutBreakpoint).matches ? {
       showSideNav: true,
       rotate: false
-    }
+  } : {
+      showSideNav: false,
+      rotate: true
+  };
+
   }
 
   toggleSideNav() {
@@ -69,6 +75,12 @@ class Layout extends Component {
       </div>
     );
 
+    // responsive sidebar styling
+    const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
+                                {'top': 'auto', 'position': 'relative', 'width': '100%'} :
+                                {'position': 'absolute', 'top': 'auto'},
+          overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
+                                styles.shadowedOverlay : styles.transparentOverlay;
     return (
       <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
@@ -84,12 +96,14 @@ class Layout extends Component {
             {toolbar}
           </Paper>
           <section className={styles.appMainContainer}>
+            <div className={overlayClass} />
             <Drawer
               docked={true}
               open={this.state.showSideNav}
-              className={this.state.showSideNav? styles.sideBarOpen : styles.sideBarClosed}
+              className={this.state.showSideNav && window.matchMedia(layoutBreakpoint).matches ? // The sidebar should not
+                            styles.sideBarOpen : styles.sideBarClosed} // take any width in parent container on mobile devices
               containerClassName={styles.sideNav}
-              containerStyle={{'top': 'auto', 'position': 'relative', 'width': '100%'}}
+              containerStyle={sideBarStyle}
             >
               <List>
                 <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
