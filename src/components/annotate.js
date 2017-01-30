@@ -11,6 +11,7 @@ class ContentCard extends Component{
       backgroundColor: 'white',
       position: '',
       margin: '10px',
+      transition: 'all .45s ease-out'
     };
 
     return (

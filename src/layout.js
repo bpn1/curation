@@ -34,12 +34,14 @@ class Layout extends Component {
   constructor() {
     super();
     this.state = {
-      showSideNav: true
+      showSideNav: true,
+      rotate: false
     }
   }
 
   toggleSideNav() {
-      this.setState({showSideNav: !this.state.showSideNav})
+      this.setState({showSideNav: !this.state.showSideNav,
+                     rotate: !this.state.rotate});
   }
 
   render() {
@@ -47,7 +49,10 @@ class Layout extends Component {
       <Toolbar className={styles.toolbar}>
         <ToolbarGroup>
           <IconButton>
-            <MenuIcon />
+            <MenuIcon
+              className={this.state.rotate? styles.rotate: ''}
+              onTouchTap={this.toggleSideNav.bind(this)}
+            />
           </IconButton>
         </ToolbarGroup>
       </Toolbar>
@@ -72,14 +77,17 @@ class Layout extends Component {
               left={leftMenu}
             />
           </header>
-
           <section className={styles.appBody}>
             <Paper zDepth={1} className={styles.appToolbarContainer}>
               {toolbar}
             </Paper>
-
             <div className={styles.appMainContainer}>
-              <Drawer zDepth={0} containerClassName={styles.sideNav}>
+              <Drawer
+                docked={true}
+                open={this.state.showSideNav}
+                className={this.state.showSideNav? styles.sideBarOpen : styles.sideBarClosed}
+                containerClassName={styles.sideNav}
+              >
                 <List>
                   <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
                   <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
