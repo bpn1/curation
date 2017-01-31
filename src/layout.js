@@ -105,14 +105,14 @@ class Layout extends Component {
               containerClassName={styles.sideNav}
               containerStyle={sideBarStyle}
             >
-              <List>
+              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
                 <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
                 <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
                 <ListItem primaryText="Data" leftIcon={<ContentSend />} />
                 <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
               </List>
               <Divider className={styles.sideDivider} />
-              <List>
+              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
                 <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
