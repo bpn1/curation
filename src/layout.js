@@ -30,7 +30,7 @@ const theme = getMuiTheme({
 });
 //const theme = getMuiTheme(darkBaseTheme);
 
-const layoutBreakpoint = '(min-width: 768px)';
+const layoutBreakpoint = '(min-width: 769px)';
 
 class Layout extends Component {
   constructor() {
@@ -77,8 +77,8 @@ class Layout extends Component {
 
     // responsive sidebar styling
     const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
-                                {'top': 'auto', 'position': 'relative', 'width': '100%'} :
-                                {'position': 'absolute', 'top': 'auto'},
+                                {'top': 'auto', 'position': 'relative', 'width': '100%', boxShadow: 'none'} :
+                                {'position': 'absolute', 'top': 'auto', boxShadow: 'none'},
           overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
                                 styles.shadowedOverlay : styles.transparentOverlay;
     return (
@@ -96,7 +96,7 @@ class Layout extends Component {
             {toolbar}
           </Paper>
           <section className={styles.appMainContainer}>
-            <div className={overlayClass} />
+            <div className={overlayClass} onClick={this.toggleSideNav.bind(this)} />
             <Drawer
               docked={true}
               open={this.state.showSideNav}
