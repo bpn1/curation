@@ -67,9 +67,9 @@ class Layout extends Component {
       </Toolbar>
     );
 
-    const rightMenu = <Avatar src={image} />;
+    const avatar = <Avatar style={{width: '60px', height: '60px'}} src={image} />;
 
-    const leftMenu = (
+    const appTitle = (
       <div>
         <span className={styles.appHeaderText}>ModelFlow</span>
       </div>
@@ -88,8 +88,8 @@ class Layout extends Component {
             <HeadBar
               showMiddle={false}
               hasSearchBar={false}
-              right={rightMenu}
-              left={leftMenu}
+              right={avatar}
+              left={appTitle}
             />
           </header>
           <Paper zDepth={1} className={styles.appToolbarContainer}>
@@ -105,6 +105,7 @@ class Layout extends Component {
               containerClassName={styles.sideNav}
               containerStyle={sideBarStyle}
             >
+                  {window.matchMedia(layoutBreakpoint).matches ? null : <div className={styles.avatarContainer}> {avatar} </div> }
               <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
                 <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
                 <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
@@ -112,7 +113,7 @@ class Layout extends Component {
                 <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
               </List>
               <Divider className={styles.sideDivider} />
-              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
+              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}run >
                 <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
