@@ -73,7 +73,7 @@ class InteractiveTable extends React.Component {
     return (
       <TableHeaderColumn tooltip={name} key={key}>
         <a onClick={this.sortRowsBy.bind(this, key)}><h2 style={{margin: 0}}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2></a>
-        <TextField ref={key+"Header"} hintText={"Filter by " + name + "..."} onChange={this.onFilterChange.bind(this, key)} />
+        <TextField style={{maxWidth: "100%", width: "100%"}} ref={key+"Header"} hintText={"Filter by " + name + "..."} onChange={this.onFilterChange.bind(this, key)} />
       </TableHeaderColumn>
     )
   }
