@@ -2,6 +2,7 @@ import React from 'react';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton'
 
 class InteractiveTable extends React.Component {
   constructor(props) {
@@ -72,7 +73,8 @@ class InteractiveTable extends React.Component {
   renderHeader(key, name, sortDirArrow) {
     return (
       <TableHeaderColumn tooltip={name} key={key}>
-        <a onClick={this.sortRowsBy.bind(this, key)}><h2 style={{margin: 0}}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2></a>
+        <FlatButton onClick={this.sortRowsBy.bind(this, key)}><h2 style={{margin: 0}}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2></FlatButton>
+        <br/>
         <TextField style={{maxWidth: "100%", width: "100%"}} ref={key+"Header"} hintText={"Filter by " + name + "..."} onChange={this.onFilterChange.bind(this, key)} />
       </TableHeaderColumn>
     )
@@ -106,7 +108,7 @@ class InteractiveTable extends React.Component {
           stripedRows={false}>
           { filteredData.map((row, index) =>
             <TableRow key={index} selected={row.selected}>
-              { this.headers.map((header) => <TableRowColumn key={header.key}>{row[header.key]}</TableRowColumn>) }
+              { this.headers.map((header) => <TableRowColumn key={header.key}>{row[header.key].toString()}</TableRowColumn>) }
             </TableRow>
           ) }
         </TableBody>
