@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';;
 
@@ -14,16 +15,27 @@ class ContentCard extends Component{
       transition: 'all .45s ease-out'
     };
 
+    const fabStyle = {
+      margin: 0,
+      top: 'auto',
+      right: 20,
+      bottom: 20,
+      left: 'auto',
+      position: 'fixed',
+    };
+
     return (
       <Card zDepth={1} style={styles}>
-        <CardActions>
-          <FloatingActionButton>
-            <ContentAdd />
-          </FloatingActionButton>
-        </CardActions>
         <CardText>
           {this.props.children}
         </CardText>
+        <CardActions >
+          <FlatButton label="Action1" />
+          <FlatButton label="Action2" />
+        </CardActions>
+        <FloatingActionButton style={fabStyle}>
+          <ContentAdd />
+        </FloatingActionButton>
       </Card>
     );
   }

@@ -63,10 +63,17 @@ module.exports = env => {
         },
         {
           test: /\.(png|jpg)$/,
-          use:[
-            'url-loader?limit=4096'
-          ]
-        }
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 15000
+            }
+          }
+        },
+        {
+          test: /\.svg$/,
+          use: 'file-loader',
+        },
       ]
     },
     plugins: [
