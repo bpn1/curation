@@ -28,6 +28,12 @@ if (isDeveloping) {
 
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
+
+  // serve JSON on /data
+  app.get('/data', (req, res) => {
+    res.sendFile(path.join(__dirname, 'versiondiff.json'));
+  });
+
   app.get('*', function response(req, res) {
     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist/index.html')));
     res.end();
