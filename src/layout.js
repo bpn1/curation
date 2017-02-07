@@ -81,6 +81,18 @@ class Layout extends Component {
                                 {'position': 'absolute', 'top': 'auto', boxShadow: 'none'},
           overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
                                 styles.shadowedOverlay : styles.transparentOverlay;
+
+    let tableData = [{id: "1", properties: "none", relations: "none"}];
+
+    let req = new XMLHttpRequest();
+    req.overrideMimeType("application/json");
+    req.open('GET', 'http://localhost:1337/versiondiff.json');
+    const that = this;
+    req.onload = function() {
+      that.onload(req);
+    };
+    req.send(null);
+
     return (
       <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
@@ -113,30 +125,38 @@ class Layout extends Component {
                 <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
               </List>
               <Divider className={styles.sideDivider} />
-              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)} run >
+              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
                 <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
               </List>
             </Drawer>
-            <ContentCard>
-              <InteractiveTable
+            <ContentCard ref="content">
+              <InteractiveTable ref="table"
                 headers={[
-                {key: "id", name: "ID"},
-                {key: "name", name: "Name"},
-                {key: "importantNumber", name: "Important Number"}
-                ]} data={[
-                {"id": 1, "name": "Test", "importantNumber": 1337},
-                {"id": 2, "name": "Testerino", "importantNumber": 42},
-                {"id": 3, "name": "Testung", "importantNumber": 18},
-                {"id": 1337, "name": "Testasterous", "importantNumber": 10000}
-                ]}
+                  {key: "id", name: "ID"},
+                  {key: "properties", name: "Properties"},
+                  {key: "relations", name: "Relations"}
+                ]} data={tableData}
               />
             </ContentCard>
           </section>
         </div>
       </MuiThemeProvider>
     );
+  }
+
+  onload(req) {
+    if(req.status == 200) {
+      console.log("before parse");
+      let data = JSON.parse(req.responseText);
+      console.log("after parse");
+      console.log("Data", data);
+      this.refs.table.setState({
+        tableData: data,
+        filteredData: data
+      });
+    }
   }
 }
 
