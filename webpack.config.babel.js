@@ -1,117 +1,108 @@
 const {resolve} = require('path');
 const webpack = require('webpack');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const {getIfUtils, removeEmpty} = require('webpack-config-utils');
 
-module.exports = env => {
+const parts = require('./configParts');
 
-  // get the absolute path to the src & node_modules dir
-  const SRC = resolve(__dirname, "src");
-  const DIST = resolve(__dirname, "dist");
-  const NODE_MODULES = resolve(__dirname, "node_modules");
+const PATHS = {
+  APP: './bootstrap.js',
+  VENDOR: './vendor.js',
+  SRC: resolve(__dirname, "src/"),
+  DIST: resolve(__dirname, 'dist'),
+  TEMPLATE: resolve('./src/index.html'),
+  NODE_MODULES: resolve(__dirname, "node_modules")
+};
 
-  // documentation: https://doclets.io/kentcdodds/webpack-config-utils/master
-  const {ifProd, ifNotProd} = getIfUtils(env);
-
-  const config = {
-    context: SRC,
-    entry:{
-      vendor: [
+const common = merge([
+  {
+    context: PATHS.SRC,
+    entry: {
+      vendor:[
         'react-hot-loader/patch',
         //'webpack-hot-middleware/client',
         'webpack-dev-server/client',
         //'webpack/hot/only-dev-server',
         //'react-hot-loader',
-        './vendor'
+        PATHS.VENDOR
       ],
-      main: './bootstrap.js'
+      app: PATHS.APP
     },
     output: {
       filename: '[name].bundle.js',
-      path: DIST,
-      publicPath: '/',
-      pathinfo: ifNotProd(),
+      path: PATHS.DIST,
+      publicPath:'/'
     },
-    devtool: ifProd('source-map', 'eval'),
-    devServer: {
-      contentBase: DIST,
-      host: '0.0.0.0',
-      port: 8080
-    },
-    performance: {
-        hints: process.env.NODE_ENV === 'production' ? "warning" : false
-    },
-    stats: {
-      colors: true,
-      reasons: true,
-      chunks: true
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(js|jsx)$/,
-          use: ['babel-loader'],
-          include: SRC,
-          exclude: /node_modules/
+    plugins: [
+      new ProgressBarPlugin(),
+      new HtmlWebpackPlugin({
+        title: 'ReactUI Template',
+        template: PATHS.TEMPLATE
+      })
+    ]
+  },
+  parts.loadJavaScript({ include: [PATHS.SRC], exclude: /node_modules/ }),
+  parts.loadCSS({ include: [PATHS.SRC, PATHS.NODE_MODULES] }),
+  parts.loadImages({
+    options:{
+      limit:15000
+    }
+  })
+]);
+
+module.exports = function(env) {
+
+  // Production configuration
+  if (env === 'production') {
+    return merge([
+      common,
+      {
+        performance: {
+          hints: 'warning'
         },
-        removeEmpty({
-          test: /\.css$/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-                modules: true
-              }
+        devtool: 'source-map',
+        plugins: [
+          new webpack.optimize.DedupePlugin(),
+          new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
+          new webpack.DefinePlugin({
+            'process.env': {
+              NODE_ENV: '"production"',
             },
-            'postcss-loader'
-          ],
-          include:[
-            NODE_MODULES,
-            SRC
-          ]
-        }),
-        {
-          test: /\.(png|jpg)$/,
-          use: {
-            loader: 'url-loader',
-            options: {
-              limit: 15000
-            }
-          }
-        },
-        {
-          test: /\.svg$/,
-          use: 'file-loader',
-        },
+          }),
+          new webpack.optimize.UglifyJsPlugin({
+            compress: {
+              screw_ie8: true,
+              warnings: false,
+            },
+          })
+        ]
+      },
+      //parts.lintJavaScript({ include: PATHS.app }),
+    ]);
+  }
+
+  // Development configuration
+  return merge(
+    common,
+    {
+      output: {
+        pathinfo: true
+      },
+      devtool: 'eval',
+      // Disable performance hints during development
+      performance: {
+        hints: false
+      },
+      plugins: [
+        new webpack.NamedModulesPlugin()
       ]
     },
-    plugins: removeEmpty([
-      ifNotProd(new webpack.HotModuleReplacementPlugin()),
-      ifNotProd(new webpack.NamedModulesPlugin()),
-      ifProd(new webpack.optimize.DedupePlugin()),
-      ifProd(new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: '"production"',
-        },
-      })),
-      ifProd(new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          screw_ie8: true,
-          warnings: false,
-        },
-      })),
-      ifProd(new webpack.optimize.CommonsChunkPlugin({name: 'vendor'})),
-      new ProgressBarPlugin(),
-      new HTMLWebpackPlugin({
-        template: resolve('./src/index.html')
-      })
-    ]),
-  };
-  if (env.debug) {
-    debugger; // eslint-disable-line
-  }
-  return config
+    parts.devServer({
+      host: '0.0.0.0',
+      port: 8080,
+      content_base: PATHS.DIST,
+      env: env
+    })
+  );
 };
