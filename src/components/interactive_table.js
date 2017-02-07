@@ -7,10 +7,10 @@ class InteractiveTable extends React.Component {
   constructor(props) {
     super(props);
     this.headers = props.headers;
-    this.tableData = props.data;
 
     this.state = {
-      filteredData: this.tableData,
+      tableData: props.data,
+      filteredData: props.data,
       sortBy: 'id',
       sortDir: null
     };
@@ -19,12 +19,12 @@ class InteractiveTable extends React.Component {
   onFilterChange(column, event) {
     if(!event.target.value) {
       this.setState({
-        filteredData: this.tableData
+        filteredData: this.state.tableData
       });
     }
 
     const filterBy = event.target.value.toString().toLowerCase();
-    const filteredList = this.tableData.filter((row) => {
+    const filteredList = this.state.tableData.filter((row) => {
       return row[column].toString().toLowerCase().indexOf(filterBy) !== -1
     });
 
