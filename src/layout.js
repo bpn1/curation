@@ -86,7 +86,7 @@ class Layout extends Component {
 
     let req = new XMLHttpRequest();
     req.overrideMimeType("application/json");
-    req.open('GET', 'http://localhost:1337/versiondiff.json');
+    req.open('GET', '/data');
     const that = this;
     req.onload = function() {
       that.onload(req);
