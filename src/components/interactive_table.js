@@ -7,10 +7,10 @@ class InteractiveTable extends React.Component {
   constructor(props) {
     super(props);
     this.headers = props.headers;
-    this.tableData = props.data;
 
     this.state = {
-      filteredData: this.tableData,
+      tableData: props.data,
+      filteredData: props.data,
       sortBy: 'id',
       sortDir: null
     };
@@ -19,12 +19,12 @@ class InteractiveTable extends React.Component {
   onFilterChange(column, event) {
     if(!event.target.value) {
       this.setState({
-        filteredData: this.tableData
+        filteredData: this.state.tableData
       });
     }
 
     const filterBy = event.target.value.toString().toLowerCase();
-    const filteredList = this.tableData.filter((row) => {
+    const filteredList = this.state.tableData.filter((row) => {
       return row[column].toString().toLowerCase().indexOf(filterBy) !== -1
     });
 
@@ -73,7 +73,7 @@ class InteractiveTable extends React.Component {
     return (
       <TableHeaderColumn tooltip={name} key={key}>
         <a onClick={this.sortRowsBy.bind(this, key)}><h2 style={{margin: 0}}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2></a>
-        <TextField ref={key+"Header"} hintText={"Filter by " + name + "..."} onChange={this.onFilterChange.bind(this, key)} />
+        <TextField style={{maxWidth: "100%", width: "100%"}} ref={key+"Header"} hintText={"Filter by " + name + "..."} onChange={this.onFilterChange.bind(this, key)} />
       </TableHeaderColumn>
     )
   }

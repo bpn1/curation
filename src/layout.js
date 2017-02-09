@@ -113,7 +113,7 @@ class Layout extends Component {
                 <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
               </List>
               <Divider className={styles.sideDivider} />
-              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}run >
+              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)} run >
                 <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
                 <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
