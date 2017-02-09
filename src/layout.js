@@ -67,7 +67,7 @@ class Layout extends Component {
       </Toolbar>
     );
 
-    const avatar = <Avatar style={{width: '60px', height: '60px'}} src={image} />;
+    const avatar = function(size) { return <Avatar size={size} src={image} />;}
 
     const appTitle = (
       <div>
@@ -88,7 +88,7 @@ class Layout extends Component {
             <HeadBar
               showMiddle={false}
               hasSearchBar={false}
-              right={avatar}
+              right={avatar(40)}
               left={appTitle}
             />
           </header>
@@ -105,7 +105,7 @@ class Layout extends Component {
               containerClassName={styles.sideNav}
               containerStyle={sideBarStyle}
             >
-                  {window.matchMedia(layoutBreakpoint).matches ? null : <div className={styles.avatarContainer}> {avatar} </div> }
+                  {window.matchMedia(layoutBreakpoint).matches ? null : <div className={styles.avatarContainer}> {avatar(80)} </div> }
               <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
                 <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
                 <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
