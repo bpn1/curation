@@ -1,8 +1,7 @@
 import React from 'react';
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
-  from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton'
+import FlatButton from 'material-ui/FlatButton';
 
 class InteractiveTable extends React.Component {
   constructor(props) {
@@ -34,7 +33,7 @@ class InteractiveTable extends React.Component {
       if(header.key == column)
         return;
       // TODO Field clearing should be implemented by using a controlled TextField subclass (setState) instead of using getInputNode().value
-      this.refs[header.key + "Header"].getInputNode().value = null;
+      this.refs[header.key + "Header"].getInputNode().value = "";
     });
 
     this.setState({
