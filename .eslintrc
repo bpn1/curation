@@ -1,14 +1,6 @@
 {
   "extends": [
-    "kentcdodds/best-practices",
-    "kentcdodds/possible-errors",
-    "kentcdodds/es6/best-practices",
-    "kentcdodds/es6/possible-errors",
-    "kentcdodds/import/best-practices",
-    "kentcdodds/import/possible-errors",
-    "kentcdodds/mocha",
-    "kentcdodds/webpack",
-    "kentcdodds/react",
+    "airbnb"
   ],
   "rules": {
     // these are only here because I did not
@@ -22,6 +14,7 @@
     "complexity": [2, 8],
     "max-depth": [2, 6],
     "consistent-return": 0,
+    "react/jsx-filename-extension": 0,
     "id-match": 0,
     "import/newline-after-import": 0,
     // es6 stuff we technically can not do yet

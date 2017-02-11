@@ -1,4 +1,4 @@
-const {resolve} = require('path');
+const { resolve } = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -9,22 +9,22 @@ const parts = require('./configParts');
 const PATHS = {
   APP: './bootstrap.js',
   VENDOR: './vendor.js',
-  SRC: resolve(__dirname, "src/"),
+  SRC: resolve(__dirname, 'src/'),
   DIST: resolve(__dirname, 'dist'),
   TEMPLATE: resolve('./src/index.html'),
-  NODE_MODULES: resolve(__dirname, "node_modules")
+  NODE_MODULES: resolve(__dirname, 'node_modules')
 };
 
 const common = merge([
   {
     context: PATHS.SRC,
     entry: {
-      vendor:[
+      vendor: [
         'react-hot-loader/patch',
-        //'webpack-hot-middleware/client',
+        // 'webpack-hot-middleware/client',
         'webpack-dev-server/client',
-        //'webpack/hot/only-dev-server',
-        //'react-hot-loader',
+        // 'webpack/hot/only-dev-server',
+        // 'react-hot-loader',
         PATHS.VENDOR
       ],
       app: PATHS.APP
@@ -32,7 +32,7 @@ const common = merge([
     output: {
       filename: '[name].bundle.js',
       path: PATHS.DIST,
-      publicPath:'/'
+      publicPath: '/'
     },
     plugins: [
       new ProgressBarPlugin(),
@@ -43,16 +43,16 @@ const common = merge([
     ]
   },
   parts.loadJavaScript({ include: [PATHS.SRC], exclude: /node_modules/ }),
+  // parts.loadLinter({ include: [PATHS.SRC], exclude: /node_modules/ }),
   parts.loadCSS({ include: [PATHS.SRC, PATHS.NODE_MODULES] }),
   parts.loadImages({
-    options:{
-      limit:15000
+    options: {
+      limit: 15000
     }
   })
 ]);
 
-module.exports = function(env) {
-
+module.exports = function (env) {
   // Production configuration
   if (env === 'production') {
     return merge([
@@ -64,7 +64,7 @@ module.exports = function(env) {
         devtool: 'source-map',
         plugins: [
           new webpack.optimize.DedupePlugin(),
-          new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
+          new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' }),
           new webpack.DefinePlugin({
             'process.env': {
               NODE_ENV: '"production"',

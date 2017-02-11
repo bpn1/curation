@@ -3,7 +3,7 @@ exports.loadJavaScript = function({ include, exclude }) {
     module: {
       rules: [
         {
-          test: /\.(js|jsx)$/,
+          test: /\.js[x]?$/,
           use: ['babel-loader'],
           include,
           exclude,
