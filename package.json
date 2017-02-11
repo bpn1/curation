@@ -36,8 +36,12 @@
     "css-loader": "0.23.1",
     "enzyme": "^2.7.1",
     "enzyme-to-json": "^1.4.5",
-    "eslint": "3.2.2",
-    "eslint-config-kentcdodds": "^9.0.0",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb": "latest",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.9.0",
     "extract-text-webpack-plugin": "2.0.0-beta.4",
     "file-loader": "^0.10.0",
     "html-webpack-plugin": "^2.26.0",
@@ -78,7 +82,8 @@
     "test:watch": "yarn run test -- --watch",
     "test:update": "yarn run test -- -u",
     "validate": "npm-run-all --parallel lint build test",
-    "lint": "eslint src/**/*.js webpack.config.babel.js --cache"
+    "lint": "eslint src/**/*.js src/**/*.jsx webpack.config.babel.js --cache -f table",
+    "lint:autofix": "yarn run lint -- --fix"
   },
   "jest": {
     "verbose": true,
