@@ -7,6 +7,10 @@
     lost-flex-container: row;
 }
 
+.appHeader {
+    flex: 0 0 auto;
+}
+
 .leftSection {
     lost-align : middle-left;
     lost-column: 1/3 0 0

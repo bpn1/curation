@@ -6,6 +6,7 @@ class HeadBar extends Component {
   render() {
 
     const barWithSearch = (
+    <header className={styles.appHeader}>
       <div className={styles.container}>
         <div className={styles.leftSection}>
           <div className={styles.title}>
@@ -20,9 +21,11 @@ class HeadBar extends Component {
             {this.props.right}
           </span>
         </div>
-      </div>);
+      </div>
+    </header>);
 
     const barWithoutSearch = (
+    <header className={styles.appHeader}>
       <div className={styles.container}>
         <div className={styles.leftSectionOnly}>
           <div className={styles.title}>
@@ -34,7 +37,8 @@ class HeadBar extends Component {
             {this.props.right}
           </span>
         </div>
-      </div>);
+      </div>
+    </header>);
 
     if (this.props.showMiddle) {
       return barWithSearch

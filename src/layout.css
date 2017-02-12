@@ -19,10 +19,6 @@ img, embed, object, video {
     flex-direction: column;
 }
 
-.appHeader {
-    flex: 0 0 auto;
-}
-
 .appHeaderText {
     font-size: 2rem;
     font-family: Roboto, sans-serif;
