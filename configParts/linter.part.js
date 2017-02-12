@@ -1,4 +1,4 @@
-exports.loadLinter = function({ include, exclude }) {
+exports.loadLinter = function({ include, exclude, options }) {
   return {
     module: {
       rules: [
@@ -7,11 +7,7 @@ exports.loadLinter = function({ include, exclude }) {
           enforce: 'pre',
           use: [{
             loader: 'eslint-loader',
-            options: {
-              formatter: require("eslint/lib/formatters/table"),
-              cache: true,
-              fix: false
-            }
+            options
           }],
           include,
           exclude,

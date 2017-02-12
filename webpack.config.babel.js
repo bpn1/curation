@@ -43,7 +43,15 @@ const common = merge([
     ]
   },
   parts.loadJavaScript({ include: [PATHS.SRC], exclude: /node_modules/ }),
-  // parts.loadLinter({ include: [PATHS.SRC], exclude: /node_modules/ }),
+  // parts.loadLinter({
+  //   include: [PATHS.SRC],
+  //   exclude: /node_modules/,
+  //   options: {
+  //     formatter: require("eslint/lib/formatters/table"),
+  //     cache: true,
+  //     fix: false
+  //   }
+  // }),
   parts.loadCSS({ include: [PATHS.SRC, PATHS.NODE_MODULES] }),
   parts.loadImages({
     options: {
