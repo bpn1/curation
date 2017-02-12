@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import tweets from './tweetsReducer';
+import SideNavReducer from './sideNavReducer';
 import user from './userReducer';
 
-export default combineReducers({
-  tweets,
-  user,
+
+const rootReducer = combineReducers({
+    showSideNav: SideNavReducer
 });
+
+export default rootReducer
