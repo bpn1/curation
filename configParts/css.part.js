@@ -8,15 +8,19 @@ exports.loadCSS = function({ include, exclude } = {}) {
           exclude,
 
           use: [
-            'style-loader',
+            {
+              loader: 'style-loader'
+            },
             {
               loader: 'css-loader',
               options: {
-                importLoaders: 1,
+                importLoaders: true,
                 modules: true
               }
             },
-            'postcss-loader'
+            {
+              loader: 'postcss-loader'
+            }
           ],
         },
       ],

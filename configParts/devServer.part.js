@@ -18,7 +18,9 @@ exports.devServer = function({ host, port, content_base, env }) {
       hotOnly: true,
 
       // Display only errors to reduce the amount of output.
-      stats: 'errors-only',
+      stats: {
+        warnings: false
+      },
 
       // Parse host and port from env to allow customization.
       //

@@ -1,11 +1,8 @@
 .appToolbarContainer {
-    flex: 0 0 auto;
-    z-index: 1;
-}
-
-.toolbar {
+  flex: 0 0 auto;
+  z-index: 1;
 }
 
 .rotate {
-    transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }

@@ -53,6 +53,7 @@
     "postcss-cssnext": "^2.9.0",
     "postcss-load-config": "^1.0.0",
     "postcss-loader": "^1.2.1",
+    "postcss-reporter": "^3.0.0",
     "precss": "^1.4.0",
     "progress-bar-webpack-plugin": "1.9.2",
     "react-addons-test-utils": "^15.4.2",
@@ -60,6 +61,8 @@
     "react-test-renderer": "^15.4.2",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
+    "stylelint": "^7.8.0",
+    "stylelint-config-standard": "^16.0.0",
     "url-loader": "^0.5.7",
     "webpack": "2.2.0-rc.3",
     "webpack-config-utils": "2.3.0",
@@ -83,7 +86,8 @@
     "test:watch": "yarn run test -- --watch",
     "test:update": "yarn run test -- -u",
     "validate": "npm-run-all --parallel lint build test",
-    "lint": "eslint src/**/*.js src/**/*.jsx webpack.config.babel.js --cache -f table",
+    "lint:code": "eslint src/**/*.js src/**/*.jsx webpack.config.babel.js --cache -f table",
+    "lint:styles": "stylelint src/**/*.css",
     "lint:autofix": "yarn run lint -- --fix"
   },
   "jest": {
