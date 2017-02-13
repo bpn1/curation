@@ -1,10 +1,18 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';;
+import { Card, CardActions, CardText } from 'material-ui/Card';
 
-class ContentCard extends Component{
+class ContentCard extends Component {
+
+  static defaultProps = {
+    children: null // or [] I guess
+  };
+
+  static propTypes = {
+    children: React.PropTypes.node
+  };
 
   render() {
     const styles = {
@@ -41,4 +49,4 @@ class ContentCard extends Component{
   }
 }
 
-export default ContentCard
+export default ContentCard;

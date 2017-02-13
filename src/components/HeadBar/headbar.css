@@ -1,45 +1,49 @@
 @lost flexbox flex;
 
 .container {
-    color: white;
-    background-color: #00bcd4;
-    height:64px;
-    lost-flex-container: row;
+  color: white;
+  background-color: #00bcd4;
+  height: 64px;
+  lost-flex-container: row;
+}
+
+.appHeader {
+  flex: 0 0 auto;
 }
 
 .leftSection {
-    lost-align : middle-left;
-    lost-column: 1/3 0 0
+  lost-align: middle-left;
+  lost-column: 1/3 0 0;
 }
 
 .middleSection {
-    lost-align : center;
-    lost-column: 1/3 0 0
+  lost-align: center;
+  lost-column: 1/3 0 0;
 }
 
 .rightSection {
-    lost-align : middle-right;
-    lost-column: 1/3 0 0
+  lost-align: middle-right;
+  lost-column: 1/3 0 0;
 }
 
 .leftSectionOnly {
-    lost-align : middle-left;
-    lost-column: 1/2 0 0
+  lost-align: middle-left;
+  lost-column: 1/2 0 0;
 }
 
 .rightSectionOnly {
-    lost-align : middle-right;
-    lost-column: 1/2 0 0
+  lost-align: middle-right;
+  lost-column: 1/2 0 0;
 }
 
 .foo {
-    margin-left: 25px;
+  margin-left: 25px;
 }
 
 .rightContent {
-    margin-right: 25px;
+  margin-right: 25px;
 }
 
 .title {
-    margin-left: 20px;
+  margin-left: 20px;
 }

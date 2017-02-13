@@ -3,51 +3,34 @@ import { deepOrange500 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { List, ListItem } from 'material-ui/List';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import IconButton from 'material-ui/IconButton';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
-import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
-import ContentSend from 'material-ui/svg-icons/content/send';
-import ContentDrafts from 'material-ui/svg-icons/content/drafts';
-import Divider from 'material-ui/Divider';
-import Drawer from 'material-ui/Drawer';
-import ActionInfo from 'material-ui/svg-icons/action/info';
-import Paper from 'material-ui/Paper';
 import Avatar from 'material-ui/Avatar';
 
 import styles from './layout.css';
 import InteractiveTable from './components/interactive_table'
 import HeadBar from './components/HeadBar';
+import ToolBar from './containers/ToolBar';
+import SideBar from './containers/SideBar';
 import ContentCard from './components/annotate';
 import image from './images/kolage.jpg';
 
-const theme = getMuiTheme({
+/*const theme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500
   }
-});
-//const theme = getMuiTheme(darkBaseTheme);
+});*/
+const theme = getMuiTheme(darkBaseTheme);
 
-const layoutBreakpoint = '(min-width: 769px)';
+export const layoutBreakpoint = '(min-width: 769px)';
+
+const appTitle = (
+  <div>
+    <span className={styles.appHeaderText}>ModelFlow</span>
+  </div>
+);
 
 class Layout extends Component {
   constructor() {
     super();
-    this.state = window.matchMedia(layoutBreakpoint).matches ? {
-      showSideNav: true,
-      rotate: false
-  } : {
-      showSideNav: false,
-      rotate: true
-  };
-
-  }
-
-  toggleSideNav() {
-      this.setState({showSideNav: !this.state.showSideNav,
-                     rotate: !this.state.rotate});
   }
 
   render() {
@@ -77,10 +60,10 @@ class Layout extends Component {
 
     // responsive sidebar styling
     const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
-                                {'top': 'auto', 'position': 'relative', 'width': '100%', boxShadow: 'none'} :
-                                {'position': 'absolute', 'top': 'auto', boxShadow: 'none'},
-          overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
-                                styles.shadowedOverlay : styles.transparentOverlay;
+        {'top': 'auto', 'position': 'relative', 'width': '100%', boxShadow: 'none'} :
+        {'position': 'absolute', 'top': 'auto', boxShadow: 'none'},
+      overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
+        styles.shadowedOverlay : styles.transparentOverlay;
 
     let tableData = [{id: "1", properties: "none", relations: "none"}];
 
@@ -96,17 +79,13 @@ class Layout extends Component {
     return (
       <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
-          <header className={styles.appHeader}>
             <HeadBar
               showMiddle={false}
               hasSearchBar={false}
-              right={avatar}
+              right={<Avatar size={40} src={image} />}
               left={appTitle}
             />
-          </header>
-          <Paper zDepth={1} className={styles.appToolbarContainer}>
-            {toolbar}
-          </Paper>
+          <ToolBar />
           <section className={styles.appMainContainer}>
             <div className={overlayClass} onClick={this.toggleSideNav.bind(this)} />
             <Drawer
@@ -131,6 +110,7 @@ class Layout extends Component {
                 <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
               </List>
             </Drawer>
+            <SideBar />
             <ContentCard ref="content">
               <InteractiveTable ref="table"
                 headers={[
@@ -160,4 +140,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout
+export default Layout;
