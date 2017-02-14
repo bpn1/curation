@@ -1,7 +1,8 @@
-export const SIDENAV_TOGGLED = 'SIDENAV_TOGGLED';
-export function toggleSideNav() {
-    return {
-        type: SIDENAV_TOGGLED,
-        payload: null
-    }
+import { SIDENAV_TOGGLED } from '../constants/ActionTypes';
+
+export default function toggleSideNav() {
+  return {
+    type: SIDENAV_TOGGLED,
+    payload: null
+  };
 }

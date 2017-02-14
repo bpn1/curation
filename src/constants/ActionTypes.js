@@ -1,0 +1,1 @@
+export const SIDENAV_TOGGLED = 'SIDENAV_TOGGLED';

@@ -3,7 +3,7 @@ import SideNavReducer from './sideNavReducer';
 
 
 const rootReducer = combineReducers({
-    showSideNav: SideNavReducer
+  showSideNav: SideNavReducer
 });
 
 export default rootReducer

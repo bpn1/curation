@@ -7,7 +7,7 @@ import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import { connect } from 'react-redux';
 
 import styles from './toolbar.css';
-import { toggleSideNav } from '../../actions/index';
+import toggleSideNav from '../../actions/index';
 
 class ToolBar extends Component {
   render() {

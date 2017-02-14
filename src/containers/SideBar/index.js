@@ -11,7 +11,7 @@ import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 
-import { toggleSideNav } from '../../actions/index';
+import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
 import image from '../../images/kolage.jpg';
