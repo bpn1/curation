@@ -1,51 +1,44 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+
 import styles from './headbar.css';
 
 class HeadBar extends Component {
-
   render() {
-
-    const barWithSearch = (
-    <header className={styles.appHeader}>
-      <div className={styles.container}>
-        <div className={styles.leftSection}>
-          <div className={styles.title}>
-            {this.props.left}
+    const withSearch = this.props.showMiddle;
+    return (
+      <header className={styles.appHeader}>
+        <div className={styles.container}>
+          <div className={withSearch ? styles.leftSection : styles.leftSectionOnly} >
+            <div className={styles.title}>
+              {this.props.left}
+            </div>
+          </div>
+          {withSearch ? null :
+          <div className={styles.middleSection}>
+            {this.props.middle}
+          </div>}
+          <div className={withSearch ? styles.rightSection : styles.rightSectionOnly} >
+            <span className={styles.rightContent}>
+              {this.props.right}
+            </span>
           </div>
         </div>
-        <div className={styles.middleSection}>
-          {this.props.middle}
-        </div>
-        <div className={styles.rightSection}>
-          <span className={styles.rightContent}>
-            {this.props.right}
-          </span>
-        </div>
-      </div>
-    </header>);
-
-    const barWithoutSearch = (
-    <header className={styles.appHeader}>
-      <div className={styles.container}>
-        <div className={styles.leftSectionOnly}>
-          <div className={styles.title}>
-            {this.props.left}
-          </div>
-        </div>
-        <div className={styles.rightSectionOnly}>
-          <span className={styles.rightContent}>
-            {this.props.right}
-          </span>
-        </div>
-      </div>
-    </header>);
-
-    if (this.props.showMiddle) {
-      return barWithSearch
-    } else {
-      return barWithoutSearch
-    }
+      </header>);
   }
 }
+
+HeadBar.propTypes = {
+  left: React.PropTypes.element,
+  middle: React.PropTypes.element,
+  right: React.PropTypes.element,
+  showMiddle: React.PropTypes.bool
+};
+
+HeadBar.defaultProps = {
+  left: null,
+  middle: null,
+  right: null,
+  showMiddle: false
+};
 
 export default HeadBar;
