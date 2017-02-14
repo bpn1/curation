@@ -1,13 +1,10 @@
-import React from 'react';
-import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
-  from 'material-ui/Table';
+import React, { Component } from 'react';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 
-class InteractiveTable extends React.Component {
+class InteractiveTable extends Component {
   constructor(props) {
     super(props);
-    this.headers = props.headers;
-
     this.state = {
       tableData: props.data,
       filteredData: props.data,
@@ -24,12 +21,16 @@ class InteractiveTable extends React.Component {
     }
 
     const filterBy = event.target.value.toString().toLowerCase();
-    const filteredList = this.state.tableData.filter(row => row[column].toString().toLowerCase().indexOf(filterBy) !== -1);
+    const filteredList = this.state.tableData.filter(row => row[column]
+        .toString()
+        .toLowerCase()
+        .indexOf(filterBy) !== -1);
 
     // clear other filter fields
-    this.headers.forEach((header) => {
-      if (header.key == column) { return; }
-      // TODO Field clearing should be implemented by using a controlled TextField subclass (setState) instead of using getInputNode().value
+    this.props.headers.forEach((header) => {
+      if (header.key === column) { return; }
+      // TODO: Field clearing should be implemented by using a controlled TextField subclass (setState)
+      // instead of using getInputNode().value
       this.refs[header.key + 'Header'].getInputNode().value = null;
     });
 
@@ -43,7 +44,7 @@ class InteractiveTable extends React.Component {
   sortRowsBy(column) {
     let sortDir = this.state.sortDir;
     const sortBy = column;
-    if (sortBy == this.state.sortBy) {
+    if (sortBy === this.state.sortBy) {
       sortDir = this.state.sortDir === 'ASC' ? 'DESC' : 'ASC';
     } else {
       sortDir = 'DESC';
@@ -55,7 +56,7 @@ class InteractiveTable extends React.Component {
 
       if (a[sortBy] > b[sortBy]) { sortVal = 1; }
       if (a[sortBy] < b[sortBy]) { sortVal = -1; }
-      if (sortDir == 'DESC') { sortVal *= -1; }
+      if (sortDir === 'DESC') { sortVal *= -1; }
 
       return sortVal;
     });
@@ -66,8 +67,15 @@ class InteractiveTable extends React.Component {
   renderHeader(key, name, sortDirArrow) {
     return (
       <TableHeaderColumn tooltip={name} key={key}>
-        <a onClick={this.sortRowsBy.bind(this, key)}><h2 style={{ margin: 0 }}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2></a>
-        <TextField style={{ maxWidth: '100%', width: '100%' }} ref={key + 'Header'} hintText={'Filter by ' + name + '...'} onChange={this.onFilterChange.bind(this, key)} />
+        <a onClick={this.sortRowsBy.bind(this, key)}>
+          <h2 style={{ margin: 0 }}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2>
+        </a>
+        <TextField
+          style={{ maxWidth: '100%', width: '100%' }}
+          ref={key + 'Header'}
+          hintText={'Filter by ' + name + '...'}
+          onChange={this.onFilterChange.bind(this, key)}
+        />
       </TableHeaderColumn>
     );
   }
@@ -92,7 +100,7 @@ class InteractiveTable extends React.Component {
           adjustForCheckbox
         >
           <TableRow>
-            { this.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
+            { this.props.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
           </TableRow>
         </TableHeader>
         <TableBody
@@ -103,12 +111,17 @@ class InteractiveTable extends React.Component {
         >
           { filteredData.map((row, index) =>
             <TableRow key={index} selected={row.selected}>
-              { this.headers.map(header => <TableRowColumn key={header.key}>{row[header.key]}</TableRowColumn>) }
+              { this.props.headers.map(header => <TableRowColumn key={header.key}>{row[header.key]}</TableRowColumn>) }
             </TableRow>
           ) }
         </TableBody>
       </Table>);
   }
 }
+
+InteractiveTable.propTypes = {
+  headers: React.PropTypes.array.isRequired,
+  data: React.PropTypes.array.isRequired
+};
 
 export default InteractiveTable;
