@@ -31,8 +31,8 @@ class ToolBar extends Component {
 }
 
 ToolBar.propTypes = {
-  showSideNav: React.propTypes.boo.isRequired,
-  toggleSideNav: React.propTypes.func.isRequired
+  showSideNav: React.PropTypes.bool.isRequired,
+  toggleSideNav: React.PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
