@@ -5,15 +5,6 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { Card, CardActions, CardText } from 'material-ui/Card';
 
 class ContentCard extends Component {
-
-  static defaultProps = {
-    children: null // or [] I guess
-  };
-
-  static propTypes = {
-    children: React.PropTypes.node
-  };
-
   render() {
     const styles = {
       width: '100%',
@@ -48,5 +39,12 @@ class ContentCard extends Component {
     );
   }
 }
+ContentCard.propTypes = {
+  children: React.PropTypes.node
+};
+
+ContentCard.defaultProps = {
+  children: null
+};
 
 export default ContentCard;
