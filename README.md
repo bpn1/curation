@@ -1,5 +1,5 @@
 # Curation
-A curation interface for the data produced by the [Ingestion] project.  
+A curation interface for the data produced by the [Ingestion](https://github.com/bpn1/ingestion) project.  
 Uses NodeJS to query data from Cassandra and the file system and serves it as a REST endpoint.  
 Uses React, Redux and MaterialUI to create a modern frontend for this data.
 
