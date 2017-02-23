@@ -36,8 +36,7 @@ class SideBar extends Component {
           containerClassName={styles.sideNav}
           containerStyle={sideBarStyle}
         >
-          { window.matchMedia(layoutBreakpoint).matches ?
-            null :
+          { !window.matchMedia(layoutBreakpoint).matches &&
             <div className={styles.avatarContainer}> <Avatar size={80} src={image} /> </div> }
           <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
             <ListItem primaryText="Services" leftIcon={<ContentInbox />} />

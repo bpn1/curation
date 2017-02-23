@@ -13,10 +13,10 @@ class HeadBar extends Component {
               {this.props.left}
             </div>
           </div>
-          {withSearch ?
+          {withSearch &&
             <div className={styles.middleSection}>
               {this.props.middle}
-            </div> : null}
+            </div>}
           <div className={withSearch ? styles.rightSection : styles.rightSectionOnly} >
             <span className={styles.rightContent}>
               {this.props.right}
