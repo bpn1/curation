@@ -108,6 +108,8 @@ class Layout extends Component {
             </Drawer>
             <SideBar />
             <ContentCard ref="content">
+              <DiffTree />
+              <hr/>
               <InteractiveTable ref="table"
                 headers={[
                   {key: "id", name: "ID"},
