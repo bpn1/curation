@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 
 class InteractiveTable extends Component {
   constructor(props) {
@@ -27,11 +28,13 @@ class InteractiveTable extends Component {
         .indexOf(filterBy) !== -1);
 
     // clear other filter fields
-    this.props.headers.forEach((header) => {
-      if (header.key === column) { return; }
-      // TODO: Field clearing should be implemented by using a controlled TextField subclass (setState)
+    this.headers.forEach((header) => {
+      if (header.key == column) {
+        return;
+      }
+      // TODO Field clearing should be implemented by using a controlled TextField subclass (setState)
       // instead of using getInputNode().value
-      this.refs[header.key + 'Header'].getInputNode().value = null;
+      this.refs[header.key + "Header"].getInputNode().value = "";
     });
 
     this.setState({
@@ -81,7 +84,7 @@ class InteractiveTable extends Component {
   }
 
   render() {
-    const { filteredData } = this.state;
+    const {filteredData} = this.state;
 
     let sortDirArrow = '';
     if (this.state.sortDir !== null) {
@@ -110,9 +113,17 @@ class InteractiveTable extends Component {
           stripedRows={false}
         >
           { filteredData.map((row, index) =>
-            <TableRow key={index} selected={row.selected}>
-              { this.props.headers.map(header => <TableRowColumn key={header.key}>{row[header.key]}</TableRowColumn>) }
-            </TableRow>
+            (<TableRow key={index} selected={row.selected}>
+              { this.headers.map((header) => {
+                let content = '';
+                if (typeof(row[header.key]) != String) {
+                  content = JSON.stringify(row[header.key]);
+                } else {
+                  content = row[header.key].toString();
+                }
+                return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
+              })}
+            </TableRow>)
           ) }
         </TableBody>
       </Table>);
