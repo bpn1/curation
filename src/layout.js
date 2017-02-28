@@ -10,6 +10,7 @@ import InteractiveTable from './components/interactive_table';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
+import DiffTree from './components/difftree'
 import ContentCard from './components/annotate';
 import image from './images/kolage.jpg';
 
@@ -43,6 +44,8 @@ class Layout extends Component {
           <section className={styles.appMainContainer}>
             <SideBar />
             <ContentCard>
+              <DiffTree />
+              <hr/>
               <InteractiveTable
                 headers={[
                 { key: 'id', name: 'ID' },
