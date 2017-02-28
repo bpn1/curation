@@ -15,7 +15,7 @@ class ToolBar extends Component {
       <Paper zDepth={1} className={styles.appToolbarContainer}>
         <Toolbar
           className={styles.toolbar}
-          style={{ backgroundColor: '#FAFAFA', padding: '3px', height: '53px' }}
+          style={{ backgroundColor: '#666', padding: '3px', height: '53px' }}
         >
           <ToolbarGroup>
             <IconButton>

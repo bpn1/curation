@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { deepOrange500 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-// import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Avatar from 'material-ui/Avatar';
 
@@ -13,44 +12,17 @@ import SideBar from './containers/SideBar';
 import ContentCard from './components/annotate';
 import image from './images/kolage.jpg';
 
-/*const theme = getMuiTheme({
-  palette: {
-    accent1Color: deepOrange500
-  }
-});*/
-// const theme = getMuiTheme(darkBaseTheme);
+const theme = getMuiTheme(darkBaseTheme);
 
 export const layoutBreakpoint = '(min-width: 769px)';
 
-const appTitle = (
-  <div>
-    <span className={styles.appHeaderText}>ModelFlow</span>
-  </div>
-);
-
 class Layout extends Component {
   render() {
-    const toolbar = (
-      <Toolbar
-        className={styles.toolbar}
-        style={{backgroundColor: '#FAFAFA', padding: '3px', height: '53px'}}
-      >
-        <ToolbarGroup>
-          <IconButton>
-            <MenuIcon
-              className={this.state.rotate? styles.rotate: ''}
-              onTouchTap={this.toggleSideNav.bind(this)}
-            />
-          </IconButton>
-        </ToolbarGroup>
-      </Toolbar>
-    );
-
     const avatar = <Avatar style={{width: '60px', height: '60px'}} src={image} />;
 
     const appTitle = (
       <div>
-        <span className={styles.appHeaderText}>ModelFlow</span>
+        <span className={styles.appHeaderText}>Curation</span>
       </div>
     );
 
@@ -81,7 +53,7 @@ class Layout extends Component {
             right={<Avatar size={40} src={image} />}
             left={appTitle}
           />
-          <ToolBar />
+          <ToolBar showSideNav="" toggleSideNav=""/>
           <section className={styles.appMainContainer}>
             <div className={overlayClass} onClick={this.toggleSideNav.bind(this)} />
             <Drawer
@@ -92,7 +64,7 @@ class Layout extends Component {
               containerClassName={styles.sideNav}
               containerStyle={sideBarStyle}
             >
-                  {window.matchMedia(layoutBreakpoint).matches ? null : <div className={styles.avatarContainer}> {avatar} </div> }
+              { window.matchMedia(layoutBreakpoint).matches ? null : <div className={styles.avatarContainer}> {avatar} </div> }
               <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
                 <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
                 <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
@@ -109,7 +81,7 @@ class Layout extends Component {
             <SideBar />
             <ContentCard ref="content">
               <DiffTree />
-              <hr/>
+              <Divider />
               <InteractiveTable ref="table"
                 headers={[
                   {key: "id", name: "ID"},
