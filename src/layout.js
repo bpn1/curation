@@ -10,14 +10,15 @@ import InteractiveTable from './components/interactive_table';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
+import DiffTree from './components/difftree';
 import ContentCard from './components/annotate';
 import image from './images/kolage.jpg';
 
-/*const theme = getMuiTheme({
+const theme = getMuiTheme({
   palette: {
     accent1Color: deepOrange500
   }
-});*/
+});
 // const theme = getMuiTheme(darkBaseTheme);
 
 export const layoutBreakpoint = '(min-width: 769px)';
@@ -29,24 +30,21 @@ const appTitle = (
 );
 
 class Layout extends Component {
-  render() {
-    const toolbar = (
-      <Toolbar
-        className={styles.toolbar}
-        style={{backgroundColor: '#FAFAFA', padding: '3px', height: '53px'}}
-      >
-        <ToolbarGroup>
-          <IconButton>
-            <MenuIcon
-              className={this.state.rotate? styles.rotate: ''}
-              onTouchTap={this.toggleSideNav.bind(this)}
-            />
-          </IconButton>
-        </ToolbarGroup>
-      </Toolbar>
-    );
+  // onload(req) {
+  //   if (req.status == 200) {
+  //     console.log('before parse');
+  //     const data = JSON.parse(req.responseText);
+  //     console.log('after parse');
+  //     console.log('Data', data);
+  //     this.refs.table.setState({
+  //       tableData: data,
+  //       filteredData: data
+  //     });
+  //   }
+  // }
 
-    const avatar = <Avatar style={{width: '60px', height: '60px'}} src={image} />;
+  render() {
+    const avatar = <Avatar style={{ width: '60px', height: '60px' }} src={image} />;
 
     const appTitle = (
       <div>
@@ -54,23 +52,16 @@ class Layout extends Component {
       </div>
     );
 
-    // responsive sidebar styling
-    const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
-        {'top': 'auto', 'position': 'relative', 'width': '100%', boxShadow: 'none'} :
-        {'position': 'absolute', 'top': 'auto', boxShadow: 'none'},
-      overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.state.showSideNav ?
-        styles.shadowedOverlay : styles.transparentOverlay;
+    const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
 
-    let tableData = [{id: "1", properties: "none", relations: "none"}];
-
-    let req = new XMLHttpRequest();
-    req.overrideMimeType("application/json");
-    req.open('GET', '/data');
-    const that = this;
-    req.onload = function() {
-      that.onload(req);
-    };
-    req.send(null);
+    // const req = new XMLHttpRequest();
+    // req.overrideMimeType('application/json');
+    // req.open('GET', '/data');
+    // const that = this;
+    // req.onload = function () {
+    //   that.onload(req);
+    // };
+    // req.send(null);
 
     return (
       <MuiThemeProvider muiTheme={theme}>
@@ -83,38 +74,15 @@ class Layout extends Component {
           />
           <ToolBar />
           <section className={styles.appMainContainer}>
-            <div className={overlayClass} onClick={this.toggleSideNav.bind(this)} />
-            <Drawer
-              docked={true}
-              open={this.state.showSideNav}
-              className={this.state.showSideNav && window.matchMedia(layoutBreakpoint).matches ? // The sidebar should not
-                            styles.sideBarOpen : styles.sideBarClosed} // take any width in parent container on mobile devices
-              containerClassName={styles.sideNav}
-              containerStyle={sideBarStyle}
-            >
-                  {window.matchMedia(layoutBreakpoint).matches ? null : <div className={styles.avatarContainer}> {avatar} </div> }
-              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
-                <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
-                <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
-                <ListItem primaryText="Data" leftIcon={<ContentSend />} />
-                <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
-              </List>
-              <Divider className={styles.sideDivider} />
-              <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : this.toggleSideNav.bind(this)}>
-                <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
-                <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
-                <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
-              </List>
-            </Drawer>
             <SideBar />
-            <ContentCard ref="content">
+            <ContentCard>
               <DiffTree />
-              <hr/>
-              <InteractiveTable ref="table"
+              <hr />
+              <InteractiveTable
                 headers={[
-                  {key: "id", name: "ID"},
-                  {key: "properties", name: "Properties"},
-                  {key: "relations", name: "Relations"}
+                  { key: 'id', name: 'ID' },
+                  { key: 'properties', name: 'Properties' },
+                  { key: 'relations', name: 'Relations' }
                 ]} data={tableData}
               />
             </ContentCard>
@@ -122,19 +90,6 @@ class Layout extends Component {
         </div>
       </MuiThemeProvider>
     );
-  }
-
-  onload(req) {
-    if(req.status == 200) {
-      console.log("before parse");
-      let data = JSON.parse(req.responseText);
-      console.log("after parse");
-      console.log("Data", data);
-      this.refs.table.setState({
-        tableData: data,
-        filteredData: data
-      });
-    }
   }
 }
 
