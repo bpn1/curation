@@ -30,18 +30,18 @@ const appTitle = (
 );
 
 class Layout extends Component {
-  // onload(req) {
-  //   if (req.status == 200) {
-  //     console.log('before parse');
-  //     const data = JSON.parse(req.responseText);
-  //     console.log('after parse');
-  //     console.log('Data', data);
-  //     this.refs.table.setState({
-  //       tableData: data,
-  //       filteredData: data
-  //     });
-  //   }
-  // }
+  onload(req) {
+    if (req.status === 200) {
+      console.log('before parse');
+      const data = JSON.parse(req.responseText);
+      console.log('after parse');
+      console.log('Data', data);
+      this.refs.table.setState({
+        tableData: data,
+        filteredData: data
+      });
+    }
+  }
 
   render() {
     const avatar = <Avatar style={{ width: '60px', height: '60px' }} src={image} />;
@@ -54,14 +54,14 @@ class Layout extends Component {
 
     const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
 
-    // const req = new XMLHttpRequest();
-    // req.overrideMimeType('application/json');
-    // req.open('GET', '/data');
-    // const that = this;
-    // req.onload = function () {
-    //   that.onload(req);
-    // };
-    // req.send(null);
+    const req = new XMLHttpRequest();
+    req.overrideMimeType('application/json');
+    req.open('GET', '/data');
+    const that = this;
+    req.onload = function () {
+      that.onload(req);
+    };
+    req.send(null);
 
     return (
       <MuiThemeProvider muiTheme={theme}>
@@ -78,7 +78,7 @@ class Layout extends Component {
             <ContentCard>
               <DiffTree />
               <hr />
-              <InteractiveTable
+              <InteractiveTable ref='table'
                 headers={[
                   { key: 'id', name: 'ID' },
                   { key: 'properties', name: 'Properties' },
