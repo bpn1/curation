@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import DiffTree from './difftree';
 
 class InteractiveTable extends Component {
   constructor(props) {
@@ -121,10 +122,13 @@ class InteractiveTable extends Component {
             (<TableRow key={index} selected={row.selected}>
               { this.props.headers.map((header) => {
                 let content = '';
-                if (typeof (row[header.key]) !== String) {
-                  content = JSON.stringify(row[header.key]);
-                } else {
+                if(typeof row[header.key] == "string") {
                   content = row[header.key].toString();
+                  console.log(content);
+                  content = content.substring(1, content.length-1);
+                } else {
+                  console.log(content);
+                  content = <DiffTree json={row[header.key]} />;
                 }
                 return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
               })}

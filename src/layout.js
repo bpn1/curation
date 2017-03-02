@@ -51,6 +51,13 @@ class Layout extends Component {
     );
 
     const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
+    const testJson = {
+      array: [1,2,3],
+      bool: false,
+      object: {
+        foo: 'bar'
+      }
+    };
 
     return (
       <MuiThemeProvider muiTheme={curationTheme}>
@@ -65,7 +72,7 @@ class Layout extends Component {
           <section className={styles.appMainContainer}>
             <SideBar />
             <ContentCard>
-              <DiffTree />
+              <DiffTree json={testJson}/>
               <br/>
               <InteractiveTable ref="table"
                 headers={[
