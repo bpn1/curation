@@ -28,7 +28,7 @@ class InteractiveTable extends Component {
       .indexOf(filterBy) !== -1);
 
     // clear other filter fields
-    this.headers.forEach((header) => {
+    this.props.headers.forEach((header) => {
       if (header.key == column) {
         return;
       }
@@ -102,12 +102,10 @@ class InteractiveTable extends Component {
         height={this.state.height}
         selectable
         multiSelectable
-        fixedHeader
-      >
+        fixedHeader>
         <TableHeader
           displaySelectAll
-          adjustForCheckbox
-        >
+          adjustForCheckbox>
           <TableRow>
             { this.props.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
           </TableRow>
@@ -116,18 +114,15 @@ class InteractiveTable extends Component {
           displayRowCheckbox
           deselectOnClickaway
           showRowHover
-          stripedRows={false}
-        >
+          stripedRows={false}>
           { filteredData.map((row, index) =>
             (<TableRow key={index} selected={row.selected}>
               { this.props.headers.map((header) => {
                 let content = '';
                 if(typeof row[header.key] == "string") {
                   content = row[header.key].toString();
-                  console.log(content);
-                  content = content.substring(1, content.length-1);
+                  //content = content.substring(1, content.length-1);
                 } else {
-                  console.log(content);
                   content = <DiffTree json={row[header.key]} />;
                 }
                 return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
