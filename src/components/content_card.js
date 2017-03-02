@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import muiThemable from 'material-ui/styles/muiThemeable';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -8,7 +9,7 @@ class ContentCard extends Component {
   render() {
     const styles = {
       width: '100%',
-      backgroundColor: '#e0e0e0',
+      backgroundColor: this.props.muiTheme.palette.contentColor,
       position: '',
       margin: '10px',
       transition: 'all .45s ease-out'
@@ -47,4 +48,4 @@ ContentCard.defaultProps = {
   children: null
 };
 
-export default ContentCard;
+export default muiThemable()(ContentCard);

@@ -5,14 +5,14 @@ import Avatar from 'material-ui/Avatar';
 import styles from './layout.css';
 import image from '../logo.png';
 
-import curationTheme from './themes/curation';
+import theme from './themes/curation';
 
 import InteractiveTable from './components/interactive_table';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
 import DiffTree from './components/DiffTree/index';
-import ContentCard from './components/annotate';
+import ContentCard from './components/content_card';
 
 export const layoutBreakpoint = '(min-width: 769px)';
 
@@ -51,6 +51,11 @@ class Layout extends Component {
     );
 
     const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
+    const tableHeaders = [
+      { key: 'id', name: 'ID' },
+      { key: 'properties', name: 'Properties' },
+      { key: 'relations', name: 'Relations' }
+    ];
     const testJson = {
       array: [1,2,3],
       bool: false,
@@ -60,7 +65,7 @@ class Layout extends Component {
     };
 
     return (
-      <MuiThemeProvider muiTheme={curationTheme}>
+      <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
           <HeadBar
             showMiddle={true}
@@ -69,18 +74,11 @@ class Layout extends Component {
             middle={appTitle}
           />
           <ToolBar />
-          <section className={styles.appMainContainer}>
+          <section className={styles.appMainContainer} style={{backgroundColor: theme.palette.canvasColor}}>
             <SideBar />
             <ContentCard>
-              <DiffTree json={testJson}/>
-              <br/>
-              <InteractiveTable ref="table"
-                headers={[
-                  { key: 'id', name: 'ID' },
-                  { key: 'properties', name: 'Properties' },
-                  { key: 'relations', name: 'Relations' }
-                ]} data={tableData}
-              />
+              <DiffTree json={testJson} />
+              <InteractiveTable ref="table" headers={tableHeaders} data={tableData} />
             </ContentCard>
           </section>
         </div>

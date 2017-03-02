@@ -32,7 +32,6 @@ video {
 .appMainContainer {
   display: flex;
   flex-grow: 1;
-  background: #eee;
   flex-direction: row;
 }
 

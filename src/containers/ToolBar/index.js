@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import muiThemable from 'material-ui/styles/muiThemeable';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import { bindActionCreators } from 'redux';
 import IconButton from 'material-ui/IconButton';
@@ -11,12 +12,15 @@ import toggleSideNav from '../../actions/index';
 
 class ToolBar extends Component {
   render() {
+    const toolbarStyle = {
+      backgroundColor: this.props.muiTheme.palette.canvasColor,
+      padding: this.props.muiTheme.spacing.padding,
+      height: this.props.muiTheme.palette
+    };
+
     return (
       <Paper zDepth={1} className={styles.appToolbarContainer}>
-        <Toolbar
-          className={styles.toolbar}
-          style={{ backgroundColor: '#666', padding: '3px', height: '53px' }}
-        >
+        <Toolbar className={styles.toolbar} style={toolbarStyle}>
           <ToolbarGroup>
             <IconButton>
               <MenuIcon
@@ -26,7 +30,8 @@ class ToolBar extends Component {
             </IconButton>
           </ToolbarGroup>
         </Toolbar>
-      </Paper>);
+      </Paper>
+    );
   }
 }
 
@@ -45,4 +50,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ toggleSideNav: toggleSideNav }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ToolBar);
+export default connect(mapStateToProps, mapDispatchToProps)(muiThemable()(ToolBar));
