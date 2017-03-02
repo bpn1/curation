@@ -14,7 +14,7 @@ import ActionInfo from 'material-ui/svg-icons/action/info';
 import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
-import image from '../../images/kolage.jpg';
+import image from '../../../logo.png';
 
 
 class SideBar extends Component {

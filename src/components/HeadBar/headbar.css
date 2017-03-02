@@ -1,8 +1,8 @@
 @lost flexbox flex;
 
 .container {
-  color: white;
-  background-color: #00bcd4;
+  color: #761;
+  background-color: #fc3;
   height: 64px;
   lost-flex-container: row;
 }

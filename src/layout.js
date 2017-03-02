@@ -5,6 +5,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Avatar from 'material-ui/Avatar';
 
 import styles from './layout.css';
+import image from '../logo.png';
+import {fade} from "material-ui/utils/colorManipulator";
+import {
+  cyan500, grey400, orange200, orange400, darkBlack, grey500, white, grey300, fullBlack, cyan300, yellow100
+} from "material-ui/styles/colors";
+
 import InteractiveTable from './components/interactive_table';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
@@ -12,9 +18,6 @@ import SideBar from './containers/SideBar';
 import Divider from 'material-ui/Divider';
 import DiffTree from './components/difftree';
 import ContentCard from './components/annotate';
-import image from './images/kolage.jpg';
-
-const theme = getMuiTheme(darkBaseTheme);
 
 export const layoutBreakpoint = '(min-width: 769px)';
 
@@ -33,7 +36,6 @@ class Layout extends Component {
   }
 
   render() {
-    const avatar = <Avatar style={{ width: '60px', height: '60px' }} src={image} />;
 
     const appTitle = (
       <div>
@@ -52,8 +54,31 @@ class Layout extends Component {
     };
     req.send(null);
 
+    //const theme = getMuiTheme(darkBaseTheme);
+
+    const customTheme = getMuiTheme({
+      palette: {
+        primary1Color: cyan300,
+        primary2Color: yellow100,
+        primary3Color: grey400,
+        accent1Color: orange200,
+        accent2Color: orange400,
+        accent3Color: grey500,
+        textColor: darkBlack,
+        alternateTextColor: white,
+        canvasColor: grey300,
+        borderColor: grey500,
+        disabledColor: fade(darkBlack, 0.3),
+        pickerHeaderColor: cyan500,
+        clockCircleColor: fade(darkBlack, 0.07),
+        shadowColor: fullBlack
+      }, appBar: {
+        height: 70
+      }
+    });
+
     return (
-      <MuiThemeProvider muiTheme={theme}>
+      <MuiThemeProvider muiTheme={customTheme}>
         <div className={styles.appLayout}>
           <HeadBar
             showMiddle={false}
