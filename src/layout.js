@@ -56,13 +56,6 @@ class Layout extends Component {
       { key: 'properties', name: 'Properties' },
       { key: 'relations', name: 'Relations' }
     ];
-    const testJson = {
-      array: [1,2,3],
-      bool: false,
-      object: {
-        foo: 'bar'
-      }
-    };
 
     return (
       <MuiThemeProvider muiTheme={theme}>
@@ -77,7 +70,6 @@ class Layout extends Component {
           <section className={styles.appMainContainer} style={{backgroundColor: theme.palette.canvasColor}}>
             <SideBar />
             <ContentCard>
-              <DiffTree json={testJson} />
               <InteractiveTable ref="table" headers={tableHeaders} data={tableData} />
             </ContentCard>
           </section>
