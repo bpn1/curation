@@ -51,5 +51,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(140deg, #114256 20%, #f07064);
+  background: linear-gradient(140deg, rgb(255, 167, 38) 20%, rgb(150, 62, 5));
 }
