@@ -4,6 +4,8 @@
   color: #761;
   background-color: #fc3;
   height: 64px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   lost-flex-container: row;
 }
 
@@ -45,5 +47,5 @@
 }
 
 .title {
-  margin-left: 20px;
+  margin-left: 10px;
 }

@@ -1,12 +1,13 @@
-import {fade} from "material-ui/utils/colorManipulator";
+import {fade} from 'material-ui/utils/colorManipulator';
 import {
-  cyan500, grey400, orange200, orange400, darkBlack, grey500, white, grey300, fullBlack, cyan300, yellow100
-} from "material-ui/styles/colors";
+  cyan500, grey400, orange200, orange400, darkBlack, grey500, white, grey300, fullBlack, yellow800
+} from 'material-ui/styles/colors';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const curationTheme = getMuiTheme({
   palette: {
-    primary1Color: cyan300,
-    primary2Color: yellow100,
+    primary1Color: orange400,
+    primary2Color: orange400,
     primary3Color: grey400,
     accent1Color: orange200,
     accent2Color: orange400,
@@ -20,7 +21,7 @@ const curationTheme = getMuiTheme({
     clockCircleColor: fade(darkBlack, 0.07),
     shadowColor: fullBlack
   }, appBar: {
-    height: 70
+    height: 84
   }
 });
 

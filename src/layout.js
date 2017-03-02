@@ -17,16 +17,8 @@ import ContentCard from './components/annotate';
 export const layoutBreakpoint = '(min-width: 769px)';
 
 class Layout extends Component {
-  render() {
-
-    const appTitle = (
-      <div>
-        <span className={styles.appHeaderText}>Curation</span>
-      </div>
-    );
-
-    const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
-
+  // TODO refactor with Redux
+  fetchData() {
     const req = new XMLHttpRequest();
     req.overrideMimeType('application/json');
     req.open('GET', '/data');
@@ -37,28 +29,44 @@ class Layout extends Component {
         const data = JSON.parse(req.responseText);
         console.log('after parse');
         console.log('Data', data);
-        this.refs.table.setState({
+        that.refs.table.setState({
           tableData: data,
           filteredData: data
         });
       }
     };
     req.send(null);
+  }
+
+  constructor() {
+    super();
+    this.fetchData();
+  }
+
+  render() {
+    const appTitle = (
+      <div>
+        <span className={styles.appHeaderText}>Curation</span>
+      </div>
+    );
+
+    const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
 
     return (
       <MuiThemeProvider muiTheme={curationTheme}>
         <div className={styles.appLayout}>
           <HeadBar
-            showMiddle={false}
-            hasSearchBar={false}
-            right={<Avatar size={40} src={image} />}
-            left={appTitle}
+            showMiddle={true}
+            hasSearchBar={true}
+            left={<Avatar backgroundColor="#0000" size={64} src={image} />}
+            middle={appTitle}
           />
           <ToolBar />
           <section className={styles.appMainContainer}>
             <SideBar />
             <ContentCard>
               <DiffTree />
+              <br/>
               <InteractiveTable ref="table"
                 headers={[
                   { key: 'id', name: 'ID' },
