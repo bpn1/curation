@@ -1,18 +1,19 @@
 import { fade } from 'material-ui/utils/colorManipulator';
 import {
-  darkBlack, fullBlack, lightGreen500, teal200, teal500, teal400, grey600, white, grey400, grey900, grey800, grey500
+  darkBlack, fullBlack, grey600, white, grey400, grey900, grey800, grey500, yellow400, yellow500, blueGrey300,
+  blueGrey500, amber200, amber500, amber700
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import spacing from 'material-ui/styles/spacing';
 
 const curationTheme = getMuiTheme({
   palette: {
-    primary1Color: teal400,
-    primary2Color: teal500,
-    primary3Color: teal200,
-    accent1Color: lightGreen500,
+    primary1Color: amber500,
+    primary2Color: amber700,
+    primary3Color: amber200,
+    accent1Color: amber200,
     accent2Color: grey600,
-    accent3Color: teal400,
+    accent3Color: amber700,
     textColor: white,
     alternateTextColor: grey900,
     canvasColor: grey800,
@@ -20,7 +21,7 @@ const curationTheme = getMuiTheme({
     borderColor: grey400,
     disabledColor: fade(darkBlack, 0.3),
     clockCircleColor: fade(darkBlack, 0.07),
-    pickerHeaderColor: teal500,
+    pickerHeaderColor: yellow500,
     shadowColor: fullBlack
   }, appBar: {
     height: 84
