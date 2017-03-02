@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
 
 class InteractiveTable extends Component {
   constructor(props) {
@@ -23,9 +22,9 @@ class InteractiveTable extends Component {
 
     const filterBy = event.target.value.toString().toLowerCase();
     const filteredList = this.state.tableData.filter(row => row[column]
-        .toString()
-        .toLowerCase()
-        .indexOf(filterBy) !== -1);
+      .toString()
+      .toLowerCase()
+      .indexOf(filterBy) !== -1);
 
     // clear other filter fields
     this.headers.forEach((header) => {
@@ -34,7 +33,7 @@ class InteractiveTable extends Component {
       }
       // TODO Field clearing should be implemented by using a controlled TextField subclass (setState)
       // instead of using getInputNode().value
-      this.refs[header.key + "Header"].getInputNode().value = "";
+      this.refs[header.key + 'Header'].getInputNode().value = '';
     });
 
     this.setState({
@@ -57,9 +56,15 @@ class InteractiveTable extends Component {
     rows.sort((a, b) => {
       let sortVal = 0;
 
-      if (a[sortBy] > b[sortBy]) { sortVal = 1; }
-      if (a[sortBy] < b[sortBy]) { sortVal = -1; }
-      if (sortDir === 'DESC') { sortVal *= -1; }
+      if (a[sortBy] > b[sortBy]) {
+        sortVal = 1;
+      }
+      if (a[sortBy] < b[sortBy]) {
+        sortVal = -1;
+      }
+      if (sortDir === 'DESC') {
+        sortVal *= -1;
+      }
 
       return sortVal;
     });
@@ -84,7 +89,7 @@ class InteractiveTable extends Component {
   }
 
   render() {
-    const {filteredData} = this.state;
+    const { filteredData } = this.state;
 
     let sortDirArrow = '';
     if (this.state.sortDir !== null) {
@@ -114,9 +119,9 @@ class InteractiveTable extends Component {
         >
           { filteredData.map((row, index) =>
             (<TableRow key={index} selected={row.selected}>
-              { this.headers.map((header) => {
+              { this.props.headers.map((header) => {
                 let content = '';
-                if (typeof(row[header.key]) != String) {
+                if (typeof (row[header.key]) !== String) {
                   content = JSON.stringify(row[header.key]);
                 } else {
                   content = row[header.key].toString();
