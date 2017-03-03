@@ -11,7 +11,6 @@ import InteractiveTable from './components/interactive_table';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
-import DiffTree from './components/DiffTree';
 import ContentCard from './components/content_card';
 
 export const layoutBreakpoint = '(min-width: 769px)';

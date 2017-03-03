@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
-import DiffTree from './DiffTree/index';
+import IconButton from 'material-ui/IconButton';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import DiffTree from './DiffTree';
 
 class InteractiveTable extends Component {
   constructor(props) {
@@ -98,7 +100,39 @@ class InteractiveTable extends Component {
     }
 
     return (
-      <Table
+      <div>
+        <Table
+          height={this.state.height}
+          selectable
+          multiSelectable
+          fixedHeader>
+          <TableHeader
+            displaySelectAll
+            adjustForCheckbox>
+            <TableRow>
+              { this.props.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            displayRowCheckbox
+            deselectOnClickaway
+            showRowHover
+            stripedRows={false}>
+            { filteredData.map((row, index) =>
+              (<TableRow key={index} selected={row.selected}>
+                { this.props.headers.map((header) => {
+                  let content = '';
+                  if(typeof row[header.key] == "string") {
+                    content = row[header.key].toString();
+                    //content = content.substring(1, content.length-1);
+                  } else {
+                    content = <DiffTree json={row[header.key]} />;
+                  }
+                  return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
+                })}
+              </TableRow>)
+            ) }
+          </TableBody><Table
         height={this.state.height}
         selectable
         multiSelectable
@@ -130,7 +164,19 @@ class InteractiveTable extends Component {
             </TableRow>)
           ) }
         </TableBody>
-      </Table>);
+      </Table>
+      <IconButton>
+        <SettingsIcon
+          onTouchTap={console.log('settings!')} />
+      </IconButton>
+        </Table>
+        <!-- TODO position correctly (without absolute) -->
+        <IconButton style={{position: 'absolute', right: 15, top: 170}}>
+          <SettingsIcon
+            onTouchTap={console.log('settings!')} />
+        </IconButton>
+      </div>
+    );
   }
 }
 
