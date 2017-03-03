@@ -12,15 +12,14 @@ const NODE_MODULES = resolve(__dirname, 'node_modules');
 module.exports = {
   context: SRC,
   entry: {
+    main: './bootstrap.js',
     vendor: [
       'react-hot-loader/patch',
-      // 'webpack-hot-middleware/client',
-      'webpack-dev-server/client',
-      // 'webpack/hot/only-dev-server',
+      'webpack-hot-middleware/client',
+      // 'webpack-dev-server/client',
       // 'react-hot-loader',
       './vendor'
-    ],
-    main: './bootstrap.js'
+    ]
   },
   output: {
     filename: '[name].bundle.js',
@@ -86,6 +85,7 @@ module.exports = {
   plugins: removeEmpty([
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new ProgressBarPlugin(),
     new HTMLWebpackPlugin({
       template: resolve('./src/index.html')
