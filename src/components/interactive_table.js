@@ -170,7 +170,7 @@ class InteractiveTable extends Component {
           onTouchTap={console.log('settings!')} />
       </IconButton>
         </Table>
-        <!-- TODO position correctly (without absolute) -->
+        {/* TODO position correctly (without absolute)  */}
         <IconButton style={{position: 'absolute', right: 15, top: 170}}>
           <SettingsIcon
             onTouchTap={console.log('settings!')} />
