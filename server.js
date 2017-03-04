@@ -8,6 +8,9 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config.node.js');
 
+const cassandra = require('cassandra-driver');
+const client = new cassandra.Client({contactPoints: ['odin01'], keyspace: 'datalake'});
+
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
 const app = express();
@@ -39,6 +42,12 @@ app.use(webpackHotMiddleware(compiler));
 // serve JSON on /data
 app.get('/data', (req, res) => {
   res.sendFile(path.join(__dirname, 'versiondiff.json'));
+});
+// cassandra version diff query
+app.get('/cassandra', (req, res) => {
+  client.execute('SELECT * FROM version')
+    .then(result => res.send(result.rows))
+    .catch(err => console.log(err));
 });
 
 app.listen(port, '0.0.0.0', function onStart(err) {
