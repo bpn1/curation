@@ -170,7 +170,6 @@ class InteractiveTable extends Component {
           onTouchTap={console.log('settings!')} />
       </IconButton>
         </Table>
-        <!-- TODO position correctly (without absolute) -->
         <IconButton style={{position: 'absolute', right: 15, top: 170}}>
           <SettingsIcon
             onTouchTap={console.log('settings!')} />
@@ -179,6 +178,8 @@ class InteractiveTable extends Component {
     );
   }
 }
+
+// TODO position correctly (without absolute) (above)
 
 InteractiveTable.propTypes = {
   headers: React.PropTypes.array.isRequired,
