@@ -17,55 +17,30 @@ class ToolBar extends Component {
   render() {
     const toolbarStyle = {
       backgroundColor: this.props.muiTheme.palette.canvasColor,
-      padding: this.props.muiTheme.spacing.padding,
-      height: this.props.muiTheme.palette
-    };
-
-    const buttonMargin = '5';
-    const buttonPadding = '0 ' + buttonMargin;
-    const acceptStyle = {
-      margin: buttonMargin,
-      padding: buttonPadding,
-      backgroundColor: this.props.muiTheme.palette.acceptColor
+      //height: this.props.muiTheme.appBar.height
     };
     const denyStyle = {
-      margin: buttonMargin,
-      padding: buttonPadding,
       backgroundColor: this.props.muiTheme.palette.denyColor
     };
-    const iconStyle = {
-      position: 'relative',
-      top: 5,
-      left: -3,
-      shadowColor: this.props.muiTheme.palette.shadowColor,
-      shadowOffset: {
-        width: 5,
-        height: 5
-      },
-      shadowOpacity: 0.5,
-      shadowRadius: 5
-    };
-    const rightGroupStyle = {
-      align: 'right'
+    const acceptStyle = {
+      backgroundColor: this.props.muiTheme.palette.acceptColor
     };
 
     return (
       <Paper zDepth={1} className={styles.appToolbarContainer}>
         <Toolbar className={styles.toolbar} style={toolbarStyle}>
           <ToolbarGroup>
-            <IconButton
-              onTouchTap={() => this.props.toggleSideNav()}>
-              <MenuIcon
-                className={this.props.showSideNav ? styles.rotate : ''} />
+            <IconButton onTouchTap={() => this.props.toggleSideNav()}>
+              <MenuIcon className={this.props.showSideNav ? styles.rotate : ''} />
             </IconButton>
           </ToolbarGroup>
-          <ToolbarGroup style={rightGroupStyle}>
-            <FlatButton style={denyStyle}>
-              <DeleteIcon style={iconStyle}/>
+          <ToolbarGroup className={styles.rightGroup}>
+            <FlatButton className={styles.denyButton} style={denyStyle}>
+              <DeleteIcon className={styles.buttonIcon}/>
               Discard
             </FlatButton>
-            <FlatButton style={acceptStyle}>
-              <SaveIcon style={iconStyle}/>
+            <FlatButton className={styles.acceptButton} style={acceptStyle}>
+              <SaveIcon className={styles.buttonIcon}/>
               Apply
             </FlatButton>
           </ToolbarGroup>
