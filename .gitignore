@@ -93,3 +93,6 @@ Session.vim
 *~
 # auto-generated tag files
 tags
+
+# Config files
+cassandra.config.js
