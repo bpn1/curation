@@ -72,7 +72,7 @@ router.get('/', function (req, res) {
 app.use('/api', router);
 app.use('/api/subjects', subjects);
 app.use('/api/versions', versions);
-app.use('/api/duplicateCandidates', duplicate_candidates);
+app.use('/api/duplicateCandidates', duplicateCandidates);
 
 // serve JSON on /data
 app.get('/data', (req, res) => {

@@ -21,7 +21,6 @@ const common = merge([
     entry: {
       vendor: [
         'react-hot-loader/patch',
-        // 'webpack-hot-middleware/client',
         'webpack-dev-server/client',
         PATHS.VENDOR
       ],
