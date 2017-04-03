@@ -1,4 +1,7 @@
 const _ = require('lodash');
+const models = require('express-cassandra');
+
+const PAGING_LIMIT = 20;
 
 module.exports = {
   buildQuery(getParams, queryConfig) {
@@ -14,6 +17,10 @@ module.exports = {
         query[property] = { $contains: [getParams[property]] };
       }
     });
+    if (getParams.next) {
+      query[queryConfig.next] = { $token: { $gt: models.uuidFromString(getParams.next) } };
+    }
+    query.$limit = Number(getParams.count) || PAGING_LIMIT;
     return query;
   },
   logError(err, res) {

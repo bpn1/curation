@@ -3,9 +3,9 @@ const express = require('express');
 const routeUtils = require('../helpers/route-util');
 
 const queryConfig = {
-  normal: ['category', 'name'],
-  lists: ['aliases'],
-  maps: ['properties', 'relations'],
+  normal: ['duplicate_id', 'duplicate_name', 'duplicate_table', 'duplicateCandidate_id', 'duplicateCandidate_name'],
+  lists: [],
+  maps: [],
   next: 'id'
 };
 
@@ -19,8 +19,8 @@ module.exports = function (models) {
       };
       const query = routeUtils.buildQuery(req.query, queryConfig);
       console.log(query);
-      models.instance.Subject.findAsync(query, options)
-        .then(subjects => res.json(subjects))
+      models.instance.DuplicateCandidates.findAsync(query, options)
+        .then(duplicateCandidates => res.json(duplicateCandidates))
         .catch(err => routeUtils.logError(err, res));
     })
     .post(function (req, res) {
@@ -29,19 +29,19 @@ module.exports = function (models) {
         ttl: 86400
       };
       // TODO validate body params
-      const subject = new models.instance.Subject(req.body);
-      subject.saveAsync(options)
+      const duplicateCandidate = new models.instance.DuplicateCandidates(req.body);
+      duplicateCandidate.saveAsync(options)
         .then(function () {
-          console.info('Created new subject');
-          res.json({ message: 'Created new subject', id: subject.id });
+          console.info('Created new duplicate candidate');
+          res.json({ message: 'Created new duplicate candidate', id: duplicateCandidate.id });
         })
         .catch(err => routeUtils.logError(err, res));
     });
 
   router.route('/:id')
     .get(function (req, res) {
-      models.instance.Subject.findOneAsync({ id: models.uuidFromString(req.params.id) })
-        .then(subject => res.json(subject))
+      models.instance.DuplicateCandidates.findOneAsync({ id: models.uuidFromString(req.params.id) })
+        .then(duplicateCandidate => res.json(duplicateCandidate))
         .catch(err => routeUtils.logError(err, res));
     })
     .put(function (req, res) {
@@ -50,7 +50,7 @@ module.exports = function (models) {
         ttl: 86400
       };
       // TODO validate body params
-      models.instance.Subject.update({
+      models.instance.DuplicateCandidates.update({
         id: models.uuidFromString(req.params.id)
       }, req.body, options, function (err) {
         if (err) {
@@ -61,8 +61,8 @@ module.exports = function (models) {
       });
     })
     .delete(function (req, res) {
-      models.instance.Subject.findOneAsync({ id: models.uuidFromString(req.params.id) })
-        .then(subject => subject.delete(function (err) {
+      models.instance.DuplicateCandidates.findOneAsync({ id: models.uuidFromString(req.params.id) })
+        .then(duplicateCandidate => duplicateCandidate.delete(function (err) {
           if (err) {
             routeUtils.logError(err, res);
             return;

@@ -1,21 +1,20 @@
 /* eslint-disable no-console */
 const express = require('express');
-const routeUtils = require('../helpers/route');
+const routeUtils = require('../helpers/route-util');
 
 const queryConfig = {
   normal: ['program'],
   lists: ['datasources'],
-  maps: []
+  maps: [],
+  next: 'version'
 };
 
-const DEFAULT_FETCH_SIZE = 20;
 module.exports = function (models) {
   const router = express.Router();
   router.route('/')
     .get(function (req, res) {
       const options = {
         allow_filtering: true,
-        fetchSize: (req.query.count || DEFAULT_FETCH_SIZE),
         ttl: 86400
       };
       const query = routeUtils.buildQuery(req.query, queryConfig);

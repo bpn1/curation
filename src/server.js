@@ -11,6 +11,7 @@ const cassandraConfig = require('../cassandra.config.js');
 
 const subjects = require('./api/routes/subjects')(models);
 const versions = require('./api/routes/versions')(models);
+const duplicateCandidates = require('./api/routes/duplicateCandidates')(models);
 
 const runReactApp = process.argv.indexOf('react') > -1;
 const isDeveloping = process.env.NODE_ENV !== 'production';
@@ -71,6 +72,7 @@ router.get('/', function (req, res) {
 app.use('/api', router);
 app.use('/api/subjects', subjects);
 app.use('/api/versions', versions);
+app.use('/api/duplicateCandidates', duplicate_candidates);
 
 // serve JSON on /data
 app.get('/data', (req, res) => {
