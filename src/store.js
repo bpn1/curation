@@ -7,5 +7,5 @@ import reducers from './reducers';
 // Create Redux Store
 const composeEnhancers = process.env.NODE_ENV === 'production' ? compose : (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose);
 
-const reduxMiddleware = applyMiddleware(promise(), thunk, logger());
+const reduxMiddleware = applyMiddleware(promise(), thunk, logger);
 export default createStore(reducers, composeEnhancers(reduxMiddleware));
