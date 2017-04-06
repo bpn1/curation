@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
-import { List, ListItem } from 'material-ui/List';
+import { List, ListItem, makeSelectable } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
@@ -15,7 +15,43 @@ import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
 import image from '../../images/kolage.jpg';
+import {Link} from "react-router";
+import PropTypes from "react/lib/ReactPropTypes";
 
+// Function copied from http://www.material-ui.com/#/components/list: Selectable list
+function wrapState(ComposedComponent) {
+  return class SelectableList extends Component {
+    static propTypes = {
+      children: PropTypes.node.isRequired,
+      defaultValue: PropTypes.number.isRequired,
+    };
+
+    componentWillMount() {
+      this.setState({
+        selectedIndex: this.props.defaultValue,
+      });
+    }
+
+    handleRequestChange = (event, index) => {
+      this.setState({
+        selectedIndex: index,
+      });
+    };
+
+    render() {
+      return (
+        <ComposedComponent
+          value={this.state.selectedIndex}
+          onChange={this.handleRequestChange}
+        >
+          {this.props.children}
+        </ComposedComponent>
+      );
+    }
+  };
+}
+
+const SelectableList = wrapState(makeSelectable(List));
 
 class SideBar extends Component {
   render() {
@@ -38,12 +74,12 @@ class SideBar extends Component {
         >
           { !window.matchMedia(layoutBreakpoint).matches &&
             <div className={styles.avatarContainer}> <Avatar size={80} src={image} /> </div> }
-          <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
-            <ListItem primaryText="Services" leftIcon={<ContentInbox />} />
-            <ListItem primaryText="Tasks" leftIcon={<ActionGrade />} />
-            <ListItem primaryText="Data" leftIcon={<ContentSend />} />
-            <ListItem primaryText="Models" leftIcon={<ContentDrafts />} />
-          </List>
+          <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
+            <ListItem value={1} primaryText="Services" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
+            <ListItem value={2} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
+            <ListItem value={3} primaryText="Data" containerElement={<Link to={'data'} />} leftIcon={<ContentSend />} />
+            <ListItem value={4} primaryText="Models" containerElement={<Link to={'models'} />} leftIcon={<ContentDrafts />} />
+          </SelectableList>
           <Divider className={styles.sideDivider} />
           <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()} >
             <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
