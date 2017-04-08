@@ -13,6 +13,7 @@ const Root = ({ store }) => (
     <Router history={browserHistory}>
       <Route component={MainLayout} >
         <Route path="/" component={ServicesTableCard} />
+        <Route path="statistics" component={TasksCard} />
         <Route path="tasks" component={TasksCard} />
         <Route path="data" component={DataTableCard} />
         <Route path="models" component={ModelsCard} />

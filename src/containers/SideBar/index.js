@@ -10,6 +10,7 @@ import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import ActionAssessment from "material-ui/svg-icons/action/assessment";
 
 import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
@@ -19,6 +20,7 @@ import {Link} from "react-router";
 import PropTypes from "react/lib/ReactPropTypes";
 import {commerzbankYellow} from "../../themes/curation";
 import {grey700} from "material-ui/styles/colors";
+
 
 // Function copied from http://www.material-ui.com/#/components/list: Selectable list
 function wrapState(ComposedComponent) {
@@ -79,9 +81,10 @@ class SideBar extends Component {
             <div className={styles.avatarContainer}> <Avatar size={80} src={image} /> </div> }
           <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
             <ListItem value={1} primaryText="Services" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
-            <ListItem value={2} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
-            <ListItem value={3} primaryText="Data" containerElement={<Link to={'data'} />} leftIcon={<ContentSend />} />
-            <ListItem value={4} primaryText="Models" containerElement={<Link to={'models'} />} leftIcon={<ContentDrafts />} />
+            <ListItem value={2} primaryText="Statistics" containerElement={<Link to={'/statistics'} />} leftIcon={<ActionAssessment />} />
+            <ListItem value={3} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
+            <ListItem value={4} primaryText="Data" containerElement={<Link to={'data'} />} leftIcon={<ContentSend />} />
+            <ListItem value={5} primaryText="Models" containerElement={<Link to={'models'} />} leftIcon={<ContentDrafts />} />
           </SelectableList>
           <Divider className={styles.sideDivider} />
           <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()} >
