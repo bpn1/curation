@@ -7,15 +7,13 @@ import image from '../logo.png';
 
 import theme from './themes/curation';
 
-import InteractiveTable from './components/interactive_table';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
-import ContentCard from './components/content_card';
 
 export const layoutBreakpoint = '(min-width: 769px)';
 
-class Layout extends Component {
+class MainLayout extends Component {
   // TODO refactor with Redux
   fetchData() {
     const req = new XMLHttpRequest();
@@ -49,28 +47,21 @@ class Layout extends Component {
       </div>
     );
 
-    const tableData = [{ id: '1', properties: 'none', relations: 'none' }];
-    const tableHeaders = [
-      { key: 'id', name: 'ID' },
-      { key: 'properties', name: 'Properties' },
-      { key: 'relations', name: 'Relations' }
-    ];
-
     return (
       <MuiThemeProvider muiTheme={theme}>
         <div className={styles.appLayout}>
           <HeadBar
-            showMiddle={true}
-            hasSearchBar={true}
+            showMiddle
+            hasSearchBar
             left={<Avatar backgroundColor="#0000" size={64} src={image} />}
             middle={appTitle}
           />
           <ToolBar />
-          <section className={styles.appMainContainer} style={{backgroundColor: theme.palette.canvasColor}}>
+          <section className={styles.appMainContainer} style={{ backgroundColor: theme.palette.canvasColor }}>
             <SideBar />
-            <ContentCard>
-              <InteractiveTable ref="table" headers={tableHeaders} data={tableData} />
-            </ContentCard>
+            <div className="content">
+              {this.props.children}
+            </div>
           </section>
         </div>
       </MuiThemeProvider>
@@ -78,4 +69,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+export default MainLayout;
