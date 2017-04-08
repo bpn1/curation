@@ -1,13 +1,11 @@
 import { fade } from 'material-ui/utils/colorManipulator';
 import {
-  grey600, amber200, amber700, red900, teal800, fullWhite, pinkA200, cyan700, pinkA400, pinkA100, blueA100, blueA400,
-  blueA200, grey700, grey900, indigoA400, indigoA200, indigoA100, tealA400, tealA200, tealA100, teal100, teal400,
-  teal200
+  grey600, red900, teal800, fullWhite
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import spacing from 'material-ui/styles/spacing';
 
-const commerzbankYellow = '#FFCC33';
+export const commerzbankYellow = '#FFCC33';
 
 const curationTheme = getMuiTheme({
   spacing: spacing,

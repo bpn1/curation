@@ -17,6 +17,8 @@ import { layoutBreakpoint } from '../../layout';
 import image from '../../../logo.png';
 import {Link} from "react-router";
 import PropTypes from "react/lib/ReactPropTypes";
+import {commerzbankYellow} from "../../themes/curation";
+import {grey700} from "material-ui/styles/colors";
 
 // Function copied from http://www.material-ui.com/#/components/list: Selectable list
 function wrapState(ComposedComponent) {
@@ -43,6 +45,7 @@ function wrapState(ComposedComponent) {
         <ComposedComponent
           value={this.state.selectedIndex}
           onChange={this.handleRequestChange}
+          selectedItemStyle={{color: commerzbankYellow, backgroundColor: grey700}}
         >
           {this.props.children}
         </ComposedComponent>
