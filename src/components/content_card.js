@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import muiThemable from 'material-ui/styles/muiThemeable';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import { Card, CardActions, CardText } from 'material-ui/Card';
+import { Card, CardText } from 'material-ui/Card';
 
 class ContentCard extends Component {
   render() {
@@ -29,10 +28,6 @@ class ContentCard extends Component {
         <CardText>
           {this.props.children}
         </CardText>
-        <CardActions >
-          <FlatButton label="Action1" />
-          <FlatButton label="Action2" />
-        </CardActions>
         <FloatingActionButton style={fabStyle}>
           <ContentAdd />
         </FloatingActionButton>
