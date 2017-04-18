@@ -3,6 +3,7 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import PropTypes from 'prop-types';
 import DiffTree from './DiffTree';
 
 class InteractiveTable extends Component {
@@ -31,7 +32,7 @@ class InteractiveTable extends Component {
 
     // clear other filter fields
     this.props.headers.forEach((header) => {
-      if (header.key == column) {
+      if(header.key === column) {
         return;
       }
       // TODO Field clearing should be implemented by using a controlled TextField subclass (setState)
@@ -122,7 +123,7 @@ class InteractiveTable extends Component {
               (<TableRow key={index} selected={row.selected}>
                 { this.props.headers.map((header) => {
                   let content = '';
-                  if(typeof row[header.key] == "string") {
+                  if(typeof row[header.key] === "string") {
                     content = row[header.key].toString();
                     //content = content.substring(1, content.length-1);
                   } else {
@@ -153,7 +154,7 @@ class InteractiveTable extends Component {
             (<TableRow key={index} selected={row.selected}>
               { this.props.headers.map((header) => {
                 let content = '';
-                if(typeof row[header.key] == "string") {
+                if(typeof row[header.key] === "string") {
                   content = row[header.key].toString();
                   //content = content.substring(1, content.length-1);
                 } else {
@@ -179,11 +180,9 @@ class InteractiveTable extends Component {
   }
 }
 
-// TODO position correctly (without absolute) (above)
-
 InteractiveTable.propTypes = {
-  headers: React.PropTypes.array.isRequired,
-  data: React.PropTypes.array.isRequired
+  headers: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired
 };
 
 export default InteractiveTable;
