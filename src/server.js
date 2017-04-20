@@ -12,6 +12,7 @@ const cassandraConfig = require('../cassandra.config.js');
 const subjects = require('./api/routes/subjects')(models);
 const versions = require('./api/routes/versions')(models);
 const duplicateCandidates = require('./api/routes/duplicateCandidates')(models);
+const deduplicationstats = require('./api/routes/deduplicationstats')(models);
 
 const runReactApp = process.argv.indexOf('react') > -1;
 const isDeveloping = process.env.NODE_ENV !== 'production';
@@ -73,6 +74,7 @@ app.use('/api', router);
 app.use('/api/subjects', subjects);
 app.use('/api/versions', versions);
 app.use('/api/duplicateCandidates', duplicateCandidates);
+app.use('/api/deduplicationstats', deduplicationstats);
 
 // serve JSON on /data
 app.get('/data', (req, res) => {

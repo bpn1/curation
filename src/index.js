@@ -4,6 +4,7 @@ import { Router, Route, browserHistory } from 'react-router';
 
 import MainLayout from './layout';
 import ServicesTableCard from './views/servicesTableCard';
+import StatisticsCard from './views/statisticsCard';
 import TasksCard from './views/tasksCard';
 import DataTableCard from './views/dataTableCard';
 import ModelsCard from './views/modelsCard';
@@ -13,7 +14,7 @@ const Root = ({ store }) => (
     <Router history={browserHistory}>
       <Route component={MainLayout} >
         <Route path="/" component={ServicesTableCard} />
-        <Route path="statistics" component={TasksCard} />
+        <Route path="statistics" component={StatisticsCard} />
         <Route path="tasks" component={TasksCard} />
         <Route path="data" component={DataTableCard} />
         <Route path="models" component={ModelsCard} />
