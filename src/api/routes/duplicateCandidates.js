@@ -3,10 +3,10 @@ const express = require('express');
 const routeUtils = require('../helpers/route-util');
 
 const queryConfig = {
-  normal: ['duplicate_id', 'duplicate_name', 'duplicate_table', 'duplicateCandidate_id', 'duplicateCandidate_name'],
-  lists: [],
+  normal: [],
+  lists: ['candidates'],
   maps: [],
-  next: 'id'
+  next: 'subject_id'
 };
 
 module.exports = function (models) {

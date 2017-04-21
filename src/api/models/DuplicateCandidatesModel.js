@@ -1,26 +1,14 @@
-
 module.exports = {
   fields: {
-    id: {
+    subject_id: {
       type: 'uuid',
       default: { $db_function: 'uuid()' }
     },
-    duplicate_id: {
-      type: 'uuid'
-    },
-    duplicate_name: {
-      type: 'text'
-    },
-    duplicate_table: {
-      type: 'text'
-    },
-    subject_id: {
-      type: 'uuid'
-    },
-    subject_name: {
-      type: 'text'
-    },
+    candidates: {
+      type: 'list',
+      typeDef: '<frozen<tuple<frozen<subject>, text, double>>>'
+    }
   },
-  key: ['id'],
+  key: ['subject_id'],
   table_name: 'duplicatecandidates'
 };
