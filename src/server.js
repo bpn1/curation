@@ -9,10 +9,11 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('../webpack.config.node');
 const cassandraConfig = require('../cassandra.config.js');
 
-const subjects = require('./api/routes/subjects')(models);
-const versions = require('./api/routes/versions')(models);
-const duplicateCandidates = require('./api/routes/duplicateCandidates')(models);
-const deduplicationstats = require('./api/routes/deduplicationstats')(models);
+const modelRouter = require('./api/helpers/modelRouter');
+const subjectsQueryConfig = require('./api/queryConfigs/subjects');
+const versionsQueryConfig = require('./api/queryConfigs/versions');
+const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCandidates');
+const deduplicationstatsQueryConfig = require('./api/queryConfigs/deduplicationstats');
 
 const runReactApp = process.argv.indexOf('react') > -1;
 const isDeveloping = process.env.NODE_ENV !== 'production';
@@ -63,7 +64,7 @@ const router = express.Router();
 router.use(function (req, res, next) {
   // do logging
   console.log(req.method, req.url);
-  next(); // make sure we go to the next routes and don't stop here
+  next(); // make sure we go to the uniqueKey routes and don't stop here
 });
 
 router.get('/', function (req, res) {
@@ -71,10 +72,10 @@ router.get('/', function (req, res) {
 });
 
 app.use('/api', router);
-app.use('/api/subjects', subjects);
-app.use('/api/versions', versions);
-app.use('/api/duplicateCandidates', duplicateCandidates);
-app.use('/api/deduplicationstats', deduplicationstats);
+app.use('/api/subjects', modelRouter(models, 'Subject', subjectsQueryConfig));
+app.use('/api/versions', modelRouter(models, 'Version', versionsQueryConfig));
+app.use('/api/duplicateCandidates', modelRouter(models, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
+app.use('/api/deduplicationstats', modelRouter(models, 'Deduplicationstats', deduplicationstatsQueryConfig));
 
 // serve JSON on /data
 app.get('/data', (req, res) => {
