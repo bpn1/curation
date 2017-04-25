@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
 import { bindActionCreators } from 'redux';
@@ -51,8 +52,8 @@ class ToolBar extends Component {
 }
 
 ToolBar.propTypes = {
-  showSideNav: React.PropTypes.bool.isRequired,
-  toggleSideNav: React.PropTypes.func.isRequired
+  showSideNav: PropTypes.bool.isRequired,
+  toggleSideNav: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

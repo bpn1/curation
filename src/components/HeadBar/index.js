@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
 import styles from './headbar.css';
@@ -35,10 +36,10 @@ class HeadBar extends Component {
 }
 
 HeadBar.propTypes = {
-  left: React.PropTypes.element,
-  middle: React.PropTypes.element,
-  right: React.PropTypes.element,
-  showMiddle: React.PropTypes.bool
+  left: PropTypes.element,
+  middle: PropTypes.element,
+  right: PropTypes.element,
+  showMiddle: PropTypes.bool
 };
 
 HeadBar.defaultProps = {

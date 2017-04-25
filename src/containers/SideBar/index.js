@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Avatar from 'material-ui/Avatar';
@@ -17,7 +18,6 @@ import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
 import image from '../../../logo.png';
 import {Link} from "react-router";
-import PropTypes from "react/lib/ReactPropTypes";
 import {commerzbankYellow} from "../../themes/curation";
 import {grey700} from "material-ui/styles/colors";
 
@@ -99,8 +99,8 @@ class SideBar extends Component {
 }
 
 SideBar.propTypes = {
-  showSideNav: React.PropTypes.bool.isRequired,
-  toggleSideNav: React.PropTypes.func.isRequired
+  showSideNav: PropTypes.bool.isRequired,
+  toggleSideNav: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

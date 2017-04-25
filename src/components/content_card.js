@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -35,7 +36,7 @@ class ContentCard extends Component {
   }
 }
 ContentCard.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.node
 };
 
 ContentCard.defaultProps = {

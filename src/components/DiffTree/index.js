@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
 import JSONTree from 'react-json-tree';
 import theme from './theme.js';
@@ -14,7 +15,7 @@ class DiffTree extends Component {
 }
 
 DiffTree.propTypes = {
-  json: React.PropTypes.object.isRequired
+  json: PropTypes.object.isRequired
 };
 
 export default muiThemable()(DiffTree);

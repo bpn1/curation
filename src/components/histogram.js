@@ -1,5 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line } from 'recharts';
+import PropTypes from 'prop-types';
 
 // from: http://stackoverflow.com/a/7638362
 function randomColor() {
