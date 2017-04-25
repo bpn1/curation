@@ -123,11 +123,11 @@ class InteractiveTable extends Component {
               (<TableRow key={index} selected={row.selected}>
                 { this.props.headers.map((header) => {
                   let content = '';
-                  if(typeof row[header.key] === "string") {
+                  if(typeof row[header.key] === "object") {
+                    content = <DiffTree json={row[header.key]} />;
+                  } else {
                     content = row[header.key].toString();
                     //content = content.substring(1, content.length-1);
-                  } else {
-                    content = <DiffTree json={row[header.key]} />;
                   }
                   return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
                 })}

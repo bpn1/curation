@@ -40,7 +40,7 @@ Histogram.propTypes = {
   dataKey: PropTypes.string.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
-  showLabels: PropTypes.boolean
+  showLabels: PropTypes.bool
 };
 
 export default Histogram;
