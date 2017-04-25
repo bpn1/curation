@@ -133,43 +133,7 @@ class InteractiveTable extends Component {
                 })}
               </TableRow>)
             ) }
-          </TableBody><Table
-        height={this.state.height}
-        selectable
-        multiSelectable
-        fixedHeader>
-        <TableHeader
-          displaySelectAll
-          adjustForCheckbox>
-          <TableRow>
-            { this.props.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          displayRowCheckbox
-          deselectOnClickaway
-          showRowHover
-          stripedRows={false}>
-          { filteredData.map((row, index) =>
-            (<TableRow key={index} selected={row.selected}>
-              { this.props.headers.map((header) => {
-                let content = '';
-                if(typeof row[header.key] === "string") {
-                  content = row[header.key].toString();
-                  //content = content.substring(1, content.length-1);
-                } else {
-                  content = <DiffTree json={row[header.key]} />;
-                }
-                return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-              })}
-            </TableRow>)
-          ) }
-        </TableBody>
-      </Table>
-      <IconButton>
-        <SettingsIcon
-          onTouchTap={console.log('settings!')} />
-      </IconButton>
+          </TableBody>
         </Table>
         <IconButton style={{position: 'absolute', right: 15, top: 170}}>
           <SettingsIcon
