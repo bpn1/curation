@@ -10,11 +10,9 @@ function randomColor() {
   return '#'+c;
 }
 
-const Histogram = ({ data, nameKey, dataKey, width, height }) => {
-  width = width ? width : 400;
-  height = height ? height : 400;
-
+const Histogram = ({ data, nameKey, dataKey, width = 400, height = 400, showLabels = true }) => {
   const lineColor = randomColor();
+  const label = showLabels ? { fill: lineColor, fontSize: 20, dy: -10, textAnchor: "middle" } : false;
 
   return (
     <LineChart
@@ -26,7 +24,7 @@ const Histogram = ({ data, nameKey, dataKey, width, height }) => {
       <YAxis />
       <Tooltip label="" />
       <CartesianGrid stroke="#555" strokeDasharray="3 3" />
-      <Line type="monotone" dataKey={dataKey} stroke={lineColor} yAxisId={0} legendType="diamond" label={{ fill: lineColor, fontSize: 20, dy: -10, textAnchor: "middle" }} />
+      <Line type="monotone" dataKey={dataKey} stroke={lineColor} yAxisId={0} legendType="diamond" label={label} />
     </LineChart>
   )
 };
@@ -41,7 +39,8 @@ Histogram.propTypes = {
   data: PropTypes.array.isRequired,
   dataKey: PropTypes.string.isRequired,
   width: PropTypes.number,
-  height: PropTypes.number
+  height: PropTypes.number,
+  showLabels: PropTypes.boolean
 };
 
 export default Histogram;
