@@ -80,7 +80,7 @@ class SideBar extends Component {
           { !window.matchMedia(layoutBreakpoint).matches &&
             <div className={styles.avatarContainer}> <Avatar size={80} src={image} /> </div> }
           <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
-            <ListItem value={1} primaryText="Services" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
+            <ListItem value={1} primaryText="Subjects" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
             <ListItem value={2} primaryText="Statistics" containerElement={<Link to={'/statistics'} />} leftIcon={<ActionAssessment />} />
             <ListItem value={3} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
             <ListItem value={4} primaryText="Data" containerElement={<Link to={'data'} />} leftIcon={<ContentSend />} />

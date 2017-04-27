@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
-import IconButton from 'material-ui/IconButton';
-import SettingsIcon from 'material-ui/svg-icons/action/settings';
-import PropTypes from 'prop-types';
 import DiffTree from './DiffTree';
 
 class InteractiveTable extends Component {
@@ -12,6 +10,7 @@ class InteractiveTable extends Component {
     this.state = {
       tableData: props.data,
       filteredData: props.data,
+      selectedRows: [],
       sortBy: 'id',
       sortDir: null
     };
@@ -76,9 +75,20 @@ class InteractiveTable extends Component {
     this.setState({ sortBy, sortDir, filteredData: rows });
   }
 
+  onRowSelection(rows) {
+    let selectedRows = [];
+    this.state.tableData.forEach((row, i) => {
+      row.selected = rows.indexOf(i) > -1;
+      selectedRows.push(row);
+    });
+    this.setState({...this.state, selectedRows}, () => {
+      console.log("Selected rows", this.state.selectedRows);
+    });
+  }
+
   renderHeader(key, name, sortDirArrow) {
     return (
-      <TableHeaderColumn tooltip={name} key={key}>
+      <TableHeaderColumn key={key}>
         <a onClick={this.sortRowsBy.bind(this, key)}>
           <h2 style={{ margin: 0 }}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2>
         </a>
@@ -90,6 +100,15 @@ class InteractiveTable extends Component {
         />
       </TableHeaderColumn>
     );
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.data) {
+      this.setState({
+        filteredData: nextProps.data,
+        tableData: nextProps.data
+      });
+    }
   }
 
   render() {
@@ -106,7 +125,8 @@ class InteractiveTable extends Component {
           height={this.state.height}
           selectable
           multiSelectable
-          fixedHeader>
+          fixedHeader
+          onRowSelection={this.onRowSelection.bind(this)}>
           <TableHeader
             displaySelectAll
             adjustForCheckbox>
@@ -116,29 +136,26 @@ class InteractiveTable extends Component {
           </TableHeader>
           <TableBody
             displayRowCheckbox
-            deselectOnClickaway
             showRowHover
+            deselectOnClickaway={false}
             stripedRows={false}>
             { filteredData.map((row, index) =>
               (<TableRow key={index} selected={row.selected}>
-                { this.props.headers.map((header) => {
+                { this.props.headers.map(header => {
                   let content = '';
-                  if(typeof row[header.key] === "object") {
+                  if(row[header.key] === null) {
+                    content = <span style={{ color: "red" }}>null</span>;
+                  } else if(typeof row[header.key] === "object") {
                     content = <DiffTree json={row[header.key]} />;
                   } else {
                     content = row[header.key].toString();
-                    //content = content.substring(1, content.length-1);
                   }
                   return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
                 })}
               </TableRow>)
-            ) }
+            )}
           </TableBody>
         </Table>
-        <IconButton style={{position: 'absolute', right: 15, top: 170}}>
-          <SettingsIcon
-            onTouchTap={console.log('settings!')} />
-        </IconButton>
       </div>
     );
   }

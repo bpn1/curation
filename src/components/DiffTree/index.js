@@ -7,13 +7,13 @@ import theme from './theme.js';
 class DiffTree extends Component {
   render() {
     return (
-      // TODO implement commented functions using Redux reducers and actions
       // TODO custom styling: add + and - icons, color accordingly for changes
       <JSONTree data={this.props.json} theme={theme} invertTheme={false} />
     );
   }
 }
 
+// TODO allow either array or object
 DiffTree.propTypes = {
   json: PropTypes.object.isRequired
 };

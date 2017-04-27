@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+
 import muiThemable from 'material-ui/styles/muiThemeable';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import { bindActionCreators } from 'redux';
 import IconButton from 'material-ui/IconButton';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
-import { connect } from 'react-redux';
+import { red600, green600 } from 'material-ui/styles/colors';
 
 import styles from './toolbar.css';
 import toggleSideNav from '../../actions/index';
@@ -36,14 +38,10 @@ class ToolBar extends Component {
             </IconButton>
           </ToolbarGroup>
           <ToolbarGroup className={styles.rightGroup}>
-            <FlatButton className={styles.denyButton} style={denyStyle}>
-              <DeleteIcon className={styles.buttonIcon}/>
-              Discard
-            </FlatButton>
-            <FlatButton className={styles.acceptButton} style={acceptStyle}>
-              <SaveIcon className={styles.buttonIcon}/>
-              Apply
-            </FlatButton>
+            <div>
+              <RaisedButton style={{margin: 5}} icon={<DeleteIcon />} label="Discard" backgroundColor={red600} />
+              <RaisedButton style={{margin: 5}} icon={<SaveIcon />} label="Apply" backgroundColor={green600} />
+            </div>
           </ToolbarGroup>
         </Toolbar>
       </Paper>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import InteractiveTable from '../components/interactive_table';
+import SubjectTable from '../components/subject_table';
 import ContentCard from '../components/content_card';
 
 const tableHeaders = [
@@ -15,15 +15,13 @@ const tableData = [
   { id: 1337, name: 'Testasterous', importantNumber: 10000 }
 ];
 
-class ServicesTableCard extends Component {
+class SubjectsTableCard extends Component {
   render() {
     return (
       <ContentCard>
-        <InteractiveTable
-          headers={tableHeaders} data={tableData}
-        />
+        <SubjectTable data={tableData} />
       </ContentCard>
     );
   }
 }
-export default ServicesTableCard;
+export default SubjectsTableCard;

@@ -1,21 +1,3 @@
-.acceptButton {
-  margin-right: 5px;
-  padding: 0 5px;
-  background-color: teal;
-}
-
-.denyButton {
-  margin-right: 5px;
-  padding: 0 5px;
-  background-color: darkred;
-}
-
-.buttonIcon {
-  position: relative;
-  top: 5px;
-  left: -3px;
-}
-
 .rightGroup {
   text-align: right;
 }
