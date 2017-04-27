@@ -18,6 +18,14 @@ You can begin developing by running the wepack-dev-server using the command:
 
     npm install
     npm run dev
+
+To start the NodeJS backend, use:
+
+    npm run node
+
+To start the Curation frontend as well as its backend, use:
+
+    npm run node react
     
 The interface will be served under http://localhost:8080
 
