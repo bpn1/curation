@@ -77,11 +77,6 @@ app.use('/api/versions', modelRouter(models, 'Version', versionsQueryConfig));
 app.use('/api/duplicateCandidates', modelRouter(models, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
 app.use('/api/deduplicationstats', modelRouter(models, 'Deduplicationstats', deduplicationstatsQueryConfig));
 
-// serve JSON on /data
-app.get('/data', (req, res) => {
-  res.sendFile(path.join(__dirname, 'versiondiff.json'));
-});
-
 app.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {
     console.log(err);
