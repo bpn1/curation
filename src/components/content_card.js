@@ -9,7 +9,6 @@ class ContentCard extends Component {
   render() {
     const styles = {
       width: '100%',
-      position: '',
       margin: '10px',
       transition: 'all .45s ease-out'
     };
