@@ -68,7 +68,7 @@ router.use(function (req, res, next) {
 });
 
 router.get('/', function (req, res) {
-  res.json({ message: 'hooray! welcome to our api!' });
+  res.json({ message: 'Welcome to the Ingestion & Curation API' });
 });
 
 app.use('/api', router);
