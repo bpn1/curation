@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, hashHistory } from 'react-router';
 
 import MainLayout from './layout';
 import SubjectsTableCard from './views/subjectsTableCard';
@@ -12,7 +12,7 @@ import ModelsCard from './views/modelsCard';
 
 const Root = ({ store }) => (
   <Provider store={store}>
-    <Router history={browserHistory}>
+    <Router history={hashHistory}>
       <Route component={MainLayout} >
         <Route path="/" component={SubjectsTableCard} />
         <Route path="statistics" component={StatisticsCard} />
