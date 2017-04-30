@@ -12,13 +12,14 @@ const NODE_MODULES = resolve(__dirname, 'node_modules');
 module.exports = {
   context: SRC,
   entry: {
-    main: './bootstrap.js',
     vendor: [
       'react-hot-loader/patch',
       'webpack-hot-middleware/client',
-      // 'webpack-dev-server/client',
-      // 'react-hot-loader',
       './vendor'
+    ],
+    main: [
+      'webpack-hot-middleware/client',
+      './bootstrap.js'
     ]
   },
   output: {
