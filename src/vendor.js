@@ -11,4 +11,4 @@ import 'redux-logger';
 import 'redux-promise-middleware';
 import 'react-redux';
 import 'react-dom';
-import {Router, Link, IndexLink, IndexRoute, Redirect, Route, browserHistory} from 'react-router';
+import {Router, Link, IndexLink, IndexRoute, Redirect, Route, hashHistory} from 'react-router';
