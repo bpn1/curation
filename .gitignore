@@ -95,4 +95,5 @@ Session.vim
 tags
 
 # Config files
-cassandra.config.js
+datalake.cassandra.config.js
+evaluation.cassandra.config.js

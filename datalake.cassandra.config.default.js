@@ -1,23 +1,25 @@
 const versionUDT = require('./src/api/models/VersionUDT');
+const subjectUDT = require('./src/api/models/SubjectUDT');
 const models = require('express-cassandra');
 
 module.exports = {
   clientOptions: {
     contactPoints: ['node1', 'node2', '...'],
     protocolOptions: { port: 9042 },
-    keyspace: 'keyspacename',
+    keyspace: 'datalake',
     queryOptions: { consistency: models.consistencies.one },
     authProvider: new models.driver.auth.DsePlainTextAuthProvider('my_user', 'my_password')
   },
   ormOptions: {
     udts: {
-      version: versionUDT
+      version: versionUDT,
+      subject: subjectUDT,
     },
     defaultReplicationStrategy: {
       class: 'SimpleStrategy',
       replication_factor: 3
     },
     migration: 'safe',
-    createKeyspace: true
+    createKeyspace: false
   }
 };

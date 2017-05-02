@@ -1,19 +1,22 @@
 /* eslint-disable no-console */
-const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const models = require('express-cassandra');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('../webpack.config.node');
-const cassandraConfig = require('../cassandra.config.js');
+const datalakeConfig = require('../datalake.cassandra.config.js');
+const evaluationConfig = require('../evaluation.cassandra.config');
+const datalakeSchemaConfig = require('./api/schemaConfigs/datalakeConfig');
+const evaluationSchemaConfig = require('./api/schemaConfigs/evaluationConfig');
 
+const modelLoader = require('./api/helpers/modelLoader');
 const modelRouter = require('./api/helpers/modelRouter');
 const subjectsQueryConfig = require('./api/queryConfigs/subjects');
 const versionsQueryConfig = require('./api/queryConfigs/versions');
 const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCandidates');
 const deduplicationstatsQueryConfig = require('./api/queryConfigs/deduplicationstats');
+const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats');
 
 const runReactApp = process.argv.indexOf('react') > -1;
 const isDeveloping = process.env.NODE_ENV !== 'production';
@@ -21,12 +24,8 @@ const port = isDeveloping ? 3000 : process.env.PORT;
 const app = express();
 
 // setup cassandra ORM
-models.setDirectory(path.join(__dirname, 'api', 'models')).bind(cassandraConfig,
-  function (err) {
-    if (err) console.log(err.message);
-    else console.info('==> 🚀 Cassandra connected to %s', cassandraConfig.clientOptions.contactPoints.toString());
-  }
-);
+const datalakeModels = modelLoader(datalakeConfig, datalakeSchemaConfig);
+const evaluationModels = modelLoader(evaluationConfig, evaluationSchemaConfig);
 
 if (runReactApp) {
   let compiler;
@@ -68,10 +67,11 @@ router.use(function (req, res, next) {
 });
 
 app.use('/api', router);
-app.use('/api/subjects', modelRouter(models, 'Subject', subjectsQueryConfig));
-app.use('/api/versions', modelRouter(models, 'Version', versionsQueryConfig));
-app.use('/api/duplicateCandidates', modelRouter(models, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
-app.use('/api/deduplicationstats', modelRouter(models, 'Deduplicationstats', deduplicationstatsQueryConfig));
+app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryConfig));
+app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));
+app.use('/api/duplicateCandidates', modelRouter(datalakeModels, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
+app.use('/api/deduplicationstats', modelRouter(datalakeModels, 'Deduplicationstats', deduplicationstatsQueryConfig));
+app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 
 app.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {

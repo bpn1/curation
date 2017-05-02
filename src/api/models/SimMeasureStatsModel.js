@@ -8,10 +8,10 @@ module.exports = {
       type: 'text'
     },
     data: {
-      type: 'map',
-      typeDef: '<text, int>'
-    }
+      type: 'list',
+      typeDef: '<frozen<tuple<double, double, double, double>>>'
+    },
   },
   key: ['id'],
-  table_name: 'deduplicationstats'
+  table_name: 'sim_measure_stats'
 };
