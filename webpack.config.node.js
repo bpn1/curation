@@ -13,7 +13,6 @@ module.exports = {
   context: SRC,
   entry: {
     vendor: [
-      'webpack-hot-middleware/client',
       './vendor'
     ],
     main: [
