@@ -11,10 +11,7 @@ function randomColor() {
   return '#'+c;
 }
 
-const Histogram = ({ data, nameKey, dataKey, width = 400, height = 400, showLabels = true }) => {
-  const lineColor = randomColor();
-  const label = showLabels ? { fill: lineColor, fontSize: 20, dy: -10, textAnchor: "middle" } : false;
-
+const Histogram = ({ data, nameKey, keyList, width = 400, height = 400, showLabels = true }) => {
   return (
     <LineChart
       width={width}
@@ -25,20 +22,20 @@ const Histogram = ({ data, nameKey, dataKey, width = 400, height = 400, showLabe
       <YAxis />
       <Tooltip label="" />
       <CartesianGrid stroke="#555" strokeDasharray="3 3" />
-      <Line type="monotone" dataKey={dataKey} stroke={lineColor} yAxisId={0} legendType="diamond" label={label} />
+      {
+        keyList.map(dataKey => {
+          const lineColor = randomColor();
+          const label = showLabels ? { fill: lineColor, fontSize: 20, dy: -10, textAnchor: "middle" } : false;
+          return <Line type="monotone" key={dataKey} dataKey={dataKey} stroke={lineColor} yAxisId={0} legendType="diamond" label={label} />
+        })
+      }
     </LineChart>
   )
 };
 
-/*{
-  dataKeys.map(function(key, i) {
-    return <Line type="monotone" dataKey={key} stroke={randomColor()} yAxisId={i} />;
-  })
-}*/
-
 Histogram.propTypes = {
   data: PropTypes.array.isRequired,
-  dataKey: PropTypes.string.isRequired,
+  keyList: PropTypes.array.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
   showLabels: PropTypes.bool

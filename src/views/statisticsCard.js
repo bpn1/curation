@@ -13,7 +13,7 @@ class StatisticsCard extends Component {
     return (
       <ContentCard>
         <h1>Statistics</h1>
-        <Histogram data={blockData} nameKey="blockName" dataKey="blockSize1" width={800} height={500} showLabels={showLabels} />
+        <Histogram data={blockData} nameKey="blockName" keyList={["blockSize1", "blockSize2"]} width={800} height={500} showLabels={showLabels} />
       </ContentCard>
     );
   }
