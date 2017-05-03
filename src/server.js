@@ -72,6 +72,7 @@ router.get('/', function (req, res) {
 
 app.use('/api', router);
 app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryConfig));
+app.use('/api/eval/subjects', modelRouter(evaluationModels, 'Subject_DBpedia', subjectsQueryConfig));
 app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));
 app.use('/api/duplicateCandidates', modelRouter(datalakeModels, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
 app.use('/api/deduplicationstats', modelRouter(datalakeModels, 'Deduplicationstats', deduplicationstatsQueryConfig));

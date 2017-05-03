@@ -4,6 +4,10 @@ const express = require('express');
 const PAGING_LIMIT = 20;
 
 module.exports = function (models, modelName, queryConfig) {
+  function logError(err, res) {
+    console.log(err);
+    res.json({ message: 'An error occurred' });
+  }
   function buildQuery(getParams) {
     const query = _.pick(getParams, queryConfig.normal);
     queryConfig.lists.forEach((property) => {
@@ -23,11 +27,33 @@ module.exports = function (models, modelName, queryConfig) {
     query.$limit = Number(getParams.count) || PAGING_LIMIT;
     return query;
   }
-  function logError(err, res) {
-    console.log(err);
-    res.json({ message: 'An error occurred' });
+  function buildCustomRoutes(router, customRoutes) {
+    customRoutes.forEach((route) => {
+      router.route('/' + route.name + '/')
+        .get(function (req, res) {
+          const options = {
+            allow_filtering: true,
+            ttl: 86400
+          };
+          if (route.options) {
+            Object.assign(options, route.options);
+          }
+          console.log('Options: ', options);
+          const query = buildQuery(req.query, queryConfig);
+          if (route.query) {
+            Object.assign(query, route.query);
+          }
+          console.log('Query: ', query);
+          models.instance[modelName].findAsync(query, options)
+            .then(row => res.json(row))
+            .catch(err => logError(err, res));
+        });
+    });
   }
   const router = express.Router();
+  if (queryConfig.custom_routes) {
+    buildCustomRoutes(router, queryConfig.custom_routes);
+  }
   router.route('/')
   .get(function (req, res) {
     const options = {
