@@ -10,6 +10,7 @@ import theme from './themes/curation';
 import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
+import DetailBar from './containers/DetailBar';
 
 export const layoutBreakpoint = '(min-width: 769px)';
 
@@ -38,8 +39,9 @@ class MainLayout extends Component {
           <section className={styles.appMainContainer} style={{ backgroundColor: theme.palette.canvasColor }}>
             <SideBar />
             <div className="content">
-              {this.props.children}
+              { this.props.children }
             </div>
+            <DetailBar />
           </section>
         </div>
       </MuiThemeProvider>

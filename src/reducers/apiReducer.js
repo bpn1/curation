@@ -1,9 +1,11 @@
 import {
-  FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED, ADD_SUBJECT, UPDATE_SUBJECT, DELETE_SUBJECT
+  FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED, ADD_SUBJECT, UPDATE_SUBJECT, DELETE_SUBJECT,
+  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED
 } from '../constants/ActionTypes';
 
 export default function reducer(state = {
   subjects: [],
+  deduplicationStats: [],
   fetching: false,
   fetched: false,
   error: null,
@@ -44,6 +46,29 @@ export default function reducer(state = {
       return {
         ...state,
         subjects: state.subjects.filter(subject => subject.id !== action.payload)
+      };
+    }
+    case FETCH_DEDUPLICATION_STATS: {
+      return { ...state, fetching: true };
+    }
+    case FETCH_DEDUPLICATION_STATS_REJECTED: {
+      return { ...state, fetching: false, error: action.payload };
+    }
+    case FETCH_DEDUPLICATION_STATS_FULFILLED: {
+      console.time('Parsing deduplicationStats');
+
+      const stats = action.payload.map(entry => entry.mapKeys((key) => {
+        if (entry.hasOwnProperty(key)) { return { blockName: key, blockSize: entry[key] }; }
+        return { error: 'error' };
+      }).filter(entry => !entry.hasOwnProperty('error')));
+
+      console.time('Done parsing deduplicationStats');
+
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        deduplicationStats: stats
       };
     }
     default:

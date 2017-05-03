@@ -66,6 +66,10 @@ router.use(function (req, res, next) {
   next(); // make sure we go to the uniqueKey routes and don't stop here
 });
 
+router.get('/', function (req, res) {
+  res.json({ message: 'Welcome to the Ingestion & Curation API' });
+});
+
 app.use('/api', router);
 app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryConfig));
 app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));

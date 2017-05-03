@@ -3,7 +3,8 @@ import {
   FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED,
   ADD_SUBJECT, ADD_SUBJECT_FULFILLED, ADD_SUBJECT_REJECTED,
   UPDATE_SUBJECT, UPDATE_SUBJECT_FULFILLED, UPDATE_SUBJECT_REJECTED,
-  DELETE_SUBJECT, DELETE_SUBJECT_FULFILLED, DELETE_SUBJECT_REJECTED
+  DELETE_SUBJECT, DELETE_SUBJECT_FULFILLED, DELETE_SUBJECT_REJECTED,
+  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED
 } from '../constants/ActionTypes';
 
 const apiPath = '/api/';
@@ -30,7 +31,7 @@ export function addSubject(subject) {
       })
       .catch((err) => {
         dispatch({ type: ADD_SUBJECT_REJECTED, payload: err });
-      })
+      });
   };
 }
 
@@ -43,7 +44,7 @@ export function updateSubject(subject) {
       })
       .catch((err) => {
         dispatch({ type: UPDATE_SUBJECT_REJECTED, payload: err });
-      })
+      });
   };
 }
 
@@ -56,6 +57,18 @@ export function deleteSubject(id) {
       })
       .catch((err) => {
         dispatch({ type: DELETE_SUBJECT_REJECTED, payload: err });
+      });
+  };
+}
+export function fetchDeduplicationStats() {
+  return function (dispatch) {
+    dispatch({ type: FETCH_DEDUPLICATION_STATS });
+    axios.get(apiPath + 'deduplicationstats')
+      .then((response) => {
+        dispatch({ type: FETCH_DEDUPLICATION_STATS_FULFILLED, payload: response.data });
       })
+      .catch((err) => {
+        dispatch({ type: FETCH_DEDUPLICATION_STATS_REJECTED, payload: err });
+      });
   };
 }

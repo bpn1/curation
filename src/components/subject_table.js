@@ -105,7 +105,6 @@ class SubjectTable extends Component {
 
   deleteSelectedSubjects() {
     const selected = this.refs["table"].state.selectedRows;
-
     selected.forEach(row => {
       this.props.deleteSubject(row.id);
     });
