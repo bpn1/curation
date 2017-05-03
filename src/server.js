@@ -76,6 +76,7 @@ app.use('/api/eval/subjects', modelRouter(evaluationModels, 'Subject_DBpedia', s
 app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));
 app.use('/api/duplicateCandidates', modelRouter(datalakeModels, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
 app.use('/api/deduplicationstats', modelRouter(datalakeModels, 'Deduplicationstats', deduplicationstatsQueryConfig));
+app.use('/api/oldblockingstats', modelRouter(datalakeModels, 'Stats', deduplicationstatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 
 app.listen(port, '0.0.0.0', function onStart(err) {

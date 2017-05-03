@@ -5,6 +5,11 @@ const schemaConfig = [
     table_name: 'deduplicationstats'
   },
   {
+    name: 'Stats',
+    model: require('../models/StatsModel'),
+    table_name: 'stats'
+  },
+  {
     name: 'DuplicateCandidates',
     model: require('../models/DuplicateCandidatesModel'),
     table_name: 'duplicatecandidates'
