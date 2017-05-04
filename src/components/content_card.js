@@ -22,7 +22,7 @@ class ContentCard extends Component {
     };
 
     return (
-      <Card zDepth={1} style={styles}>
+      <Card zDepth={5} style={styles}>
         <CardText>
           {this.props.children}
         </CardText>
