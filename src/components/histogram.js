@@ -11,17 +11,17 @@ function randomColor() {
   return '#'+c;
 }
 
-const Histogram = ({ data, nameKey, keyList, width = 400, height = 400, showLabels = true }) => {
+const Histogram = ({ data, nameKey, keyList, width = 400, height = 400, showLabels = true, showGrid = true }) => {
   return (
     <LineChart
       width={width}
       height={height}
       data={data}
       margin={{ top:5, right: 20, left: 10, bottom: 5 }}>
+      { showGrid ? <CartesianGrid stroke="#555" strokeDasharray="3 3" /> : "" }
       <XAxis dataKey={nameKey} />
       <YAxis />
       <Tooltip label="" />
-      <CartesianGrid stroke="#555" strokeDasharray="3 3" />
       {
         keyList.map(dataKey => {
           const lineColor = randomColor();
@@ -38,7 +38,8 @@ Histogram.propTypes = {
   keyList: PropTypes.array.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
-  showLabels: PropTypes.bool
+  showLabels: PropTypes.bool,
+  showGrid: PropTypes.bool
 };
 
 export default Histogram;
