@@ -3,9 +3,9 @@ const queryConfig = {
   lists: ['aliases'],
   maps: ['properties', 'relations'],
   uniqueKey: 'id',
-  custom_routes: [
+  custom_params: [
     {
-      name: 'without_history',
+      name: 'noHistory',
       options: {
         select: ['id', 'name', 'aliases', 'category', 'properties', 'relations']
       }

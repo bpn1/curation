@@ -62,6 +62,18 @@ module.exports = function (models, modelName, queryConfig) {
     };
     const query = buildQuery(req.query, queryConfig);
     console.log(query);
+    if (queryConfig.custom_params) {
+      queryConfig.custom_params.forEach((param) => {
+        if (param.name in req.query) {
+          if (param.options) {
+            Object.assign(options, param.options);
+          }
+          if (param.query) {
+            Object.assign(query, param.query);
+          }
+        }
+      });
+    }
     models.instance[modelName].findAsync(query, options)
       .then(row => res.json(row))
       .catch(err => logError(err, res));
