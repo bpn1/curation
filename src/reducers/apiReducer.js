@@ -1,6 +1,7 @@
 import {
   FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED, ADD_SUBJECT, UPDATE_SUBJECT, DELETE_SUBJECT,
-  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED
+  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED,
+  FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_REJECTED
 } from '../constants/ActionTypes';
 
 export default function reducer(state = {
@@ -58,7 +59,9 @@ export default function reducer(state = {
       console.time('Parsing deduplicationStats');
 
       const stats = action.payload.map(entry => entry.mapKeys((key) => {
-        if (entry.hasOwnProperty(key)) { return { blockName: key, blockSize: entry[key] }; }
+        if (entry.hasOwnProperty(key)) {
+          return { blockName: key, blockSize: entry[key] };
+        }
         return { error: 'error' };
       }).filter(entry => !entry.hasOwnProperty('error')));
 
@@ -69,6 +72,21 @@ export default function reducer(state = {
         fetching: false,
         fetched: true,
         deduplicationStats: stats
+      };
+    }
+    case FETCH_SIM_MEASURE_STATS: {
+      return { ...state, fetching: true };
+    }
+    case FETCH_SIM_MEASURE_STATS_REJECTED: {
+      return { ...state, fetching: false, error: action.payload };
+    }
+    case FETCH_SIM_MEASURE_STATS_FULFILLED: {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        typeFetched: 'simstats',
+        simstats: action.payload[0].data // TODO load all stats
       };
     }
     default:

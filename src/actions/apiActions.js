@@ -4,7 +4,8 @@ import {
   ADD_SUBJECT, ADD_SUBJECT_FULFILLED, ADD_SUBJECT_REJECTED,
   UPDATE_SUBJECT, UPDATE_SUBJECT_FULFILLED, UPDATE_SUBJECT_REJECTED,
   DELETE_SUBJECT, DELETE_SUBJECT_FULFILLED, DELETE_SUBJECT_REJECTED,
-  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED
+  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED,
+  FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS_REJECTED
 } from '../constants/ActionTypes';
 
 const apiPath = '/api/';
@@ -60,6 +61,7 @@ export function deleteSubject(id) {
       });
   };
 }
+
 export function fetchDeduplicationStats() {
   return function (dispatch) {
     dispatch({ type: FETCH_DEDUPLICATION_STATS });
@@ -72,3 +74,18 @@ export function fetchDeduplicationStats() {
       });
   };
 }
+
+export function fetchSimMeasureStats() {
+  return function (dispatch) {
+    dispatch({ type: FETCH_SIM_MEASURE_STATS });
+    axios.get(apiPath + 'simstats')
+      .then((response) => {
+        dispatch({ type: FETCH_SIM_MEASURE_STATS_FULFILLED, payload: response.data });
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_SIM_MEASURE_STATS_REJECTED, payload: err });
+      });
+  };
+}
+
+export const fetchStatsActions = { fetchSimMeasureStats, fetchDeduplicationStats };

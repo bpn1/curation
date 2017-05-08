@@ -9,6 +9,8 @@ class ContentCard extends Component {
   render() {
     const styles = {
       width: '100%',
+      height: '100%',
+      margin: '10px',
       transition: 'all .45s ease-out'
     };
 
@@ -22,7 +24,7 @@ class ContentCard extends Component {
     };
 
     return (
-      <Card zDepth={5} style={styles}>
+      <Card zDepth={2} style={styles}>
         <CardText>
           {this.props.children}
         </CardText>

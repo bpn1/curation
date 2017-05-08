@@ -5,20 +5,18 @@ import { Router, Route, hashHistory } from 'react-router';
 
 import MainLayout from './layout';
 import SubjectsTableCard from './views/subjectsTableCard';
-import StatisticsCard from './views/statisticsCard';
+import StatisticsCard from './views/blockingStatisticsCard';
+import SimMeasureStatisticsCard from './views/simMeasureStatisticsCard'
 import TasksCard from './views/tasksCard';
-import DataTableCard from './views/dataTableCard';
-import ModelsCard from './views/modelsCard';
 
 const Root = ({ store }) => (
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route component={MainLayout} >
         <Route path="/" component={SubjectsTableCard} />
-        <Route path="statistics" component={StatisticsCard} />
+        <Route path="statistics/blocking" component={StatisticsCard} />
+        <Route path="statistics/simmeasure" component={SimMeasureStatisticsCard} />
         <Route path="tasks" component={TasksCard} />
-        <Route path="data" component={DataTableCard} />
-        <Route path="models" component={ModelsCard} />
       </Route>
     </Router>
   </Provider>
