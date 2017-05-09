@@ -1,2 +1,0 @@
-# make js line endings to be always lf (to not trigger the es-lint linebreak-style)
-*.js text eol=lf
