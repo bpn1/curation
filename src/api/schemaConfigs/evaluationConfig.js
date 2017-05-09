@@ -1,10 +1,5 @@
 const schemaConfig = [
   {
-    name: 'Deduplicationstats',
-    model: require('../models/DeduplicationstatsModel'),
-    table_name: 'deduplicationstats'
-  },
-  {
     name: 'DuplicateCandidates',
     model: require('../models/DuplicateCandidatesModel'),
     table_name: 'duplicatecandidates'

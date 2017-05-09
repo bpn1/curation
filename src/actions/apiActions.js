@@ -4,7 +4,7 @@ import {
   ADD_SUBJECT, ADD_SUBJECT_FULFILLED, ADD_SUBJECT_REJECTED,
   UPDATE_SUBJECT, UPDATE_SUBJECT_FULFILLED, UPDATE_SUBJECT_REJECTED,
   DELETE_SUBJECT, DELETE_SUBJECT_FULFILLED, DELETE_SUBJECT_REJECTED,
-  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED,
+  FETCH_BLOCKING_STATS, FETCH_BLOCKING_STATS_FULFILLED, FETCH_BLOCKING_STATS_REJECTED,
   FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS_REJECTED
 } from '../constants/ActionTypes';
 
@@ -62,15 +62,15 @@ export function deleteSubject(id) {
   };
 }
 
-export function fetchDeduplicationStats() {
+export function fetchBlockingStats() {
   return function (dispatch) {
-    dispatch({ type: FETCH_DEDUPLICATION_STATS });
-    axios.get(apiPath + 'deduplicationstats')
+    dispatch({ type: FETCH_BLOCKING_STATS });
+    axios.get(apiPath + 'blockingstats?schemetag=simple_scheme') // TODO configure for different schemes
       .then((response) => {
-        dispatch({ type: FETCH_DEDUPLICATION_STATS_FULFILLED, payload: response.data });
+        dispatch({ type: FETCH_BLOCKING_STATS_FULFILLED, payload: response.data });
       })
       .catch((err) => {
-        dispatch({ type: FETCH_DEDUPLICATION_STATS_REJECTED, payload: err });
+        dispatch({ type: FETCH_BLOCKING_STATS_REJECTED, payload: err });
       });
   };
 }
@@ -88,4 +88,4 @@ export function fetchSimMeasureStats() {
   };
 }
 
-export const fetchStatsActions = { fetchSimMeasureStats, fetchDeduplicationStats };
+export const fetchStatsActions = { fetchSimMeasureStats, fetchBlockingStats };

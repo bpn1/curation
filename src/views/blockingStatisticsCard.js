@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import { randomHistogram } from '../api/helpers/random_data';
 import ContentCard from '../components/content_card';
-import Histogram from '../components/histogram';
-
-const maxBlocksForLabels = 23;
+import BlockingHistogram from '../components/blockingHistogram';
 
 class BlockingStatisticsCard extends Component {
   render() {
-    const blockData = randomHistogram();
-    const showLabels = blockData.length < maxBlocksForLabels;
-
     return (
       <ContentCard>
         <h1>Blocking Statistics</h1>
-        <Histogram data={blockData} nameKey="blockName" keyList={["blockSize1", "blockSize2"]} width={800} height={500} showLabels={showLabels} />
+        <BlockingHistogram />
       </ContentCard>
     );
   }

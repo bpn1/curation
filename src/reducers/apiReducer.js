@@ -1,6 +1,6 @@
 import {
   FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED, ADD_SUBJECT, UPDATE_SUBJECT, DELETE_SUBJECT,
-  FETCH_DEDUPLICATION_STATS, FETCH_DEDUPLICATION_STATS_FULFILLED, FETCH_DEDUPLICATION_STATS_REJECTED,
+  FETCH_BLOCKING_STATS, FETCH_BLOCKING_STATS_FULFILLED, FETCH_BLOCKING_STATS_REJECTED,
   FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_REJECTED
 } from '../constants/ActionTypes';
 
@@ -49,14 +49,14 @@ export default function reducer(state = {
         subjects: state.subjects.filter(subject => subject.id !== action.payload)
       };
     }
-    case FETCH_DEDUPLICATION_STATS: {
+    case FETCH_BLOCKING_STATS: {
       return { ...state, fetching: true };
     }
-    case FETCH_DEDUPLICATION_STATS_REJECTED: {
+    case FETCH_BLOCKING_STATS_REJECTED: {
       return { ...state, fetching: false, error: action.payload };
     }
-    case FETCH_DEDUPLICATION_STATS_FULFILLED: {
-      console.time('Parsing deduplicationStats');
+    case FETCH_BLOCKING_STATS_FULFILLED: {
+      /*console.time('Parsing deduplicationStats');
 
       const stats = action.payload.map(entry => entry.mapKeys((key) => {
         if (entry.hasOwnProperty(key)) {
@@ -65,13 +65,14 @@ export default function reducer(state = {
         return { error: 'error' };
       }).filter(entry => !entry.hasOwnProperty('error')));
 
-      console.time('Done parsing deduplicationStats');
+      console.time('Done parsing deduplicationStats');*/
 
       return {
         ...state,
         fetching: false,
         fetched: true,
-        deduplicationStats: stats
+        typeFetched: 'blockingstats',
+        blockingstats: action.payload[0].data // TODO load all schemes
       };
     }
     case FETCH_SIM_MEASURE_STATS: {

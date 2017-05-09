@@ -1,13 +1,8 @@
 const schemaConfig = [
   {
-    name: 'Deduplicationstats',
-    model: require('../models/DeduplicationstatsModel'),
-    table_name: 'deduplicationstats'
-  },
-  {
-    name: 'Stats',
-    model: require('../models/StatsModel'),
-    table_name: 'stats'
+    name: 'BlockingStats',
+    model: require('../models/BlockingStatsModel'),
+    table_name: 'blockingstats'
   },
   {
     name: 'DuplicateCandidates',
@@ -28,11 +23,6 @@ const schemaConfig = [
     name: 'SubjectTemp',
     model: require('../models/SubjectModel'),
     table_name: 'subject_temp'
-  },
-  {
-    name: 'SimMeasureStats',
-    model: require('../models/SimMeasureStatsModel'),
-    table_name: 'sim_measure_stats'
   },
   {
     name: 'Version',

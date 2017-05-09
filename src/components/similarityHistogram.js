@@ -22,6 +22,7 @@ class SimilarityHistogram extends Component {
         keyList={DATA_KEYS}
         fetchKey={'fetchSimMeasureStats'}
         convertStats={convertStats}
+        nameKey={'x'}
       />
     );
   }

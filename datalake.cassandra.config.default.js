@@ -1,5 +1,6 @@
 const versionUDT = require('./src/api/models/VersionUDT');
 const subjectUDT = require('./src/api/models/SubjectUDT');
+const blockStatsUDT = require('./src/api/models/BlockStatsUDT');
 const models = require('express-cassandra');
 
 module.exports = {
@@ -14,6 +15,7 @@ module.exports = {
     udts: {
       version: versionUDT,
       subject: subjectUDT,
+      blockstats: blockStatsUDT
     },
     defaultReplicationStrategy: {
       class: 'SimpleStrategy',

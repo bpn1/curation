@@ -15,7 +15,7 @@ const modelRouter = require('./api/helpers/modelRouter');
 const subjectsQueryConfig = require('./api/queryConfigs/subjects');
 const versionsQueryConfig = require('./api/queryConfigs/versions');
 const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCandidates');
-const deduplicationstatsQueryConfig = require('./api/queryConfigs/deduplicationstats');
+const blockingStatsQueryConfig = require('./api/queryConfigs/blockingstats');
 const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats');
 
 const runReactApp = process.argv.indexOf('react') > -1;
@@ -75,8 +75,7 @@ app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryCon
 app.use('/api/eval/subjects', modelRouter(evaluationModels, 'Subject_DBpedia', subjectsQueryConfig));
 app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));
 app.use('/api/duplicateCandidates', modelRouter(datalakeModels, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
-app.use('/api/deduplicationstats', modelRouter(datalakeModels, 'Deduplicationstats', deduplicationstatsQueryConfig));
-app.use('/api/oldblockingstats', modelRouter(datalakeModels, 'Stats', deduplicationstatsQueryConfig));
+app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', blockingStatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 
 app.listen(port, '0.0.0.0', function onStart(err) {

@@ -32,7 +32,7 @@ class APIHistogram extends Component {
       <Histogram
         data={this.state.histogramData}
         keyList={this.props.keyList}
-        nameKey={'x'}
+        nameKey={this.props.nameKey}
         showLabels={this.props.showLabels}
       />
     );
@@ -43,6 +43,7 @@ APIHistogram.propTypes = {
   keyList: PropTypes.array.isRequired,
   convertStats: PropTypes.func.isRequired,
   fetchKey: PropTypes.string.isRequired,
+  nameKey: PropTypes.string.isRequired,
   showLabels: PropTypes.bool
 };
 
