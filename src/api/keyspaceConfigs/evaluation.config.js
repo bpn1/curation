@@ -9,7 +9,7 @@ module.exports = {
     protocolOptions: { port: 9042 },
     keyspace: 'evaluation',
     queryOptions: { consistency: models.consistencies.one },
-    authProvider:
+    authProvider: cassandraAuthProvider
   },
   ormOptions: {
     udts: {

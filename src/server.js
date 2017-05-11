@@ -5,8 +5,8 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('../webpack.config.node');
-const datalakeConfig = require('../datalake.cassandra.config.js');
-const evaluationConfig = require('../evaluation.cassandra.config');
+const datalakeConfig = require('./api/keyspaceConfigs/datalake.config');
+const evaluationConfig = require('./api/keyspaceConfigs/evaluation.config');
 const datalakeSchemaConfig = require('./api/schemaConfigs/datalakeConfig');
 const evaluationSchemaConfig = require('./api/schemaConfigs/evaluationConfig');
 
