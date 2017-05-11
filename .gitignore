@@ -97,3 +97,4 @@ tags
 # Config files
 datalake.cassandra.config.js
 evaluation.cassandra.config.js
+cassandraAuth.config.js

@@ -1,14 +1,15 @@
-const versionUDT = require('./src/api/models/VersionUDT');
-const subjectUDT = require('./src/api/models/SubjectUDT');
+const versionUDT = require('../models/VersionUDT');
+const subjectUDT = require('../models/SubjectUDT');
+const cassandraAuthProvider = require('../../../cassandraAuth.config');
 const models = require('express-cassandra');
 
 module.exports = {
   clientOptions: {
-    contactPoints: ['node1', 'node2', '...'],
+    contactPoints: ['odin01', 'odin02', 'odin03', 'odin04', 'odin05', 'odin06', 'odin07', 'odin08'],
     protocolOptions: { port: 9042 },
     keyspace: 'evaluation',
     queryOptions: { consistency: models.consistencies.one },
-    authProvider: new models.driver.auth.DsePlainTextAuthProvider('my_user', 'my_password')
+    authProvider:
   },
   ormOptions: {
     udts: {
