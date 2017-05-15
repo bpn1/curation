@@ -3,6 +3,7 @@ const queryConfig = {
   lists: [],
   maps: [],
   uniqueKey: 'jobid',
+  key: 'schemetag',
   custom_params: [
     {
       name: 'noData',

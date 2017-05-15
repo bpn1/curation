@@ -1,28 +1,21 @@
 import React, { Component } from 'react';
 
+import getDateFromTimeUUID from '../helpers/timeUUIDParser';
 import APIHistogram from './apiHistogram';
 
-const DATA_KEYS = ['f1Score', 'recall', 'precision'];
-
-function convertStats(stats) {
-  return stats
-    .sort((a, b) => (a[0] > b[0]) ? 1 : ((b[0] > a[0]) ? -1 : 0))
-    .map(entry => ({
-      x: entry[0],
-      f1Score: entry[1],
-      recall: entry[2],
-      precision: entry[3],
-    }));
-}
+const DATA_KEYS = ['fscore', 'recall', 'precision'];
 
 class SimilarityHistogram extends Component {
   render() {
     return (
       <APIHistogram
+        type="similarity"
         keyList={DATA_KEYS}
-        fetchKey={'fetchSimMeasureStats'}
-        convertStats={convertStats}
-        nameKey={'x'}
+        fetchIdKey={'fetchSimMeasureStatsIds'}
+        fetchDataKey={'fetchSimMeasureData'}
+        primaryKeys={['id']}
+        dropDownText={stat => stat.comment + ': ' + getDateFromTimeUUID(stat.id).toLocaleString()}
+        nameKey={'threshold'}
       />
     );
   }

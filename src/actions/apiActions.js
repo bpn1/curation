@@ -6,7 +6,9 @@ import {
   UPDATE_SUBJECT, UPDATE_SUBJECT_FULFILLED, UPDATE_SUBJECT_REJECTED,
   DELETE_SUBJECT, DELETE_SUBJECT_FULFILLED, DELETE_SUBJECT_REJECTED,
   FETCH_BLOCKING_STATS, FETCH_BLOCKING_STATS_FULFILLED, FETCH_BLOCKING_STATS_REJECTED,
-  FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS_REJECTED
+  FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS_REJECTED,
+  FETCH_SIM_MEASURE_STATS_DATA_FULFILLED, FETCH_SIM_MEASURE_STATS_DATA_REJECTED, FETCH_SIM_MEASURE_STATS_DATA,
+  FETCH_BLOCKING_STATS_DATA_FULFILLED, FETCH_BLOCKING_STATS_DATA, FETCH_BLOCKING_STATS_DATA_REJECTED
 } from '../constants/ActionTypes';
 
 const apiPath = '/api/';
@@ -76,10 +78,11 @@ export function deleteSubject(id) {
   };
 }
 
-export function fetchBlockingStats() {
+
+export function fetchBlockingStatsIds() {
   return function (dispatch) {
     dispatch({ type: FETCH_BLOCKING_STATS });
-    axios.get(apiPath + 'blockingstats?schemetag=simple_scheme') // TODO configure for different schemes
+    axios.get(apiPath + 'blockingstats?noData')
       .then((response) => {
         dispatch({ type: FETCH_BLOCKING_STATS_FULFILLED, payload: response.data });
       })
@@ -89,10 +92,23 @@ export function fetchBlockingStats() {
   };
 }
 
-export function fetchSimMeasureStats() {
+export function fetchBlockingStatsData(primaryKeys) {
+  return function (dispatch) {
+    dispatch({ type: FETCH_BLOCKING_STATS_DATA });
+    axios.get(apiPath + 'blockingstats/' + primaryKeys.join('/'))
+      .then((response) => {
+        dispatch({ type: FETCH_BLOCKING_STATS_DATA_FULFILLED, payload: response.data });
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_BLOCKING_STATS_DATA_REJECTED, payload: err });
+      });
+  };
+}
+
+export function fetchSimMeasureStatsIds() {
   return function (dispatch) {
     dispatch({ type: FETCH_SIM_MEASURE_STATS });
-    axios.get(apiPath + 'simstats')
+    axios.get(apiPath + 'simstats?noData')
       .then((response) => {
         dispatch({ type: FETCH_SIM_MEASURE_STATS_FULFILLED, payload: response.data });
       })
@@ -102,4 +118,19 @@ export function fetchSimMeasureStats() {
   };
 }
 
-export const fetchStatsActions = { fetchSimMeasureStats, fetchBlockingStats };
+export function fetchSimMeasureData(primaryKeys) {
+  return function (dispatch) {
+    dispatch({ type: FETCH_SIM_MEASURE_STATS_DATA });
+    axios.get(apiPath + 'simstats/' + primaryKeys.join('/'))
+      .then((response) => {
+        dispatch({ type: FETCH_SIM_MEASURE_STATS_DATA_FULFILLED, payload: response.data });
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_SIM_MEASURE_STATS_DATA_REJECTED, payload: err });
+      });
+  };
+}
+
+export const fetchStatsActions = {
+  fetchSimMeasureStatsIds, fetchSimMeasureData, fetchBlockingStatsIds, fetchBlockingStatsData
+};

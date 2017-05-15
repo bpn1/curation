@@ -16,6 +16,7 @@ module.exports = {
       './vendor'
     ],
     main: [
+      'react-hot-loader/patch',
       'webpack-hot-middleware/client',
       './bootstrap.js'
     ]

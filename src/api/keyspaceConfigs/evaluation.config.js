@@ -1,5 +1,6 @@
 const versionUDT = require('../models/VersionUDT');
 const subjectUDT = require('../models/SubjectUDT');
+const precisionRecallDataTupleUDT = require('../models/PrecisionRecallDataTupleUDT');
 const cassandraAuthProvider = require('../../../cassandraAuth.config');
 const models = require('express-cassandra');
 
@@ -15,6 +16,7 @@ module.exports = {
     udts: {
       version: versionUDT,
       subject: subjectUDT,
+      precisionrecalldatatuple: precisionRecallDataTupleUDT
     },
     defaultReplicationStrategy: {
       class: 'SimpleStrategy',

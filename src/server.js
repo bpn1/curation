@@ -62,7 +62,7 @@ const router = express.Router();
 // middleware to use for all requests
 router.use(function (req, res, next) {
   // do logging
-  console.log(req.method, req.url);
+  console.log(req.method, '/api' + req.url);
   next(); // make sure we go to the uniqueKey routes and don't stop here
 });
 

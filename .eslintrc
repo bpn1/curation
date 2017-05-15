@@ -3,6 +3,9 @@
     "airbnb"
   ],
   "rules": {
+    // img-has-alt is deprecated, use alt-text
+    "jsx-a11y/img-has-alt": "off",
+    "jsx-a11y/alt-text": "error",
     // these are only here because I did not
     // want to update the entire codebase ¯\_(ツ)_/¯
     "no-undef": 0,
