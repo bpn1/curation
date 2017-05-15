@@ -8,7 +8,11 @@ class DiffTree extends Component {
   render() {
     return (
       // TODO custom styling: add + and - icons, color accordingly for changes
-      <JSONTree data={this.props.json} theme={theme} invertTheme={false} />
+      <JSONTree
+        data={this.props.json}
+        theme={theme}
+        invertTheme={false}
+        shouldExpandNode={(keyName, data, level) => false} />
     );
   }
 }

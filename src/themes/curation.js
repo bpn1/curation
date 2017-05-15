@@ -1,6 +1,10 @@
 import { fade } from 'material-ui/utils/colorManipulator';
 import {
-  grey600, red900, teal800, fullWhite
+  red900, teal800, fullWhite, red600, red400, green600, green400, grey600, grey400
+} from 'material-ui/styles/colors';
+
+import {
+
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import spacing from 'material-ui/styles/spacing';
@@ -22,6 +26,7 @@ const curationTheme = getMuiTheme({
     accent2Color: fade(commerzbankYellow, 0.2),
     accent3Color: commerzbankYellow,
 
+    // TODO remove these or adapt them to positive & negative color (see below)?
     acceptColor: teal800,
     denyColor: red900,
 
@@ -33,6 +38,15 @@ const curationTheme = getMuiTheme({
     disabledColor: fade(fullWhite, 0.3),
     pickerHeaderColor: fade(fullWhite, 0.12),
     clockCircleColor: fade(fullWhite, 0.12),
+
+    positiveColor1: green600,
+    positiveColor2: green400,
+    negativeColor1: red600,
+    negativeColor2: red400,
+    neutralColor1: grey600,
+    neutralColor2: grey400,
+    interactiveColor1: commerzbankYellow,
+    interactiveColor2: fade(commerzbankYellow, 0.4)
   }
 });
 

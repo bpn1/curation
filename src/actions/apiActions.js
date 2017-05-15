@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED,
+  FETCH_SUBJECT, FETCH_SUBJECT_FULFILLED, FETCH_SUBJECT_REJECTED,
   ADD_SUBJECT, ADD_SUBJECT_FULFILLED, ADD_SUBJECT_REJECTED,
   UPDATE_SUBJECT, UPDATE_SUBJECT_FULFILLED, UPDATE_SUBJECT_REJECTED,
   DELETE_SUBJECT, DELETE_SUBJECT_FULFILLED, DELETE_SUBJECT_REJECTED,
@@ -19,6 +20,19 @@ export function fetchSubjects() {
       })
       .catch((err) => {
         dispatch({ type: FETCH_SUBJECTS_REJECTED, payload: err });
+      });
+  };
+}
+
+export function fetchSubject(subject) {
+  return function (dispatch) {
+    dispatch({ type: FETCH_SUBJECT });
+    axios.get(apiPath + 'subjects/' + subject)
+      .then((response) => {
+        dispatch({ type: FETCH_SUBJECT_FULFILLED, payload: response.data });
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_SUBJECT_REJECTED, payload: err });
       });
   };
 }
@@ -51,7 +65,7 @@ export function updateSubject(subject) {
 
 export function deleteSubject(id) {
   return function (dispatch) {
-    dispatch({ type: DELETE_SUBJECT });
+    dispatch({ type: DELETE_SUBJECT, payload: id });
     axios.put(apiPath + 'subjects/' + id)
       .then((response) => {
         dispatch({ type: DELETE_SUBJECT_FULFILLED, payload: id });

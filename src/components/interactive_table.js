@@ -24,10 +24,13 @@ class InteractiveTable extends Component {
     }
 
     const filterBy = event.target.value.toString().toLowerCase();
-    const filteredList = this.state.tableData.filter(row => row[column]
-      .toString()
-      .toLowerCase()
-      .indexOf(filterBy) !== -1);
+    const filteredList = this.state.tableData.filter(row => {
+      const data = row[column] ? row[column] : "null";
+      return data
+        .toString()
+        .toLowerCase()
+        .indexOf(filterBy) !== -1;
+    });
 
     // clear other filter fields
     this.props.headers.forEach((header) => {
@@ -77,13 +80,13 @@ class InteractiveTable extends Component {
 
   onRowSelection(rows) {
     let selectedRows = [];
+
     this.state.tableData.forEach((row, i) => {
       row.selected = rows.indexOf(i) > -1;
-      selectedRows.push(row);
+      if(row.selected)
+        selectedRows.push(row);
     });
-    this.setState({...this.state, selectedRows}, () => {
-      console.log("Selected rows", this.state.selectedRows);
-    });
+    this.setState({...this.state, selectedRows});
   }
 
   renderHeader(key, name, sortDirArrow) {
@@ -95,7 +98,7 @@ class InteractiveTable extends Component {
         <TextField
           style={{ maxWidth: '100%', width: '100%' }}
           ref={key + 'Header'}
-          hintText={'Filter by ' + name + '...'}
+          hintText={'Filter'}
           onChange={this.onFilterChange.bind(this, key)}
         />
       </TableHeaderColumn>
@@ -104,9 +107,15 @@ class InteractiveTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.data) {
+      // if the data has changed, clear the selection
+      let selectedRows = this.state.selectedRows;
+      if(nextProps.data !== this.state.tableData)
+        selectedRows = [];
+
       this.setState({
         filteredData: nextProps.data,
-        tableData: nextProps.data
+        tableData: nextProps.data,
+        selectedRows
       });
     }
   }
@@ -119,10 +128,13 @@ class InteractiveTable extends Component {
       sortDirArrow = this.state.sortDir === 'DESC' ? '↓' : '↑';
     }
 
+    // TODO adapt Table height to window size changes (see http://stackoverflow.com/a/42141641)
+    // TODO or use flexbox for adaptive sizing
+
     return (
       <div>
         <Table
-          height={this.state.height}
+          height={(window.innerHeight / 2).toString() + 'px'}
           selectable
           multiSelectable
           fixedHeader

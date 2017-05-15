@@ -1,11 +1,13 @@
 import {
   FETCH_SUBJECTS, FETCH_SUBJECTS_FULFILLED, FETCH_SUBJECTS_REJECTED, ADD_SUBJECT, UPDATE_SUBJECT, DELETE_SUBJECT,
   FETCH_BLOCKING_STATS, FETCH_BLOCKING_STATS_FULFILLED, FETCH_BLOCKING_STATS_REJECTED,
-  FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_REJECTED
+  FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_REJECTED, FETCH_SUBJECT,
+  FETCH_SUBJECT_REJECTED, FETCH_SUBJECT_FULFILLED
 } from '../constants/ActionTypes';
 
 export default function reducer(state = {
   subjects: [],
+  subject: null,
   deduplicationStats: [],
   fetching: false,
   fetched: false,
@@ -23,7 +25,21 @@ export default function reducer(state = {
         ...state,
         fetching: false,
         fetched: true,
-        subjects: action.payload,
+        subjects: action.payload
+      };
+    }
+    case FETCH_SUBJECT: {
+      return { ...state, fetching: true };
+    }
+    case FETCH_SUBJECT_REJECTED: {
+      return { ...state, fetching: false, error: action.payload };
+    }
+    case FETCH_SUBJECT_FULFILLED: {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        subject: action.payload
       };
     }
     case ADD_SUBJECT: {
@@ -56,17 +72,6 @@ export default function reducer(state = {
       return { ...state, fetching: false, error: action.payload };
     }
     case FETCH_BLOCKING_STATS_FULFILLED: {
-      /*console.time('Parsing deduplicationStats');
-
-      const stats = action.payload.map(entry => entry.mapKeys((key) => {
-        if (entry.hasOwnProperty(key)) {
-          return { blockName: key, blockSize: entry[key] };
-        }
-        return { error: 'error' };
-      }).filter(entry => !entry.hasOwnProperty('error')));
-
-      console.time('Done parsing deduplicationStats');*/
-
       return {
         ...state,
         fetching: false,
@@ -91,7 +96,7 @@ export default function reducer(state = {
       };
     }
     default:
-    // do nothing
+      // do nothing
   }
   return state;
 }
