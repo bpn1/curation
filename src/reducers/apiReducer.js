@@ -95,10 +95,7 @@ export default function reducer(state = {
       const blockingSchemeTag = action.payload.schemetag;
       const blockingData = action.payload.data
         .map(entry => Object.assign(entry, { comparision: entry.numsubjects * entry.numstaging }))
-        // TODO make filtering configurable in the interface
-        //.filter(entry => entry.numsubjects > 15 && entry.numstaging > 15 /*&& entry.key !== 'undefined'*/)
-        .sort((a, b) => (a.numsubjects * a.numstaging > b.numsubjects * b.numstaging) ? -1 : ((b.numsubjects * b.numstaging > a.numsubjects * a.numstaging) ? 1 : 0))
-        .slice(-5000);
+        .sort((a, b) => (a.comparision > b.comparision) ? -1 : ((b.comparision > a.comparision) ? 1 : 0));
       return {
         ...state,
         fetching: false,

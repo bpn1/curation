@@ -11,7 +11,7 @@ function randomColor() {
   return '#' + c;
 }
 const lineColors = ['#F44336', '#2196F3', '#FF9800', '#9C27B0'];
-const Histogram = ({ data, nameKey, keyList, showLabels, showGrid }) => (
+const Histogram = ({ data, nameKey, keyList, showLabels, showGrid, showDots }) => (
   <ResponsiveContainer aspect={3}>
     <LineChart
       data={data}
@@ -30,7 +30,7 @@ const Histogram = ({ data, nameKey, keyList, showLabels, showGrid }) => (
               key={dataKey}
               dataKey={dataKey}
               stroke={lineColors[i]}
-              dot={false}
+              dot={showDots}
               yAxisId={0}
               legendType="diamond"
               label={label}
@@ -44,13 +44,15 @@ const Histogram = ({ data, nameKey, keyList, showLabels, showGrid }) => (
 
 Histogram.defaultProps = {
   showLabels: true,
-  showGrid: true
+  showGrid: true,
+  showDots: true
 };
 
 Histogram.propTypes = {
   data: PropTypes.array.isRequired,
   keyList: PropTypes.array.isRequired,
   nameKey: PropTypes.string.isRequired,
+  showDots: PropTypes.bool,
   showLabels: PropTypes.bool,
   showGrid: PropTypes.bool
 };
