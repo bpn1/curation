@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+
 import DiffTree from './DiffTree';
 
 class InteractiveTable extends Component {
@@ -129,7 +131,7 @@ class InteractiveTable extends Component {
     }
 
     // TODO adapt Table height to window size changes (see http://stackoverflow.com/a/42141641)
-    // TODO or use flexbox for adaptive sizing
+    // TODO or use e.g. flexbox for adaptive sizing
 
     return (
       <div>
@@ -143,6 +145,9 @@ class InteractiveTable extends Component {
             displaySelectAll
             adjustForCheckbox>
             <TableRow>
+              <TableHeaderColumn>
+                <h2 style={{ margin: 0, textAlign: 'center' }}>Actions</h2>
+              </TableHeaderColumn>
               { this.props.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
             </TableRow>
           </TableHeader>
@@ -153,6 +158,11 @@ class InteractiveTable extends Component {
             stripedRows={false}>
             { filteredData.map((row, index) =>
               (<TableRow key={index} selected={row.selected}>
+                <TableRowColumn>
+                  <div>
+                    { this.props.buttonColumnGenerator(index, row) }
+                  </div>
+                </TableRowColumn>
                 { this.props.headers.map(header => {
                   let content = '';
                   if(row[header.key] === null) {
@@ -163,7 +173,7 @@ class InteractiveTable extends Component {
                     content = row[header.key].toString();
                   }
                   return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-                })}
+                }) }
               </TableRow>)
             )}
           </TableBody>
@@ -175,7 +185,12 @@ class InteractiveTable extends Component {
 
 InteractiveTable.propTypes = {
   headers: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired,
+  buttonColumnGenerator: PropTypes.func
+};
+
+InteractiveTable.defaultProps = {
+  buttonColumnGenerator: (index, row) => {}
 };
 
 export default InteractiveTable;
