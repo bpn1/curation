@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
-import {DropDownMenu, MenuItem} from 'material-ui/DropDownMenu';
-import {Checkbox, TextField} from 'material-ui';
-import {Grid, Row, Col} from 'react-flexbox-grid';
+import { DropDownMenu, MenuItem } from 'material-ui/DropDownMenu';
+import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import ChipInput from 'material-ui-chip-input';
 
 import Histogram from './histogram';
 import {fetchStatsActions} from '../actions/apiActions';
@@ -17,7 +19,8 @@ class APIHistogram extends Component {
       filteredHistogramData: [],
       excludeFilter: [],
       showDots: false,
-      min: 15,
+      min: props.min,
+      max: props.max,
       keyList: props.keyList
     };
   }
@@ -28,10 +31,8 @@ class APIHistogram extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.statsData && this.state.histogramId) {
-      this.setState({
-        histogramData: nextProps.statsData[this.histogramIdToKey(this.state.histogramId)],
-        filteredHistogramData: this.filterHistogramData(nextProps.statsData[this.histogramIdToKey(this.state.histogramId)], this.state.max, this.state.min, this.state.excludeFilter)
-      });
+      this.filterHistogramData(nextProps.statsData[this.histogramIdToKey(this.state.histogramId)],
+        this.state.max, this.state.min, this.state.excludeFilter)
     } else if (nextProps.statsIds) {
       const firstStatsEntry = nextProps.statsIds[1]; // TODO select first item
       const histogramId = nextProps.primaryKeys.map((primaryKey) => firstStatsEntry[primaryKey]);
@@ -45,26 +46,24 @@ class APIHistogram extends Component {
   // fetches only if statsdata is not already in redux state
   fetchStatsData(histogramId) {
     if (this.props.statsData && this.histogramIdToKey(histogramId) in this.props.statsData) {
-      this.setState({
-        histogramData: this.props.statsData[this.histogramIdToKey(histogramId)],
-        filteredHistogramData: this.filterHistogramData(this.props.statsData[this.histogramIdToKey(this.state.histogramId)], this.state.max, this.state.min, this.state.excludeFilter)
-      });
+      this.filterHistogramData(this.props.statsData[this.histogramIdToKey(histogramId)],
+        this.state.max, this.state.min, this.state.excludeFilter);
     } else {
       this.props[this.props.fetchDataKey](histogramId);
     }
   }
 
   onDropDownChange = (event, index, value) => {
-    this.setState({histogramId: this.keyToHistogramId(value)});
+    this.setState({ histogramId: this.keyToHistogramId(value) });
     this.fetchStatsData(this.keyToHistogramId(value));
   };
 
-  onExcludeFilterChange = (event, newValue) => {
-    const excludes = newValue.replace(/ /g, '').toLowerCase().split(',');
+  onExcludeFilterChange = (newValue) => {
+    console.log(newValue);
     this.setState({
-      excludeFilter: excludes,
+      excludeFilter: newValue,
     });
-    this.filterHistogramData(this.state.histogramData, this.state.max, this.state.min, excludes);
+    this.filterHistogramData(this.state.histogramData, this.state.max, this.state.min, newValue);
   };
 
   onMinFilterChange = (event, newValue) => {
@@ -83,12 +82,12 @@ class APIHistogram extends Component {
 
   filterHistogramData = (histogramData, max, min, excludes) => {
     const filteredData = histogramData
-      .filter(entry => excludes.indexOf(entry[this.props.nameKey].toLowerCase()) === -1
+      .filter(entry => excludes.indexOf(entry[this.props.nameKey].toString().toLowerCase()) === -1
       && this.filterMinMax(entry, min, max));
     this.setState({
+      histogramData: histogramData,
       filteredHistogramData: filteredData
     });
-    return filteredData; // TODO return OR setState
   };
 
   filterMinMax = (entry, min, max) => {
@@ -110,7 +109,7 @@ class APIHistogram extends Component {
     return (
       <Grid fluid>
         <Row middle="xs">
-          <Col xs={4}>
+          <Col xs={12} sm={8} lg={5}>
             <DropDownMenu
               autoWidth
               value={this.histogramIdToKey(this.state.histogramId)}
@@ -121,38 +120,43 @@ class APIHistogram extends Component {
                   return <MenuItem
                     key={'stats_' + i}
                     value={this.histogramIdToKey(this.props.primaryKeys.map((primaryKey) => stat[primaryKey]))}
-                    primaryText={this.props.dropDownText(stat)}/>
+                    primaryText={this.props.dropDownText(stat)} />
                 }.bind(this))
               }
             </DropDownMenu>
           </Col>
-          <Col xs={2}>
+          <Col xs={12} sm={4} lg={2}>
             <Checkbox label="Show Dots"
                       defaultChecked={false}
                       value={this.state.showDots}
-                      onCheck={(event, isInputChecked) => this.setState({showDots: isInputChecked})}/>
+                      onCheck={(event, isInputChecked) => this.setState({ showDots: isInputChecked })} />
           </Col>
-          <Col xs={2}>
+          <Col xs={12} md={8} lg={3}>
+            <ChipInput
+              defaultValue={[]}
+              onChange={chips => this.onExcludeFilterChange(chips)}
+              fullWidth={true}
+              floatingLabelText="Excluded values"
+            />
+          </Col>
+          <Col xs={6} md={2} lg={1}>
             <TextField
+              fullWidth={true}
+              type="number"
               hintText="Minimum value"
               floatingLabelText="Minimum"
               value={this.state.min}
               onChange={this.onMinFilterChange}
             />
           </Col>
-          <Col xs={2}>
+          <Col xs={6} md={2} lg={1}>
             <TextField
+              fullWidth={true}
+              type="number"
               hintText="Maximum value"
               floatingLabelText="Maximum"
               value={this.state.max}
               onChange={this.onMaxFilterChange}
-            />
-          </Col>
-          <Col xs={2}>
-            <TextField
-              hintText="Values seperated by ,"
-              floatingLabelText="Excluded values"
-              onChange={this.onExcludeFilterChange}
             />
           </Col>
         </Row>
@@ -178,6 +182,8 @@ APIHistogram.propTypes = {
   nameKey: PropTypes.string.isRequired,
   primaryKeys: PropTypes.array.isRequired,
   dropDownText: PropTypes.func.isRequired,
+  min: PropTypes.number,
+  max: PropTypes.number,
   showLabels: PropTypes.bool
 };
 

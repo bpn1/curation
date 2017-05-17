@@ -12,9 +12,10 @@ const NODE_MODULES = resolve(__dirname, 'node_modules');
 module.exports = {
   context: SRC,
   entry: {
-    vendor: [
+    // exclude vendor, it is only useful in production
+    /*vendor: [
       './vendor'
-    ],
+    ],*/
     main: [
       'react-hot-loader/patch',
       'webpack-hot-middleware/client',

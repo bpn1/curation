@@ -16,6 +16,7 @@ class BlockingHistogram extends Component {
         primaryKeys={['jobid', 'schemetag']}
         dropDownText={stat => stat.comment + ' - ' + stat.schemetag + ': ' + getDateFromTimeUUID(stat.jobid).toLocaleString()}
         nameKey={'key'}
+        min={15}
       />
     );
   }

@@ -3,7 +3,6 @@ import 'react';
 import 'axios';
 import 'classnames';
 import 'material-ui';
-import 'd3';
 import 'redux';
 import 'redux-thunk';
 import 'react-tap-event-plugin';
