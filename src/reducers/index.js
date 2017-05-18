@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import FormReducer from 'redux-form/es/reducer';
+import { reducer as FormReducer } from 'redux-form';
 
 import SideNavReducer from './sideNavReducer';
 import DetailNavReducer from './detailNavReducer';
