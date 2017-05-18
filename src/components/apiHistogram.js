@@ -59,7 +59,6 @@ class APIHistogram extends Component {
   };
 
   onExcludeFilterChange = (newValue) => {
-    console.log(newValue);
     this.setState({
       excludeFilter: newValue,
     });
@@ -105,7 +104,6 @@ class APIHistogram extends Component {
   }
 
   render() {
-    console.log(this.state.filteredHistogramData)
     return (
       <Grid fluid>
         <Row middle="xs">

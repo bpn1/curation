@@ -1,6 +1,8 @@
 import thunk from 'redux-thunk';
 // import logger from 'redux-logger';
-import { createStore, applyMiddleware, compose } from 'redux';
+import applyMiddleware from 'redux/es/applyMiddleware';
+import createStore from 'redux/es/createStore';
+import compose from 'redux/es/compose';
 import promise from 'redux-promise-middleware';
 import reducers from './reducers';
 

@@ -15,10 +15,6 @@ import DetailBar from './containers/DetailBar';
 export const layoutBreakpoint = '(min-width: 769px)';
 
 class MainLayout extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
     const appTitle = (
       <div>

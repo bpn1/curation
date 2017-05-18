@@ -28,12 +28,7 @@ module.exports = {
     publicPath: '/',
     pathinfo: true,
   },
-  devtool: 'eval',
-  devServer: {
-    contentBase: DIST,
-    host: '0.0.0.0',
-    port: 8080
-  },
+  devtool: 'cheap-module-source-map',
   performance: {
     hints: process.env.NODE_ENV === 'production' ? 'warning' : false
   },

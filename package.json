@@ -12,7 +12,6 @@
     "lost": "^8.0.0",
     "material-ui": "^0.18.1",
     "material-ui-chip-input": "^0.14.0",
-    "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-addons-css-transition-group": "^15.5.2",

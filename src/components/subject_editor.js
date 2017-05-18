@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
-import { connect } from 'react-redux';
+import Field from 'redux-form/es/Field';
+import reduxForm from 'redux-form/es/reduxForm';
+import connect from 'react-redux/es/connect/connect';
 import PropTypes from 'prop-types';
-import {
-  Checkbox, RadioButtonGroup, SelectField, TextField, Toggle, DatePicker
-} from 'redux-form-material-ui';
+import { Checkbox, SelectField, TextField } from 'redux-form-material-ui';
 import MenuItem from 'material-ui/MenuItem';
 
 import uuid from 'uuid/v4';
@@ -32,13 +31,13 @@ class SubjectEditor extends Component {
   }
 
   reload() {
-    if(this.state.id) {
+    if (this.state.id) {
       this.props.fetchSubject(this.state.id);
     }
   }
 
   handleSubmit(e) {
-    if(this.state.id)
+    if (this.state.id)
       this.props.updateSubject(this.state.id, data);
   }
 
@@ -113,7 +112,7 @@ class SubjectEditor extends Component {
         </div>
         <div>
           <RaisedButton
-            style={{marginRight: 10, marginTop: 10}}
+            style={{ marginRight: 10, marginTop: 10 }}
             label="Save"
             icon={<SaveIcon />}
             backgroundColor={this.props.muiTheme.palette.positiveColor1}
@@ -121,7 +120,7 @@ class SubjectEditor extends Component {
             disabled={pristine || submitting} />
           <RaisedButton
             label="Cancel"
-            icon={<DeleteIcon/>}
+            icon={<DeleteIcon />}
             backgroundColor={this.props.muiTheme.palette.negativeColor1}
             disabled={pristine || submitting}
             onClick={reset} />

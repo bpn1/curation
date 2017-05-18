@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import bindActionCreators from 'redux/es/bindActionCreators';
+import connect from 'react-redux/es/connect/connect';
 import InteractiveTable from './interactive_table';
 import { fetchSubjects, addSubject, updateSubject, deleteSubject } from '../actions/apiActions';
 

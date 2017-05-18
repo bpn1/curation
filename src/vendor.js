@@ -1,4 +1,3 @@
-import 'moment';
 import 'react';
 import 'axios';
 import 'classnames';

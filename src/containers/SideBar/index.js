@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import bindActionCreators from 'redux/es/bindActionCreators';
+import connect from 'react-redux/es/connect/connect';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
@@ -10,12 +10,12 @@ import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionAssessment from "material-ui/svg-icons/action/assessment";
+import Link from "react-router/es/Link";
 
 import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
 import image from '../../../logo.png';
-import {Link} from "react-router";
 import {commerzbankYellow} from "../../themes/curation";
 import {grey700} from "material-ui/styles/colors";
 

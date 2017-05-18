@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import bindActionCreators from 'redux/es/bindActionCreators';
+import connect from 'react-redux/es/connect/connect';
 import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
 
 import { toggleDetailNav } from '../../actions/index';
 import styles from './detailbar.css';
 import { layoutBreakpoint } from '../../layout';
-import {Link} from "react-router";
 import {commerzbankYellow} from "../../themes/curation";
-import {grey700} from "material-ui/styles/colors";
 
 class DetailBar extends Component {
   constructor(props) {

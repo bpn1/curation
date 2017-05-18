@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const pick = require('lodash/pick');
 const express = require('express');
 
 const PAGING_LIMIT = 20;
@@ -10,7 +10,7 @@ module.exports = function (models, modelName, queryConfig) {
   }
 
   function buildQuery(getParams) {
-    const query = _.pick(getParams, queryConfig.normal);
+    const query = pick(getParams, queryConfig.normal);
     queryConfig.lists.forEach((property) => {
       if (getParams[property]) {
         query[property] = { $contains: getParams[property] };

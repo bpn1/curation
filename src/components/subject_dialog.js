@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
 
 import SubjectEditor from './subject_editor';
 
@@ -28,7 +27,7 @@ class SubjectDialog extends Component {
         {...this.props}>
         <SubjectEditor id={this.state.id}  />
       </Dialog>
-    )
+    );
   }
 }
 

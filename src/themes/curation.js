@@ -1,6 +1,6 @@
 import { fade } from 'material-ui/utils/colorManipulator';
 import {
-  red900, teal800, fullWhite, red600, green600, grey600, orange600
+  fullWhite, red600, green600, grey600, orange600
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import spacing from 'material-ui/styles/spacing';

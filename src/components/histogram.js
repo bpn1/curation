@@ -1,6 +1,12 @@
 import React from 'react';
-import { LineChart, XAxis, YAxis, Tooltip, CartesianGrid, Line, ResponsiveContainer } from 'recharts';
 import PropTypes from 'prop-types';
+import ResponsiveContainer from 'recharts/es6/component/ResponsiveContainer';
+import LineChart from 'recharts/es6/chart/LineChart';
+import CartesianGrid from 'recharts/es6/cartesian/CartesianGrid';
+import XAxis from 'recharts/es6/cartesian/XAxis';
+import YAxis from 'recharts/es6/cartesian/YAxis';
+import Tooltip from 'recharts/es6/component/Tooltip';
+import Line from 'recharts/es6/cartesian/Line';
 
 // from: http://stackoverflow.com/a/7638362
 function randomColor() {

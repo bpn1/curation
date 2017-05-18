@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import connect from 'react-redux/es/connect/connect';
+import bindActionCreators from 'redux/es/bindActionCreators';
 import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
