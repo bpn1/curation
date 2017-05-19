@@ -11,6 +11,7 @@ class SimilarityHistogram extends Component {
       <APIHistogram
         type="similarity"
         keyList={DATA_KEYS}
+        filterKeys={DATA_KEYS}
         fetchIdKey={'fetchSimMeasureStatsIds'}
         fetchDataKey={'fetchSimMeasureData'}
         primaryKeys={['id']}

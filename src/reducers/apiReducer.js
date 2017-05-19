@@ -94,8 +94,8 @@ export default function reducer(state = {
       const blockingId = action.payload.jobid;
       const blockingSchemeTag = action.payload.schemetag;
       const blockingData = action.payload.data
-        .map(entry => Object.assign(entry, { comparision: entry.numsubjects * entry.numstaging }))
-        .sort((a, b) => (a.comparision > b.comparision) ? -1 : ((b.comparision > a.comparision) ? 1 : 0));
+        .map(entry => Object.assign(entry, { comparisons: entry.numsubjects * entry.numstaging }))
+        .sort((a, b) => (a.comparisons > b.comparisons) ? -1 : ((b.comparisons > a.comparisons) ? 1 : 0));
       return {
         ...state,
         fetching: false,

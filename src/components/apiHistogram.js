@@ -90,7 +90,7 @@ class APIHistogram extends Component {
   };
 
   filterMinMax = (entry, min, max) => {
-    return this.props.keyList.every(function (key) {
+    return this.props.filterKeys.every(function (key) {
       return !(entry[key] < min || entry[key] > max);
     });
   };
@@ -175,6 +175,7 @@ class APIHistogram extends Component {
 APIHistogram.propTypes = {
   type: PropTypes.string.isRequired,
   keyList: PropTypes.array.isRequired,
+  filterKeys: PropTypes.array.isRequired,
   fetchIdKey: PropTypes.string.isRequired,
   fetchDataKey: PropTypes.string.isRequired,
   nameKey: PropTypes.string.isRequired,
