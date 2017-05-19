@@ -1,13 +1,14 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const { getIfUtils, removeEmpty } = require('webpack-config-utils');
 
-const parts = require('./configParts');
+const { ifProduction, ifNotProduction } = getIfUtils(process.env.NODE_ENV);
 
 const PATHS = {
-  APP: './bootstrap.js',
+  APP: ['./bootstrap.js'],
+  APP_DEV: ['react-hot-loader/patch', 'webpack-hot-middleware/client', './bootstrap.js'],
   VENDOR: './vendor.js',
   SRC: resolve(__dirname, 'src/'),
   DIST: resolve(__dirname, 'dist'),
@@ -15,99 +16,99 @@ const PATHS = {
   NODE_MODULES: resolve(__dirname, 'node_modules')
 };
 
-const common = merge([
-  {
-    context: PATHS.SRC,
-    entry: {
-      vendor: [
-        'react-hot-loader/patch',
-        'webpack-dev-server/client',
-        PATHS.VENDOR
-      ],
-      app: PATHS.APP
-    },
-    output: {
-      filename: '[name].bundle.js',
-      path: PATHS.DIST,
-      publicPath: '/'
-    },
-    plugins: [
-      new ProgressBarPlugin(),
-      new HtmlWebpackPlugin({
-        title: 'ReactUI Template',
-        template: PATHS.TEMPLATE
-      })
+const config = {
+  context: PATHS.SRC,
+  entry: removeEmpty({
+    vendor: ifProduction(PATHS.VENDOR),
+    app: ifProduction(PATHS.APP, PATHS.APP_DEV)
+  }),
+  output: {
+    filename: '[name].bundle.js',
+    path: PATHS.DIST,
+    publicPath: '/',
+    pathinfo: ifProduction(true, false)
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        use: ['babel-loader'],
+        include: PATHS.SRC,
+        exclude: /node_modules/
+      },
+      removeEmpty({
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true
+            }
+          },
+          'postcss-loader'
+        ],
+        include: [
+          PATHS.NODE_MODULES,
+          PATHS.SRC
+        ]
+      }),
+      {
+        test: /\.(png|jpg)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 15000
+          }
+        }
+      },
+      {
+        test: /\.svg$/,
+        use: 'file-loader',
+      },
     ]
   },
-  parts.loadJavaScript({ include: [PATHS.SRC], exclude: /node_modules/ }),
-  /* parts.loadLinter({
-       include: [PATHS.SRC],
-       exclude: /node_modules/,
-       options: {
-         formatter: require("eslint/lib/formatters/table"),
-         cache: true,
-         fix: false
-       }
-     }), */
-  parts.loadCSS({ include: [PATHS.SRC, PATHS.NODE_MODULES] }),
-  parts.loadImages({
-    options: {
-      limit: 15000
-    }
-  })
-]);
-
-module.exports = function (env) {
-  // Production configuration
-  if (env === 'production') {
-    return merge([
-      common,
-      {
-        performance: {
-          hints: 'warning'
-        },
-        devtool: 'source-map',
-        plugins: [
-          new webpack.optimize.DedupePlugin(),
-          new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' }),
-          new webpack.DefinePlugin({
-            'process.env': {
-              NODE_ENV: '"production"',
-            },
-          }),
-          new webpack.optimize.UglifyJsPlugin({
-            compress: {
-              screw_ie8: true,
-              warnings: false,
-            },
-          })
-        ]
+  performance: {
+    hints: ifProduction('warning', 'warning')
+  },
+  devtool: ifProduction('source-map', 'cheap-module-source-map'),
+  plugins: removeEmpty([
+    ifProduction(new webpack.HashedModuleIdsPlugin(), new webpack.NamedModulesPlugin()),
+    ifProduction(new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      quiet: true,
+    })),
+    ifNotProduction(new webpack.HotModuleReplacementPlugin()),
+    ifProduction(new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
       },
-      //parts.lintJavaScript({ include: PATHS.app }),
-    ]);
-  }
-
-  // Development configuration
-  return merge(
-    common,
-    {
-      output: {
-        pathinfo: true
+    })),
+    ifProduction(new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' })),
+    ifProduction(new webpack.optimize.AggressiveMergingPlugin()),
+    ifProduction(new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        screw_ie8: true,
+        warnings: false,
       },
-      devtool: 'eval',
-      // Disable performance hints during development
-      performance: {
-        hints: false
-      },
-      plugins: [
-        new webpack.NamedModulesPlugin()
-      ]
-    },
-    parts.devServer({
-      host: '0.0.0.0',
-      port: 8080,
-      content_base: PATHS.DIST,
-      env: env
+    })),
+    new ProgressBarPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Curation',
+      template: PATHS.TEMPLATE
     })
-  );
+  ]),
+  /*devServer: {
+    historyApiFallback: true,
+    hotOnly: true,
+    stats: {
+      warnings: false
+    },
+    host: '0.0.0.0',
+    port: 8080,
+    content_base: PATHS.DIST
+  }*/
 };
+
+module.exports = config;

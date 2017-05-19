@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-const config = require('../webpack.config.node');
+const config = require('../webpack.config.babel');
 const datalakeConfig = require('./api/keyspaceConfigs/datalake.config');
 const evaluationConfig = require('./api/keyspaceConfigs/evaluation.config');
 const datalakeSchemaConfig = require('./api/schemaConfigs/datalakeConfig');
@@ -20,7 +20,7 @@ const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats')
 
 const runReactApp = process.argv.indexOf('react') > -1;
 const isDeveloping = process.env.NODE_ENV !== 'production';
-const port = isDeveloping ? 3000 : process.env.PORT;
+const port = process.env.PORT || 3000;
 const app = express();
 
 // setup cassandra ORM
@@ -50,7 +50,9 @@ if (runReactApp) {
   });
 
   app.use(middleware);
-  app.use(webpackHotMiddleware(compiler));
+  if (isDeveloping) {
+    app.use(webpackHotMiddleware(compiler));
+  }
 }
 
 // parse data from POST

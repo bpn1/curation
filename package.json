@@ -33,7 +33,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "^7.1.0",
+    "autoprefixer": "^7.1.1",
     "babel-core": "6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.1",
@@ -78,12 +78,11 @@
     "webpack-config-utils": "2.3.0",
     "webpack-dev-middleware": "^1.10.2",
     "webpack-dev-server": "^2.4.5",
-    "webpack-hot-middleware": "^2.18.0",
-    "webpack-merge": "^4.1.0"
+    "webpack-hot-middleware": "^2.18.0"
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "rimraf dist && --env production webpack --config ./webpack.config.babel.js --progress --profile --colors",
+    "build": "rimraf dist && webpack --env production --config ./webpack.config.babel.js --progress --profile --colors",
     "prebuild:dev": "rimraf dist",
     "build:dev": "webpack --env development",
     "start": "http-server",

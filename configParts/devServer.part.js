@@ -1,11 +1,4 @@
-const webpack = require('webpack');
-const {getIfUtils, removeEmpty} = require('webpack-config-utils');
-
-exports.devServer = function({ host, port, content_base, env }) {
-
-  // documentation: https://doclets.io/kentcdodds/webpack-config-utils/master
-  const {ifProd, ifNotProd} = getIfUtils(env);
-
+exports.devServer = function (contentBase) {
   return {
     devServer: {
       // Enable history API fallback so HTML5 History API based
@@ -29,12 +22,9 @@ exports.devServer = function({ host, port, content_base, env }) {
       //
       // 0.0.0.0 is available to all network devices
       // unlike default `localhost`.
-      host, // Defaults to `localhost`
-      port, // Defaults to 8080
-      contentBase: content_base
-    },
-    plugins: removeEmpty([
-      ifNotProd(new webpack.HotModuleReplacementPlugin())
-    ])
-  }
+      host: '0.0.0.0',
+      port: 8080,
+      content_base: contentBase
+    }
+  };
 };
