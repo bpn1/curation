@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const { getIfUtils, removeEmpty } = require('webpack-config-utils');
 
-const { ifProduction, ifNotProduction } = getIfUtils(process.env.NODE_ENV);
+const { ifProduction, ifNotProduction } = getIfUtils(process.env.NODE_ENV || 'development');
 
 const PATHS = {
   APP: ['./bootstrap.js'],
@@ -86,11 +86,22 @@ const config = {
       },
     })),
     ifProduction(new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' })),
+    ifProduction(new webpack.optimize.OccurrenceOrderPlugin()),
     ifProduction(new webpack.optimize.AggressiveMergingPlugin()),
     ifProduction(new webpack.optimize.UglifyJsPlugin({
+      mangle: true,
       compress: {
+        unsafe: true,
         screw_ie8: true,
+        unused: true,
+        dead_code: true,
         warnings: false,
+        drop_debugger: true,
+        conditionals: true,
+        evaluate: true,
+        drop_console: true,
+        sequences: true,
+        booleans: true,
       },
     })),
     new ProgressBarPlugin(),

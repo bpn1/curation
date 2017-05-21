@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 const express = require('express');
+const compression = require('compression');
 const bodyParser = require('body-parser');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
+const path = require('path');
+
 const config = require('../webpack.config.babel');
 const datalakeConfig = require('./api/keyspaceConfigs/datalake.config');
 const evaluationConfig = require('./api/keyspaceConfigs/evaluation.config');
@@ -18,16 +18,20 @@ const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCand
 const blockingStatsQueryConfig = require('./api/queryConfigs/blockingstats');
 const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats');
 
-const runReactApp = process.argv.indexOf('react') > -1;
-const isDeveloping = process.env.NODE_ENV !== 'production';
-const port = process.env.PORT || 3000;
-const app = express();
-
 // setup cassandra ORM
 const datalakeModels = modelLoader(datalakeConfig, datalakeSchemaConfig);
 const evaluationModels = modelLoader(evaluationConfig, evaluationSchemaConfig);
 
-if (runReactApp) {
+const isDeveloping = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT || 3000;
+
+const app = express();
+app.use(compression());
+
+if (isDeveloping) {
+  const webpack = require('webpack');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
   let compiler;
   try {
     compiler = webpack(config);
@@ -48,12 +52,13 @@ if (runReactApp) {
       modules: false
     }
   });
-
   app.use(middleware);
-  if (isDeveloping) {
-    app.use(webpackHotMiddleware(compiler));
-  }
+  app.use(webpackHotMiddleware(compiler));
+} else {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 }
+
 
 // parse data from POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -84,5 +89,5 @@ app.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {
     console.log(err);
   }
-  console.info('==> 🌎 Curation☣ interface is running on port %s', port);
+  console.info('==> 🌎 Curation☣ interface is running on port %s in %s environment', port, process.env.NODE_ENV);
 });
