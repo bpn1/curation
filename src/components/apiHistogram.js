@@ -34,7 +34,7 @@ class APIHistogram extends Component {
       this.filterHistogramData(nextProps.statsData[this.histogramIdToKey(this.state.histogramId)],
         this.state.max, this.state.min, this.state.excludeFilter)
     } else if (nextProps.statsIds) {
-      const firstStatsEntry = nextProps.statsIds[1]; // TODO select first item
+      const firstStatsEntry = nextProps.statsIds[0];
       const histogramId = nextProps.primaryKeys.map((primaryKey) => firstStatsEntry[primaryKey]);
       this.setState({
         histogramId: histogramId

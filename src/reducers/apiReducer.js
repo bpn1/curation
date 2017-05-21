@@ -6,6 +6,7 @@ import {
   FETCH_BLOCKING_STATS_DATA, FETCH_BLOCKING_STATS_DATA_REJECTED, FETCH_BLOCKING_STATS_DATA_FULFILLED,
   FETCH_SUBJECT, FETCH_SUBJECT_REJECTED, FETCH_SUBJECT_FULFILLED
 } from '../constants/ActionTypes';
+import { getMillisecondsFromTimeUUID } from "../helpers/timeUUIDParser";
 
 export default function reducer(state = {
   subjects: [],
@@ -80,7 +81,7 @@ export default function reducer(state = {
         fetched: true,
         statsIds: {
           ...state.statsIds,
-          blocking: action.payload
+          blocking: action.payload.sort((a, b) => getMillisecondsFromTimeUUID(b.jobid) - getMillisecondsFromTimeUUID(a.jobid))
         }
       };
     }
@@ -95,7 +96,7 @@ export default function reducer(state = {
       const blockingSchemeTag = action.payload.schemetag;
       const blockingData = action.payload.data
         .map(entry => Object.assign(entry, { comparisons: entry.numsubjects * entry.numstaging }))
-        .sort((a, b) => (a.comparisons > b.comparisons) ? -1 : ((b.comparisons > a.comparisons) ? 1 : 0));
+        .sort((a, b) => b.comparisons - a.comparisons);
       return {
         ...state,
         fetching: false,
@@ -122,7 +123,7 @@ export default function reducer(state = {
         fetched: true,
         statsIds: {
           ...state.statsIds,
-          similarity: action.payload
+          similarity: action.payload.sort((a, b) => getMillisecondsFromTimeUUID(b.id) - getMillisecondsFromTimeUUID(a.id))
         }
       };
     }

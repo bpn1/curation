@@ -8,12 +8,15 @@ function parseTimeUUID(uuidString) {
   return parseInt(timeString, 16);
 }
 
-export default function getDateFromTimeUUID(uuidString) {
+export function getMillisecondsFromTimeUUID(uuidString) {
   if (!uuidString) {
     return '';
   }
   const time = parseTimeUUID(uuidString) - 122192928000000000,
     millisecs = Math.floor(time / 10000);
-  return new Date(millisecs);
+  return millisecs;
 }
 
+export default function getDateFromTimeUUID(uuidString) {
+  return new Date(getMillisecondsFromTimeUUID(uuidString));
+}
