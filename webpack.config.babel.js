@@ -70,7 +70,7 @@ const config = {
     ]
   },
   performance: {
-    hints: ifProduction('warning', 'warning')
+    hints: ifProduction('warning', false)
   },
   devtool: ifProduction('source-map', 'eval'),
   plugins: removeEmpty([
