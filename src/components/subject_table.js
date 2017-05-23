@@ -5,6 +5,7 @@ import connect from 'react-redux/es/connect/connect';
 import Dialog from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 import TextField from 'material-ui/TextField';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
@@ -45,7 +46,8 @@ class SubjectTable extends Component {
       multipleDeletions: false,
       toBeDeletedID: null,
       toBeDeletedNames: [],
-      settingsOpen: false
+      settingsOpen: false,
+      refreshStatus: 'loading'
     };
   }
 
@@ -57,6 +59,12 @@ class SubjectTable extends Component {
     if(nextProps.tableData) {
       this.setState({
         tableData: nextProps.tableData
+      });
+    }
+
+    if(nextProps.loading !== null) {
+      this.setState({
+        refreshStatus: nextProps.loading ? "loading" : "hide"
       });
     }
   }
@@ -120,6 +128,14 @@ class SubjectTable extends Component {
       width: '30px',
       height: '30px',
       padding: '4px'
+    },
+    refreshContainer: {
+      position: 'relative'
+    },
+    refreshIndicator: {
+      display: 'inline-block',
+      marginLeft: '50%'
+      //position: 'relative'
     }
   };
 
@@ -170,6 +186,14 @@ class SubjectTable extends Component {
           </IconButton>
         </div>
         <br />
+        <div style={this.styles.refreshContainer}>
+          <RefreshIndicator
+            status={this.state.refreshStatus}
+            style={this.styles.refreshIndicator}
+            size={40}
+            left={-20}
+            top={-50} />
+        </div>
         <InteractiveTable
           ref="table"
           headers={this.headers}
@@ -177,6 +201,8 @@ class SubjectTable extends Component {
           muiTheme={this.props.muiTheme}
           buttonColumnGenerator={this.generateButtonColumn}
           hiddenColumns={this.state.hiddenColumns} />
+
+        { /* these elements are hidden by default */ }
         <SubjectDialog
           ref="subjectDialog"
           type="add"
@@ -303,7 +329,8 @@ class SubjectTable extends Component {
 function mapStateToProps(state) {
   return {
     tableData: state.api.subjects,
-    error: state.api.error
+    error: state.api.error,
+    loading: state.api.fetching
   };
 }
 
