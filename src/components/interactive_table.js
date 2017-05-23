@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import muiThemable from 'material-ui/styles/muiThemeable';
+
+import UpArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
+import DownArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
 import DiffTree from './DiffTree';
 
@@ -13,7 +18,8 @@ class InteractiveTable extends Component {
       filteredData: props.data,
       selectedRows: [],
       sortBy: 'id',
-      sortDir: null
+      sortDir: null,
+      headerFilter: {}
     };
   }
 
@@ -33,18 +39,18 @@ class InteractiveTable extends Component {
         .indexOf(filterBy) !== -1;
     });
 
-    // clear other filter fields
+    // clear all filter fields, update the content of the current field
+    const headerFilter = {...this.state.headerFilter};
     this.props.headers.forEach((header) => {
-      if(header.key === column) {
-        return;
-      }
-      // TODO Field clearing should be implemented by using a controlled TextField subclass (setState)
-      // instead of using getInputNode().value
-      this.refs[header.key + 'Header'].getInputNode().value = '';
+      if(header.key === column)
+        headerFilter[header.key] = event.target.value;
+      else
+        headerFilter[header.key] = '';
     });
 
     this.setState({
-      filteredData: filteredList
+      filteredData: filteredList,
+      headerFilter
     });
 
     return true;
@@ -90,18 +96,38 @@ class InteractiveTable extends Component {
     this.setState({...this.state, selectedRows});
   }
 
-  renderHeader(key, name, sortDirArrow) {
+  renderHeader(key, name) {
+    const sortDisabled = !(this.state.sortBy === key);
+    const colors = this.props.muiTheme.palette;
+
+    const iconColor = sortDisabled ? colors.neutralColor2 : colors.neutralColor1;
+
+    const sortDirArrow =
+      (this.state.sortDir === 'DESC' || sortDisabled || this.state.sortDir === null)
+        ? <DownArrowIcon color={iconColor} />
+        : <UpArrowIcon color={iconColor} />;
+
+    const filterValue = this.state.headerFilter.hasOwnProperty(key) ? this.state.headerFilter[key] : "";
+
     return (
       <TableHeaderColumn key={key}>
-        <a onClick={this.sortRowsBy.bind(this, key)}>
-          <h2 style={{ margin: 0 }}>{name} {this.state.sortBy === key ? sortDirArrow : ''}</h2>
-        </a>
         <TextField
           style={{ maxWidth: '100%', width: '100%' }}
           ref={key + 'Header'}
-          hintText={'Filter'}
-          onChange={this.onFilterChange.bind(this, key)}
-        />
+          hintText={'Filter...'}
+          floatingLabelText={name}
+          floatingLabelFixed={false}
+          floatingLabelStyle={{ color: colors.interactiveColor1, fontWeight: 'bold' }}
+          floatingLabelFocusStyle={{ color: colors.interactiveColor1, fontWeight: 'normal' }}
+          value={filterValue}
+          onChange={this.onFilterChange.bind(this, key)} />
+        <IconButton
+          onClick={this.sortRowsBy.bind(this, key)}
+          tooltip="Sort"
+          touch={true}
+          tooltipPosition="bottom-center">
+          { sortDirArrow }
+        </IconButton>
       </TableHeaderColumn>
     );
   }
@@ -124,11 +150,6 @@ class InteractiveTable extends Component {
   render() {
     const { filteredData } = this.state;
 
-    let sortDirArrow = '';
-    if (this.state.sortDir !== null) {
-      sortDirArrow = this.state.sortDir === 'DESC' ? '↓' : '↑';
-    }
-
     // TODO adapt Table height to window size changes (see http://stackoverflow.com/a/42141641)
     // TODO or use e.g. flexbox for adaptive sizing
 
@@ -144,10 +165,15 @@ class InteractiveTable extends Component {
             displaySelectAll
             adjustForCheckbox>
             <TableRow>
+              { this.props.headers.map(header => {
+                if(this.props.hiddenColumns.indexOf(header.key) > -1)
+                  return "";
+                else
+                  return this.renderHeader(header.key, header.name);
+              }) }
               <TableHeaderColumn>
-                <h2 style={{ margin: 0, textAlign: 'center' }}>Actions</h2>
+                { /*<h2 style={{ margin: 0, textAlign: 'center' }}></h2> */ }
               </TableHeaderColumn>
-              { this.props.headers.map(header => this.renderHeader(header.key, header.name, sortDirArrow)) }
             </TableRow>
           </TableHeader>
           <TableBody
@@ -155,26 +181,36 @@ class InteractiveTable extends Component {
             showRowHover
             deselectOnClickaway={false}
             stripedRows={false}>
-            { filteredData.map((row, index) =>
-              (<TableRow key={index} selected={row.selected}>
-                <TableRowColumn>
-                  <div>
-                    { this.props.buttonColumnGenerator(index, row) }
-                  </div>
-                </TableRowColumn>
-                { this.props.headers.map(header => {
-                  let content = '';
-                  if(row[header.key] === null) {
-                    content = <span style={{ color: "red" }}>null</span>;
-                  } else if(typeof row[header.key] === "object") {
-                    content = <DiffTree json={row[header.key]} />;
-                  } else {
-                    content = row[header.key].toString();
-                  }
-                  return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-                }) }
-              </TableRow>)
-            )}
+            { filteredData.map((row, index) => {
+              if(!row) {
+                console.error("Row #"+index+" is undefined/ null!");
+                return;
+              }
+
+              return (
+                <TableRow key={index} selected={row.selected}>
+                  { this.props.headers.map(header => {
+                    // don't render this column if it has been set to hidden
+                    if(this.props.hiddenColumns.indexOf(header.key) > -1)
+                      return "";
+
+                    let content = '';
+                    if(!(header.key in row) || row[header.key] === null) {
+                      content = <span style={{ color: "red" }}>null</span>;
+                    } else if(typeof row[header.key] === "object") {
+                      content = <DiffTree json={row[header.key]} />;
+                    } else {
+                      content = row[header.key].toString();
+                    }
+                    return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
+                  }) }
+                  <TableRowColumn>
+                    <div>
+                      { this.props.buttonColumnGenerator(index, row) }
+                    </div>
+                  </TableRowColumn>
+                </TableRow>
+            )} )}
           </TableBody>
         </Table>
       </div>
@@ -185,11 +221,14 @@ class InteractiveTable extends Component {
 InteractiveTable.propTypes = {
   headers: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  buttonColumnGenerator: PropTypes.func
+  muiTheme: PropTypes.object.isRequired,
+  buttonColumnGenerator: PropTypes.func,
+  hiddenColumns: PropTypes.array
 };
 
 InteractiveTable.defaultProps = {
-  buttonColumnGenerator: (index, row) => {}
+  buttonColumnGenerator: (index, row) => {},
+  hiddenColumns: []
 };
 
 export default InteractiveTable;

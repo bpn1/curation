@@ -33,8 +33,13 @@ class SubjectTable extends Component {
   constructor(props) {
     super(props);
 
+    // TODO load from/ save to Redux settings?
+    const defaultHiddenColumns = ["id", "aliases", "category", "relations"];
+
     this.state = {
       tableData: [],
+      hiddenColumns: defaultHiddenColumns,
+      hiddenColumnsVal: defaultHiddenColumns.join(", "),
       editorOpen: false,
       deleteConfirmationOpen: false,
       multipleDeletions: false,
@@ -96,30 +101,30 @@ class SubjectTable extends Component {
     evt.preventDefault();
   }
 
-  render() {
-    const colors = this.props.muiTheme.palette;
-
-    const dialogTitleStyle = {
+  styles = {
+    dialogTitle: {
       display: 'inline-block',
       verticalAlign: 'center',
       marginTop: '30px'
-    };
-
-    const cogIconStyle = {
+    },
+    cogIcon: {
       color: '#444',
       borderRadius: '100px',
       width: '30px',
       height: '30px',
       padding: '4px'
-    };
-
-    const fireIconStyle = {
+    },
+    fireIcon: {
       color: '#E04C11',
       borderRadius: '100px',
       width: '30px',
       height: '30px',
       padding: '4px'
-    };
+    }
+  };
+
+  render() {
+    const colors = this.props.muiTheme.palette;
 
     return (
       <div>
@@ -169,7 +174,9 @@ class SubjectTable extends Component {
           ref="table"
           headers={this.headers}
           data={this.state.tableData}
-          buttonColumnGenerator={this.generateButtonColumn} />
+          muiTheme={this.props.muiTheme}
+          buttonColumnGenerator={this.generateButtonColumn}
+          hiddenColumns={this.state.hiddenColumns} />
         <SubjectDialog
           ref="subjectDialog"
           type="add"
@@ -194,21 +201,21 @@ class SubjectTable extends Component {
             backgroundColor
             title={
               <span>
-                <span style={dialogTitleStyle}><span style={cogIconStyle}>⚙</span>️ TableSettings <span style={fireIconStyle}>🌶️</span></span>
+                <span style={this.styles.dialogTitle}><span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.fireIcon}>🌶️</span></span>
               </span>}
             modal={true}
             actions={[
               <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
               <FlatButton label="Save" primary={true} onTouchTap={this.listeners.saveSettings} keyboardFocused={true} />
             ]}>
-          <p>ToDo: Add some settings :)</p>
           <TextField
             style={{ maxWidth: '100%', width: '100%' }}
-            ref="filterIDSetting"
-            hintText="Search for a given ID..."
-            floatingLabelText="Filter ID"
+            ref="setting_hiddenColumns"
+            hintText="Enter column names, comma-separated..."
+            floatingLabelText="Hidden columns"
             floatingLabelFixed={false}
-            onChange={(field, event) => { console.log("🔥 Filter ID setting changed! 🌶", field, event) }}
+            value={this.state.hiddenColumnsVal}
+            onChange={this.listeners.hiddenColumnsChanged}
           />
         </Dialog>
       </div>
@@ -282,7 +289,12 @@ class SubjectTable extends Component {
       // TODO add Redux state component that contains the settings for this component (needs to be saved in server)
       // TODO maybe use Redux connection in SubjectTable and keep this component clean
       // TODO just add callback props that are called when the data should be saved
-      this.closeSettings();
+      this.listeners.closeSettings();
+    },
+    hiddenColumnsChanged: (event) => {
+      const hiddenColumnsVal = event.target.value;
+      const hiddenColumns = hiddenColumnsVal.split(',').map(str => str.trim().toLowerCase());
+      this.setState({ hiddenColumns, hiddenColumnsVal });
     }
   };
 }

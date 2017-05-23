@@ -15,9 +15,8 @@ class SubjectDialog extends Component {
   }
 
   render() {
+    // Capitalize first word of header
     let headerAction = this.state.type.replace(/\b\w/g, l => l.toUpperCase());
-
-    // TODO change modal to true once it works properly and there are action buttons
 
     return (
       <Dialog
@@ -25,7 +24,7 @@ class SubjectDialog extends Component {
         modal={false}
         autoScrollBodyContent={true}
         {...this.props}>
-        <SubjectEditor id={this.state.id}  />
+        <SubjectEditor id={this.state.id} editorType={this.state.type} onRequestClose={this.props.onRequestClose} />
       </Dialog>
     );
   }

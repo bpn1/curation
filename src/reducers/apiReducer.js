@@ -6,7 +6,7 @@ import {
   FETCH_BLOCKING_STATS_DATA, FETCH_BLOCKING_STATS_DATA_REJECTED, FETCH_BLOCKING_STATS_DATA_FULFILLED,
   FETCH_SUBJECT, FETCH_SUBJECT_REJECTED, FETCH_SUBJECT_FULFILLED
 } from '../constants/ActionTypes';
-import { getMillisecondsFromTimeUUID } from "../helpers/timeUUIDParser";
+import { getMillisecondsFromTimeUUID } from '../helpers/timeUUIDParser';
 
 export default function reducer(state = {
   subjects: [],
@@ -15,6 +15,8 @@ export default function reducer(state = {
   fetching: false,
   fetched: false,
   error: null,
+  subject: null,
+  editableSubject: null
 }, action) {
   switch (action.type) {
     case FETCH_SUBJECTS: {
@@ -38,11 +40,25 @@ export default function reducer(state = {
       return { ...state, fetching: false, error: action.payload };
     }
     case FETCH_SUBJECT_FULFILLED: {
+      // transform fetched subject to the SubjectEditor format
+      const editableSubject = action.payload;
+      const newProps = [];
+
+      if (editableSubject.hasOwnProperty('properties')) {
+        Object.keys(editableSubject.properties).map((key) => {
+          newProps.push([key, editableSubject.properties[key][0]]);
+        });
+      }
+
+      editableSubject.properties = newProps;
+      console.log('Editable subject', editableSubject);
+
       return {
         ...state,
         fetching: false,
         fetched: true,
-        subject: action.payload
+        subject: action.payload,
+        editableSubject: editableSubject
       };
     }
     case ADD_SUBJECT: {

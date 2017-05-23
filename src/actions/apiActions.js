@@ -26,10 +26,10 @@ export function fetchSubjects() {
   };
 }
 
-export function fetchSubject(subject) {
+export function fetchSubject(id) {
   return function (dispatch) {
     dispatch({ type: FETCH_SUBJECT });
-    axios.get(apiPath + 'subjects/' + subject)
+    axios.get(apiPath + 'subjects/' + id)
       .then((response) => {
         dispatch({ type: FETCH_SUBJECT_FULFILLED, payload: response.data });
       })
@@ -41,7 +41,7 @@ export function fetchSubject(subject) {
 
 export function addSubject(subject) {
   return function (dispatch) {
-    dispatch({ type: ADD_SUBJECT });
+    dispatch({ type: ADD_SUBJECT, payload: subject });
     axios.post(apiPath + 'subjects', subject)
       .then((response) => {
         dispatch({ type: ADD_SUBJECT_FULFILLED, payload: subject });
@@ -54,7 +54,7 @@ export function addSubject(subject) {
 
 export function updateSubject(subject) {
   return function (dispatch) {
-    dispatch({ type: UPDATE_SUBJECT });
+    dispatch({ type: UPDATE_SUBJECT, payload: subject });
     axios.put(apiPath + 'subjects/' + subject.id, subject)
       .then((response) => {
         dispatch({ type: UPDATE_SUBJECT_FULFILLED, payload: subject });
