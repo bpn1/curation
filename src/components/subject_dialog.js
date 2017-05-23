@@ -10,8 +10,18 @@ class SubjectDialog extends Component {
 
     this.state = {
       type: 'add',
-      id: null
-    }
+      id: null,
+      load: false
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // opening transition
+    if(nextProps.open && !this.props.open)
+      this.setState({ load: true });
+    // closing transition
+    else if(!nextProps.open && this.props.open)
+      this.setState({ load: false });
   }
 
   render() {
@@ -24,7 +34,11 @@ class SubjectDialog extends Component {
         modal={false}
         autoScrollBodyContent={true}
         {...this.props}>
-        <SubjectEditor id={this.state.id} editorType={this.state.type} onRequestClose={this.props.onRequestClose} />
+        <SubjectEditor
+          id={this.state.id}
+          load={this.state.load}
+          editorType={this.state.type}
+          onRequestClose={this.props.onRequestClose} />
       </Dialog>
     );
   }

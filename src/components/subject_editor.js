@@ -39,7 +39,8 @@ class SubjectEditor extends Component {
   }
 
   componentDidMount() {
-    this.reload();
+    if(this.props.load)
+      this.reload();
   }
 
   updateTheme(theme) {
@@ -54,10 +55,17 @@ class SubjectEditor extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.updateTheme(nextProps.muiTheme);
+
+    // load prop transitioning to true
+    if(nextProps.load && !this.props.load) {
+      this.reload();
+      this.props.reset();
+    }
   }
 
   reload() {
-    if (this.state.id) {
+    console.log("Reload subject #", this.state.id);
+    if(this.state.id) {
       this.props.fetchSubject(this.state.id);
     }
   }
@@ -164,7 +172,7 @@ class SubjectEditor extends Component {
     width = width ? width : 500;
     let fieldStyle = { width };
 
-    // TODO load initialValues like this: http://redux-form.com/6.0.0-alpha.4/examples/initializeFromState/
+    // TODO load initialValues like this: http://redux-form.com/6.7.0/examples/initializeFromState/
 
     return (
       <form onSubmit={handleSubmit((values) => this.handleSubmit(values))}>
@@ -223,6 +231,7 @@ class SubjectEditor extends Component {
 SubjectEditor.propTypes = {
   editorType: PropTypes.string.isRequired,
   onRequestClose: PropTypes.func.isRequired,
+  load: PropTypes.bool,
   id: PropTypes.string,
   width: PropTypes.number,
   name: PropTypes.string,
@@ -234,10 +243,10 @@ const reduxConnectedForm = reduxForm({
   form: 'subjectEditorForm'
 })(SubjectEditor);
 
-// API connection
+// API connection (pull initial values from API reducer if not an 'add' dialog)
 const apiConnectedForm = connect(
-  state => ({
-    initialValues: state.api.editableSubject // pull initial values from API reducer
+  (state, ownProps) => ({
+    initialValues: state.api.editableSubjects[ownProps.id]
   }),
   { fetchSubject, addSubject, updateSubject } // bind loading and updating action creators
 )(reduxConnectedForm);

@@ -72,7 +72,7 @@ const config = {
   performance: {
     hints: ifProduction('warning', 'warning')
   },
-  devtool: ifProduction('source-map', 'cheap-module-source-map'),
+  devtool: ifProduction('source-map', 'eval'),
   plugins: removeEmpty([
     ifProduction(new webpack.HashedModuleIdsPlugin(), new webpack.NamedModulesPlugin()),
     ifProduction(new webpack.LoaderOptionsPlugin({

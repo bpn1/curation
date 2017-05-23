@@ -16,7 +16,7 @@ export default function reducer(state = {
   fetched: false,
   error: null,
   subject: null,
-  editableSubject: null
+  editableSubjects: {}
 }, action) {
   switch (action.type) {
     case FETCH_SUBJECTS: {
@@ -41,24 +41,30 @@ export default function reducer(state = {
     }
     case FETCH_SUBJECT_FULFILLED: {
       // transform fetched subject to the SubjectEditor format
-      const editableSubject = action.payload;
+      const transformedSubject = action.payload;
       const newProps = [];
 
-      if (editableSubject.hasOwnProperty('properties')) {
-        Object.keys(editableSubject.properties).map((key) => {
-          newProps.push([key, editableSubject.properties[key][0]]);
+      if (transformedSubject.hasOwnProperty('properties')) {
+        Object.keys(transformedSubject.properties).map((key) => {
+          newProps.push({
+            name: key,
+            value: transformedSubject.properties[key].join('; ') // TODO display differently?
+          });
         });
       }
 
-      editableSubject.properties = newProps;
-      console.log('Editable subject', editableSubject);
+      transformedSubject.properties = newProps;
+      console.log('Editable subject', transformedSubject);
+
+      const editableSubjects = Object.assign({}, state.editableSubjects);
+      editableSubjects[transformedSubject.id] = transformedSubject;
 
       return {
         ...state,
         fetching: false,
         fetched: true,
         subject: action.payload,
-        editableSubject: editableSubject
+        editableSubjects: editableSubjects
       };
     }
     case ADD_SUBJECT: {

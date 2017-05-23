@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
-import InteractiveTable from './interactive_table';
-import { fetchSubjects, addSubject, updateSubject, deleteSubject } from '../actions/apiActions';
 
 import Dialog from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
@@ -18,7 +16,9 @@ import AddIcon from 'material-ui/svg-icons/action/note-add';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 
+import InteractiveTable from './interactive_table';
 import SubjectDialog from './subject_dialog';
+import { fetchSubjects, addSubject, updateSubject, deleteSubject } from '../actions/apiActions';
 
 class SubjectTable extends Component {
   headers = [
@@ -114,7 +114,7 @@ class SubjectTable extends Component {
       height: '30px',
       padding: '4px'
     },
-    fireIcon: {
+    chiliIcon: {
       color: '#E04C11',
       borderRadius: '100px',
       width: '30px',
@@ -200,8 +200,8 @@ class SubjectTable extends Component {
             open={this.state.settingsOpen}
             backgroundColor
             title={
-              <span>
-                <span style={this.styles.dialogTitle}><span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.fireIcon}>🌶️</span></span>
+              <span style={this.styles.dialogTitle}>
+                <span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.chiliIcon}>🌶️</span>
               </span>}
             modal={true}
             actions={[
