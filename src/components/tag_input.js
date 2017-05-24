@@ -50,8 +50,6 @@ class TagInput extends Component {
     // TODO remove if not needed
     delete props.initialValue;
 
-    // TODO correctly connect aliases to redux-form, doesn't change e.g. dirty state
-
     // ChipInput used controlled mode => value, onRequestAdd & onRequestDelete (stace syncing)
     return (
       <ChipInput
