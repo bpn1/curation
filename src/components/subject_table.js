@@ -69,11 +69,6 @@ class SubjectTable extends Component {
     }
   }
 
-  iconStyle = {
-    width: 18,
-    height: 18
-  };
-
   generateButtonColumn = (index, row) => {
     const colors = this.props.muiTheme.palette;
 
@@ -84,19 +79,19 @@ class SubjectTable extends Component {
         <IconButton
           touch={true}
           onClick={evt => this.preventSelection(evt, () => this.listeners.editSubject(row.id)) }
-          iconStyle={this.iconStyle}>
+          iconStyle={this.styles.bigButtonIcon}>
           <EditIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
         </IconButton>
         <IconButton
           touch={true}
           onClick={evt => this.preventSelection(evt, () => console.log("TODO implement graph function"))}
-          iconStyle={this.iconStyle}>
+          iconStyle={this.styles.bigButtonIcon}>
           <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
         </IconButton>
         <IconButton
           touch={true}
           onClick={evt => this.preventSelection(evt, () => this.listeners.openDeleteConfirmationForSingleEntry(row.id, row.name)) }
-          iconStyle={this.iconStyle}>
+          iconStyle={this.styles.bigButtonIcon}>
           <DeleteIcon color={colors.negativeColor1} hoverColor={colors.negativeColor2} />
         </IconButton>
       </div>
@@ -136,6 +131,10 @@ class SubjectTable extends Component {
       display: 'inline-block',
       marginLeft: '50%'
       //position: 'relative'
+    },
+    bigButtonIcon: {
+      width: 18,
+      height: 18
     }
   };
 
