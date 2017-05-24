@@ -6,22 +6,27 @@ class TagInput extends Component {
   constructor(props) {
     super(props);
 
+    const startTags = props.initialValue ? props.initialValues : [];
+
     this.state = {
-      tags: [],
+      tags: startTags,
       formValue: ""
     };
-
-    //this.parseJSONAndUpdate(props);
   }
 
   // automatically update tags if new ones are received
   componentWillReceiveProps(nextProps) {
-    this.parseJSONAndUpdate(nextProps);
+    if(nextProps.value) {
+      console.log("TagInput => New values: ", nextProps.value);
+      this.setState({ tags: nextProps.value });
+    }
   }
 
   addTag(tag) {
     const tags = [...this.state.tags, tag];
-    this.updateTagsAndSerialize(tags);
+    this.setState({ tags });
+
+    this.props.onChange(tags);
   }
 
   deleteTag(tag, index) {
@@ -29,32 +34,13 @@ class TagInput extends Component {
 
     if(tags.length > index) {
       tags.splice(index, 1);
-      this.updateTagsAndSerialize(tags);
+      this.setState({ tags });
     } else {
       console.error("Couldn't delete tag", tag, "at index", index,
-        "because tag list only contains",tags.length,"elements!");
+        "because tag list only contains", tags.length, "elements!");
     }
-  }
 
-  parseJSONAndUpdate(props) {
-    const value = props.value || props.initialValue || null;
-    if(!value) return;
-
-    try {
-      // const tags = JSON.parse(value);
-      const tags = value;
-      this.setState({
-        formValue: value,
-        tags
-      });
-    } catch(e) {
-      console.error("Couldn't parse JSON for tags", value, e);
-    }
-  }
-
-  updateTagsAndSerialize(tags) {
-    const formValue = JSON.stringify(tags);
-    this.setState({ tags, formValue });
+    this.props.onChange(tags);
   }
 
   render() {
@@ -64,10 +50,9 @@ class TagInput extends Component {
     // TODO remove if not needed
     delete props.initialValue;
 
-    // TODO add other side of synchronization (onRequestAdd, onRequestDelete)
     // TODO correctly connect aliases to redux-form, doesn't change e.g. dirty state
-    // DONE use controlled mode => value, onRequestAdd & onRequestDelete so the state can be properly synced
 
+    // ChipInput used controlled mode => value, onRequestAdd & onRequestDelete (stace syncing)
     return (
       <ChipInput
         value={this.state.tags}
@@ -85,7 +70,8 @@ class TagInput extends Component {
 }
 
 TagInput.propTypes = {
-  value: PropTypes.string
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.array
 };
 
 export default TagInput;

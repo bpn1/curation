@@ -80,7 +80,7 @@ class SubjectEditor extends Component {
     <TagInput
       hintText={props.label}
       errorText={props.touched && props.error}
-      onChange={tags => props.onChange(tags)}
+      onChange={props.input.onChange}
       {...props} />
   );
 
@@ -88,7 +88,7 @@ class SubjectEditor extends Component {
     <Checkbox
       label={props.label}
       checked={!!props.value}
-      onCheck={props.onChange}
+      onCheck={props.input.onChange}
       {...props} />
   );
 
@@ -97,7 +97,7 @@ class SubjectEditor extends Component {
       label={props.label}
       errorText={props.touched && props.error}
       {...props}
-      onChange={props.onChange} />
+      onChange={props.input.onChange} />
   );
 
   renderTextFieldArray = ({ fields, meta: { error } }) => (
