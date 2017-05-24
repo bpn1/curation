@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
-import muiThemable from 'material-ui/styles/muiThemeable';
 
 import UpArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import DownArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
@@ -13,9 +12,13 @@ import DiffTree from './DiffTree';
 class InteractiveTable extends Component {
   constructor(props) {
     super(props);
+
+    // catch invalid data
+    const data = this.validateAndFixData(props.data);
+
     this.state = {
-      tableData: props.data,
-      filteredData: props.data,
+      tableData: data,
+      filteredData: data,
       selectedRows: [],
       sortBy: 'id',
       sortDir: null,
@@ -132,6 +135,15 @@ class InteractiveTable extends Component {
     );
   }
 
+  validateAndFixData(data) {
+    if(data === undefined || data === null || !(data instanceof Array)) {
+      console.error("Subject data is invalid! =>", data);
+      data = [];
+    }
+
+    return data;
+  }
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.data) {
       // if the data has changed, clear the selection
@@ -139,9 +151,11 @@ class InteractiveTable extends Component {
       if(nextProps.data !== this.state.tableData)
         selectedRows = [];
 
+      const data = this.validateAndFixData(nextProps.data);
+
       this.setState({
-        filteredData: nextProps.data,
-        tableData: nextProps.data,
+        filteredData: data,
+        tableData: data,
         selectedRows
       });
     }
