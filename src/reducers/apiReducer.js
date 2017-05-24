@@ -8,13 +8,25 @@ import {
 } from '../constants/ActionTypes';
 import { getMillisecondsFromTimeUUID } from '../helpers/timeUUIDParser';
 
+function makeError(actionType, payload) {
+  let error = actionType;
+  error = error.replace(/_/g, " ").toLowerCase();         // spaces to underscore, all lower case
+  error = error.charAt(0).toUpperCase() + error.slice(1); // first letter to upper case
+
+  if(payload !== null)
+    error += " ⇒ " + payload.toString();
+
+  return error;
+}
+
 export default function reducer(state = {
   subjects: [],
   statsIds: [],
   stats: [],
   fetching: false,
   fetched: false,
-  error: null,
+  status: 'ok',
+  error: '',
   subject: null,
   editableSubjects: {}
 }, action) {
@@ -23,7 +35,7 @@ export default function reducer(state = {
       return { ...state, fetching: true };
     }
     case FETCH_SUBJECTS_REJECTED: {
-      return { ...state, fetching: false, error: action.payload };
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_SUBJECTS_FULFILLED: {
       return {
@@ -37,9 +49,20 @@ export default function reducer(state = {
       return { ...state, fetching: true };
     }
     case FETCH_SUBJECT_REJECTED: {
-      return { ...state, fetching: false, error: action.payload };
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_SUBJECT_FULFILLED: {
+      if(action.payload && action.payload.hasOwnProperty('length')) {
+        return {
+          ...state,
+          fetching: false,
+          fetched: false,
+          subject: null,
+          error: "Server returned a string in API reducer (Action: "+action.type+")!",
+          status: 'warning'
+        }
+      }
+
       // transform fetched subject to the SubjectEditor format
       const transformedSubject = action.payload;
       const newProps = [];
@@ -94,7 +117,7 @@ export default function reducer(state = {
       return { ...state, fetching: true };
     }
     case FETCH_BLOCKING_STATS_REJECTED: {
-      return { ...state, fetching: false, error: action.payload };
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_BLOCKING_STATS_FULFILLED: {
       return {
@@ -111,7 +134,7 @@ export default function reducer(state = {
       return { ...state, fetching: true };
     }
     case FETCH_BLOCKING_STATS_DATA_REJECTED: {
-      return { ...state, fetching: false, error: action.payload };
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_BLOCKING_STATS_DATA_FULFILLED: {
       const blockingId = action.payload.jobid;
@@ -136,7 +159,7 @@ export default function reducer(state = {
       return { ...state, fetching: true };
     }
     case FETCH_SIM_MEASURE_STATS_REJECTED: {
-      return { ...state, fetching: false, error: action.payload };
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_SIM_MEASURE_STATS_FULFILLED: {
       return {
@@ -153,7 +176,7 @@ export default function reducer(state = {
       return { ...state, fetching: true };
     }
     case FETCH_SIM_MEASURE_STATS_DATA_REJECTED: {
-      return { ...state, fetching: false, error: action.payload };
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_SIM_MEASURE_STATS_DATA_FULFILLED: {
       const similarityId = action.payload.id;
@@ -172,8 +195,11 @@ export default function reducer(state = {
         }
       };
     }
-    default:
-    // do nothing
+    default: {
+      // TODO maybe to rigorous => e.g. actions from forms also end up here
+      // return { ...state, error: "Unknown action type: " + action.type, status: 'warning' };
+    }
   }
+
   return state;
 }
