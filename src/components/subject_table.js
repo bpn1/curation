@@ -184,7 +184,6 @@ class SubjectTable extends Component {
             <SettingsIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
           </IconButton>
         </div>
-        <br />
         <div style={this.styles.refreshContainer}>
           <RefreshIndicator
             status={this.state.refreshStatus}
