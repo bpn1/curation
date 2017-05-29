@@ -8,7 +8,6 @@ import Checkbox from "material-ui/Checkbox";
 
 class GraphView extends Component {
   isFirstRender = true;
-  i = 0;
 
   constructor(props) {
     super(props);
@@ -45,8 +44,7 @@ class GraphView extends Component {
       graph = {nodes:[], edges:[]};
     }
 
-    this.i++;
-
+    // TODO try to move this object into the state and see if if updates correctly
     let settings = {
       defaultEdgeColor: "#eee",
       defaultNodeColor: "#eebb11",
