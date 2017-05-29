@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import {
-  Sigma, RelativeSize, RandomizeNodePositions
-} from 'react-sigma';
+import Sigma from "react-sigma/es/Sigma";
+import RelativeSize from "react-sigma/es/RelativeSize";
 import EdgeShapes from "react-sigma/es/EdgeShapes";
+import RandomizeNodePositions from "react-sigma/es/RandomizeNodePositions";
 import ForceAtlas2 from "react-sigma/es/ForceAtlas2";
 import Checkbox from "material-ui/Checkbox";
+
 
 class GraphView extends Component {
   isFirstRender = true;
