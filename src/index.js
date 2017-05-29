@@ -9,6 +9,7 @@ import MainLayout from './layout';
 import SubjectsTableCard from './views/subjectsTableCard';
 import StatisticsCard from './views/blockingStatisticsCard';
 import SimMeasureStatisticsCard from './views/simMeasureStatisticsCard';
+import GraphsCard from './views/graphsCard';
 import TasksCard from './views/tasksCard';
 
 const Root = ({ store }) => (
@@ -18,6 +19,7 @@ const Root = ({ store }) => (
         <Route path="/" component={SubjectsTableCard} />
         <Route path="statistics/blocking" component={StatisticsCard} />
         <Route path="statistics/simmeasure" component={SimMeasureStatisticsCard} />
+        <Route path="graphs" component={GraphsCard} />
         <Route path="tasks" component={TasksCard} />
       </Route>
     </Router>

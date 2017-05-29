@@ -10,6 +10,7 @@ import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionAssessment from "material-ui/svg-icons/action/assessment";
+import GraphIcon from 'material-ui/svg-icons/social/share';
 import Link from "react-router/es/Link";
 
 import toggleSideNav from '../../actions/index';
@@ -81,7 +82,8 @@ class SideBar extends Component {
             <ListItem value={1} primaryText="Subjects" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
             <ListItem value={2} primaryText="Blocking&nbsp;Statistics" containerElement={<Link to={'/statistics/blocking'} />} leftIcon={<ActionAssessment />} />
             <ListItem value={3} primaryText="Similarity&nbsp;Measure" containerElement={<Link to={'/statistics/simmeasure'} />} leftIcon={<ActionAssessment />} />
-            <ListItem value={4} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
+            <ListItem value={4} primaryText="Graphs" containerElement={<Link to={'graphs'} />} leftIcon={<GraphIcon />} />
+            <ListItem value={5} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
           </SelectableList>
           <Divider className={styles.sideDivider} />
           <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()} >
