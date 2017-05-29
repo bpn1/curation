@@ -22,7 +22,8 @@ class InteractiveTable extends Component {
       selectedRows: [],
       sortBy: 'id',
       sortDir: null,
-      headerFilter: {}
+      headerFilter: {},
+      expandedObjects: {}
     };
   }
 
@@ -97,6 +98,9 @@ class InteractiveTable extends Component {
         selectedRows.push(row);
     });
     this.setState({...this.state, selectedRows});
+
+    if(this.props.onSelectionChange)
+      this.props.onSelectionChange(selectedRows);
   }
 
   renderHeader(key, name) {
@@ -144,6 +148,19 @@ class InteractiveTable extends Component {
     return data;
   }
 
+  expandObject(evt, id, key, isExpanded) {
+    let expandedObjects = this.state.expandedObjects;
+    if(!expandedObjects.hasOwnProperty(id))
+      expandedObjects[id] = {};
+
+    expandedObjects[id][key] = isExpanded;
+    console.log("Expanded objects:", expandedObjects);
+    this.setState({ expandedObjects });
+
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+
   componentWillReceiveProps(nextProps) {
     if(nextProps.data) {
       // if the data has changed, clear the selection
@@ -176,7 +193,7 @@ class InteractiveTable extends Component {
           fixedHeader
           onRowSelection={this.onRowSelection.bind(this)}>
           <TableHeader
-            displaySelectAll
+            displaySelectAll={false}
             adjustForCheckbox>
             <TableRow>
               { this.props.headers.map(header => {
@@ -212,12 +229,28 @@ class InteractiveTable extends Component {
                     if(!(header.key in row) || row[header.key] === null) {
                       content = <span style={{ color: "red" }}>null</span>;
                     } else if(typeof row[header.key] === "object") {
-                      content = <DiffTree json={row[header.key]} />;
+                      const expanded = this.state.expandedObjects[row.id];
+                      if(expanded && expanded[header.key])
+                        content =
+                          <div>
+                            <a onClick={evt => this.expandObject(evt, row.id, header.key, false)}
+                               style={{textDecoration: 'underline', paddingTop: 50}}>
+                              Collapse
+                            </a>
+                            <DiffTree json={row[header.key]} />
+                          </div>;
+                      else
+                        content =
+                          <a
+                            onClick={evt => this.expandObject(evt, row.id, header.key, true)}
+                            style={{textDecoration: 'underline'}}>
+                            { Object.keys(row[header.key]).length } values
+                          </a>;
                     } else {
                       content = row[header.key].toString();
                     }
                     return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-                  }) }
+                  }) }this.state.expandedObjects[row.id]
                   <TableRowColumn>
                     <div>
                       { this.props.buttonColumnGenerator(index, row) }
@@ -237,6 +270,7 @@ InteractiveTable.propTypes = {
   data: PropTypes.array.isRequired,
   muiTheme: PropTypes.object.isRequired,
   buttonColumnGenerator: PropTypes.func,
+  onSelectionChange: PropTypes.func,
   hiddenColumns: PropTypes.array
 };
 

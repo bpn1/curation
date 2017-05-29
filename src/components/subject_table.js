@@ -47,7 +47,8 @@ class SubjectTable extends Component {
       toBeDeletedID: null,
       toBeDeletedNames: [],
       settingsOpen: false,
-      refreshStatus: 'loading'
+      refreshStatus: 'loading',
+      selectedRows: []
     };
   }
 
@@ -68,35 +69,6 @@ class SubjectTable extends Component {
       });
     }
   }
-
-  generateButtonColumn = (index, row) => {
-    const colors = this.props.muiTheme.palette;
-
-    // TODO add behaviour for graph button
-
-    return (
-      <div>
-        <IconButton
-          touch={true}
-          onClick={evt => this.preventSelection(evt, () => this.listeners.editSubject(row.id)) }
-          iconStyle={this.styles.bigButtonIcon}>
-          <EditIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
-        </IconButton>
-        <IconButton
-          touch={true}
-          onClick={evt => this.preventSelection(evt, () => console.log("TODO implement graph function"))}
-          iconStyle={this.styles.bigButtonIcon}>
-          <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
-        </IconButton>
-        <IconButton
-          touch={true}
-          onClick={evt => this.preventSelection(evt, () => this.listeners.openDeleteConfirmationForSingleEntry(row.id, row.name)) }
-          iconStyle={this.styles.bigButtonIcon}>
-          <DeleteIcon color={colors.negativeColor1} hoverColor={colors.negativeColor2} />
-        </IconButton>
-      </div>
-    )
-  };
 
   preventSelection(evt, lambda) {
     lambda();
@@ -130,59 +102,61 @@ class SubjectTable extends Component {
     refreshIndicator: {
       display: 'inline-block',
       marginLeft: '50%'
-      //position: 'relative'
-    },
-    bigButtonIcon: {
-      width: 18,
-      height: 18
     }
   };
 
   render() {
     const colors = this.props.muiTheme.palette;
 
+    const selectionCount = this.state.selectedRows.length;
+    const showSelectionButtons = selectionCount > 0;
+    const showSingleSelectionButtons = selectionCount === 1;
+    const showMultipleSelectionButtons = selectionCount > 1;
+
+    // TODO add behaviour for graph button
+
     return (
       <div>
         <div style={{textAlign: 'right'}}>
-          <IconButton
-            tooltip="Add new"
-            touch={true}
-            tooltipPosition="top-center"
-            onClick={this.listeners.addSubject}
-            style={this.iconButtonStyle}>
-            <AddIcon color={colors.positiveColor1} hoverColor={colors.positiveColor2} />
-          </IconButton>
-          <IconButton
+          <CustomButton
+            tooltip="Edit selected"
+            visible={showSingleSelectionButtons}
+            onClick={evt => this.preventSelection(evt, () => this.listeners.editSelectedSubject())}>
+            <EditIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
+          </CustomButton>
+          <CustomButton
             tooltip="Merge selected"
-            touch={true}
-            tooltipPosition="top-center"
-            onClick={evt => console.log("TODO: Add merge function")}
-            style={this.iconButtonStyle}>
+            visible={showMultipleSelectionButtons}
+            onClick={evt => console.log("TODO: Add merge function")}>
             <MergeIcon color={colors.semiNegativeColor1} hoverColor={colors.semiNegativeColor2} />
-          </IconButton>
-          <IconButton
+          </CustomButton>
+          <CustomButton
             tooltip="Delete selected"
-            touch={true}
-            tooltipPosition="top-center"
-            onClick={this.listeners.openDeleteConfirmationIfSelected}
-            style={this.iconButtonStyle}>
+            visible={showSelectionButtons}
+            onClick={this.listeners.openDeleteConfirmationIfSelected}>
             <DeleteIcon color={colors.negativeColor1} hoverColor={colors.negativeColor2} />
-          </IconButton>
-          <IconButton
+          </CustomButton>
+          <CustomButton
+            tooltip="Show selection graph"
+            visible={showSelectionButtons}
+            onClick={evt => this.preventSelection(evt, () => console.log("TODO implement graph function"))}>
+            <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
+          </CustomButton>
+          <CustomButton
+            tooltip="Add new"
+            onClick={this.listeners.addSubject}>
+            <AddIcon color={colors.positiveColor1} hoverColor={colors.positiveColor2} />
+          </CustomButton>
+          <CustomButton
             tooltip="Reload"
-            touch={true}
-            tooltipPosition="top-center"
-            onClick={this.listeners.reloadSubjects}
-            style={this.iconButtonStyle}>
+            onClick={this.listeners.reloadSubjects}>
             <RefreshIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
-          </IconButton>
-          <IconButton
+          </CustomButton>
+          <CustomButton
             tooltip="Settings"
-            touch={true}
-            tooltipPosition="top-center"
             onClick={this.listeners.showSettings}>
             <SettingsIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
-          </IconButton>
+          </CustomButton>
         </div>
         <div style={this.styles.refreshContainer}>
           <RefreshIndicator
@@ -197,7 +171,7 @@ class SubjectTable extends Component {
           headers={this.headers}
           data={this.state.tableData}
           muiTheme={this.props.muiTheme}
-          buttonColumnGenerator={this.generateButtonColumn}
+          onSelectionChange={this.listeners.handleSelectionChange}
           hiddenColumns={this.state.hiddenColumns} />
 
         { /* these elements are hidden by default */ }
@@ -247,6 +221,9 @@ class SubjectTable extends Component {
   }
 
   listeners = {
+    handleSelectionChange: (selectedRows) => {
+      this.setState({ selectedRows });
+    },
     reloadSubjects: () => {
       this.props.fetchSubjects();
     },
@@ -254,7 +231,13 @@ class SubjectTable extends Component {
       this.refs['subjectDialog'].setState({id: null, type: 'add'});
       this.setState({editorOpen: true});
     },
-    editSubject: (id) => {
+    editSelectedSubject: () => {
+      if(this.state.selectedRows.length !== 1) {
+        console.error("Edit button clicked although there wasn't exactly 1 subject selected! Button should be hidden!");
+        return;
+      }
+
+      const id = this.state.selectedRows[0].id;
       this.refs['subjectDialog'].setState({id: id, type: 'edit'});
       this.setState({editorOpen: true});
     },
@@ -262,7 +245,7 @@ class SubjectTable extends Component {
       this.setState({editorOpen: false});
     },
     openDeleteConfirmationIfSelected: () => {
-      const selected = this.refs["table"].state.selectedRows;
+      const selected = this.state.selectedRows;
       if(selected.length > 0) {
         const deletedNames = selected.map(row => row.name);
 
@@ -272,14 +255,6 @@ class SubjectTable extends Component {
           multipleDeletions: (selected.length > 1)
         });
       }
-    },
-    openDeleteConfirmationForSingleEntry: (id, name) => {
-      this.setState({
-        deleteConfirmationOpen: true,
-        toBeDeletedID: id,
-        toBeDeletedNames: [name],
-        multipleDeletions: false
-      })
     },
     closeDeleteConfirmation: () => {
       this.setState({deleteConfirmationOpen: false});
@@ -322,6 +297,17 @@ class SubjectTable extends Component {
     }
   };
 }
+
+const CustomButton = ({tooltip, onClick, children, visible = true}) => {
+  return (visible &&
+  <IconButton
+    tooltip={tooltip}
+    touch={true}
+    tooltipPosition="top-center"
+    onClick={onClick}>
+    { children }
+  </IconButton>);
+};
 
 /* connection to Redux */
 function mapStateToProps(state) {

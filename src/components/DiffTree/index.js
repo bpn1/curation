@@ -12,7 +12,10 @@ class DiffTree extends Component {
         <JSONTree
           data={this.props.json}
           theme={theme}
+          hideRoot={true}
           invertTheme={false}
+          getItemString={(type, data, itemType, itemString) => <span>{itemString}</span>}
+          valueRenderer={raw => raw.replace(/"/g, '')}
           shouldExpandNode={(keyName, data, level) => false} />
       </div>
     );
