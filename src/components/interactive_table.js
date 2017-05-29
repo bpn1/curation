@@ -202,9 +202,6 @@ class InteractiveTable extends Component {
                 else
                   return this.renderHeader(header.key, header.name);
               }) }
-              <TableHeaderColumn>
-                { /*<h2 style={{ margin: 0, textAlign: 'center' }}></h2> */ }
-              </TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody
@@ -251,11 +248,6 @@ class InteractiveTable extends Component {
                     }
                     return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
                   }) }this.state.expandedObjects[row.id]
-                  <TableRowColumn>
-                    <div>
-                      { this.props.buttonColumnGenerator(index, row) }
-                    </div>
-                  </TableRowColumn>
                 </TableRow>
             )} )}
           </TableBody>
@@ -269,13 +261,11 @@ InteractiveTable.propTypes = {
   headers: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   muiTheme: PropTypes.object.isRequired,
-  buttonColumnGenerator: PropTypes.func,
   onSelectionChange: PropTypes.func,
   hiddenColumns: PropTypes.array
 };
 
 InteractiveTable.defaultProps = {
-  buttonColumnGenerator: (index, row) => {},
   hiddenColumns: []
 };
 
