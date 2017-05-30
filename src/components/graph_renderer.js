@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import Sigma from "react-sigma/es/Sigma";
-import RelativeSize from "react-sigma/es/RelativeSize";
-import EdgeShapes from "react-sigma/es/EdgeShapes";
-import RandomizeNodePositions from "react-sigma/es/RandomizeNodePositions";
-import ForceAtlas2 from "react-sigma/es/ForceAtlas2";
 import Checkbox from "material-ui/Checkbox";
+import { EdgeShapes, ForceAtlas2, RandomizeNodePositions, RelativeSize, Sigma } from "react-sigma";
 
 class GraphRenderer extends Component {
   isFirstRender = true;
