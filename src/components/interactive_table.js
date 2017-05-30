@@ -34,9 +34,13 @@ class InteractiveTable extends Component {
       });
     }
 
-    const filterBy = event.target.value.toString().toLowerCase();
+    let filterBy = event.target.value.toString().toLowerCase();
     const filteredList = this.state.tableData.filter(row => {
-      const data = row[column] ? row[column] : "null";
+      let data = row[column] ? row[column] : "null";
+
+      if(!(typeof data === 'string') || !(data instanceof String))
+        data = JSON.stringify(data);
+
       return data
         .toString()
         .toLowerCase()
