@@ -154,7 +154,6 @@ class InteractiveTable extends Component {
       expandedObjects[id] = {};
 
     expandedObjects[id][key] = isExpanded;
-    console.log("Expanded objects:", expandedObjects);
     this.setState({ expandedObjects });
 
     evt.stopPropagation();
