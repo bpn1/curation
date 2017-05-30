@@ -28,7 +28,8 @@
     "prefer-arrow-callback": 0,
     "prefer-template": 0,
     "react/prefer-stateless-function": 0,
-    "babel/object-shorthand": 0
+    "babel/object-shorthand": 0,
+    "class-methods-use-this": 0
   },
   "globals": {
     "describe": false,
