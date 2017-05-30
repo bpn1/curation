@@ -65,7 +65,7 @@ class SubjectEditor extends Component {
 
   reload() {
     console.log("Reload subject #", this.state.id);
-    if(this.state.id) {
+    if(this.state.id && this.props.editorType !== "add") {
       this.props.fetchSubject(this.state.id);
     }
   }
