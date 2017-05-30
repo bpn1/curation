@@ -6,8 +6,7 @@ import RandomizeNodePositions from "react-sigma/es/RandomizeNodePositions";
 import ForceAtlas2 from "react-sigma/es/ForceAtlas2";
 import Checkbox from "material-ui/Checkbox";
 
-
-class GraphView extends Component {
+class GraphRenderer extends Component {
   isFirstRender = true;
 
   constructor(props) {
@@ -90,4 +89,4 @@ class GraphView extends Component {
   }
 }
 
-export default GraphView;
+export default GraphRenderer;
