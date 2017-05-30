@@ -247,7 +247,7 @@ class InteractiveTable extends Component {
                       content = row[header.key].toString();
                     }
                     return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-                  }) }this.state.expandedObjects[row.id]
+                  }) }
                 </TableRow>
             )} )}
           </TableBody>
