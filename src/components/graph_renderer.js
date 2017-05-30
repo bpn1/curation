@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Checkbox from "material-ui/Checkbox";
-import { EdgeShapes, ForceAtlas2, RandomizeNodePositions, RelativeSize, Sigma } from "react-sigma";
+import { EdgeShapes, ForceAtlas2, RandomizeNodePositions, Sigma } from "react-sigma";
 
 class GraphRenderer extends Component {
   isFirstRender = true;
@@ -69,7 +69,6 @@ class GraphRenderer extends Component {
                     onCheck={(event, isInputChecked) => this.setState({ showEdgeLabels: isInputChecked })} />
         </div>
         <Sigma renderer="canvas" graph={graph} settings={settings}>
-          <RelativeSize initialSize={15} />
           <EdgeShapes default="curvedArrow" />
           <RandomizeNodePositions />
           <ForceAtlas2
