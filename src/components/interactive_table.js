@@ -34,12 +34,11 @@ class InteractiveTable extends Component {
       });
     }
 
-    let filterBy = event.target.value.toString().toLowerCase();
-    const filteredList = this.state.tableData.filter(row => {
-      let data = row[column] ? row[column] : "null";
+    const filterBy = event.target.value.toString().toLowerCase();
+    const filteredList = this.state.tableData.filter((row) => {
+      let data = row[column] ? row[column] : 'null';
 
-      if(!(typeof data === 'string') || !(data instanceof String))
-        data = JSON.stringify(data);
+      if (!(typeof data === 'string') || !(data instanceof String)) { data = JSON.stringify(data); }
 
       return data
         .toString()
@@ -48,12 +47,9 @@ class InteractiveTable extends Component {
     });
 
     // clear all filter fields, update the content of the current field
-    const headerFilter = {...this.state.headerFilter};
+    const headerFilter = { ...this.state.headerFilter };
     this.props.headers.forEach((header) => {
-      if(header.key === column)
-        headerFilter[header.key] = event.target.value;
-      else
-        headerFilter[header.key] = '';
+      if (header.key === column) { headerFilter[header.key] = event.target.value; } else { headerFilter[header.key] = ''; }
     });
 
     this.setState({
@@ -94,17 +90,15 @@ class InteractiveTable extends Component {
   }
 
   onRowSelection(rows) {
-    let selectedRows = [];
+    const selectedRows = [];
 
     this.state.tableData.forEach((row, i) => {
       row.selected = rows.indexOf(i) > -1;
-      if(row.selected)
-        selectedRows.push(row);
+      if (row.selected) { selectedRows.push(row); }
     });
-    this.setState({...this.state, selectedRows});
+    this.setState({ ...this.state, selectedRows });
 
-    if(this.props.onSelectionChange)
-      this.props.onSelectionChange(selectedRows);
+    if (this.props.onSelectionChange) { this.props.onSelectionChange(selectedRows); }
   }
 
   renderHeader(key, name) {
@@ -118,7 +112,7 @@ class InteractiveTable extends Component {
         ? <DownArrowIcon color={iconColor} />
         : <UpArrowIcon color={iconColor} />;
 
-    const filterValue = this.state.headerFilter.hasOwnProperty(key) ? this.state.headerFilter[key] : "";
+    const filterValue = this.state.headerFilter.hasOwnProperty(key) ? this.state.headerFilter[key] : '';
 
     return (
       <TableHeaderColumn key={key}>
@@ -131,12 +125,14 @@ class InteractiveTable extends Component {
           floatingLabelStyle={{ color: colors.interactiveColor1, fontWeight: 'bold' }}
           floatingLabelFocusStyle={{ color: colors.interactiveColor1, fontWeight: 'normal' }}
           value={filterValue}
-          onChange={this.onFilterChange.bind(this, key)} />
+          onChange={this.onFilterChange.bind(this, key)}
+        />
         <IconButton
           onClick={this.sortRowsBy.bind(this, key)}
           tooltip="Sort"
-          touch={true}
-          tooltipPosition="bottom-center">
+          touch
+          tooltipPosition="bottom-center"
+        >
           { sortDirArrow }
         </IconButton>
       </TableHeaderColumn>
@@ -144,8 +140,8 @@ class InteractiveTable extends Component {
   }
 
   validateAndFixData(data) {
-    if(data === undefined || data === null || !(data instanceof Array)) {
-      console.error("Subject data is invalid! =>", data);
+    if (data === undefined || data === null || !(data instanceof Array)) {
+      console.error('Subject data is invalid! =>', data);
       data = [];
     }
 
@@ -153,9 +149,8 @@ class InteractiveTable extends Component {
   }
 
   expandObject(evt, id, key, isExpanded) {
-    let expandedObjects = this.state.expandedObjects;
-    if(!expandedObjects.hasOwnProperty(id))
-      expandedObjects[id] = {};
+    const expandedObjects = this.state.expandedObjects;
+    if (!expandedObjects.hasOwnProperty(id)) { expandedObjects[id] = {}; }
 
     expandedObjects[id][key] = isExpanded;
     this.setState({ expandedObjects });
@@ -165,11 +160,10 @@ class InteractiveTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.data) {
+    if (nextProps.data) {
       // if the data has changed, clear the selection
       let selectedRows = this.state.selectedRows;
-      if(nextProps.data !== this.state.tableData)
-        selectedRows = [];
+      if (nextProps.data !== this.state.tableData) { selectedRows = []; }
 
       const data = this.validateAndFixData(nextProps.data);
 
@@ -194,16 +188,16 @@ class InteractiveTable extends Component {
           selectable
           multiSelectable
           fixedHeader
-          onRowSelection={this.onRowSelection.bind(this)}>
+          onRowSelection={this.onRowSelection.bind(this)}
+        >
           <TableHeader
             displaySelectAll={false}
-            adjustForCheckbox>
+            adjustForCheckbox
+          >
             <TableRow>
-              { this.props.headers.map(header => {
-                if(this.props.hiddenColumns.indexOf(header.key) > -1)
-                  return "";
-                else
-                  return this.renderHeader(header.key, header.name);
+              { this.props.headers.map((header) => {
+                if (this.props.hiddenColumns.indexOf(header.key) > -1) { return ''; }
+                return this.renderHeader(header.key, header.name);
               }) }
             </TableRow>
           </TableHeader>
@@ -211,48 +205,53 @@ class InteractiveTable extends Component {
             displayRowCheckbox
             showRowHover
             deselectOnClickaway={false}
-            stripedRows={false}>
+            stripedRows={false}
+          >
             { filteredData.map((row, index) => {
-              if(!row) {
-                console.error("Row #"+index+" is undefined/ null!");
-                return;
+              if (!row) {
+                console.error('Row #' + index + ' is undefined/ null!');
+                return '';
               }
 
               return (
                 <TableRow key={index} selected={row.selected}>
-                  { this.props.headers.map(header => {
+                  { this.props.headers.map((header) => {
                     // don't render this column if it has been set to hidden
-                    if(this.props.hiddenColumns.indexOf(header.key) > -1)
-                      return "";
+                    if (this.props.hiddenColumns.indexOf(header.key) > -1) { return ''; }
 
                     let content = '';
-                    if(!(header.key in row) || row[header.key] === null) {
-                      content = <span style={{ color: "red" }}>null</span>;
-                    } else if(typeof row[header.key] === "object") {
+                    if (!(header.key in row) || row[header.key] === null) {
+                      content = <span style={{ color: 'red' }}>null</span>;
+                    } else if (typeof row[header.key] === 'object') {
                       const expanded = this.state.expandedObjects[row.id];
-                      if(expanded && expanded[header.key])
+                      if (expanded && expanded[header.key]) {
                         content =
-                          <div>
-                            <a onClick={evt => this.expandObject(evt, row.id, header.key, false)}
-                               style={{textDecoration: 'underline', paddingTop: 50}}>
+                          (<div>
+                            <a
+                              onClick={evt => this.expandObject(evt, row.id, header.key, false)}
+                              style={{ textDecoration: 'underline', paddingTop: 50 }}
+                            >
                               Collapse
                             </a>
                             <DiffTree json={row[header.key]} />
-                          </div>;
-                      else
+                          </div>);
+                      } else {
                         content =
-                          <a
+                          (<a
                             onClick={evt => this.expandObject(evt, row.id, header.key, true)}
-                            style={{textDecoration: 'underline'}}>
+                            style={{ textDecoration: 'underline' }}
+                          >
                             { Object.keys(row[header.key]).length } values
-                          </a>;
+                          </a>);
+                      }
                     } else {
                       content = row[header.key].toString();
                     }
                     return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
                   }) }
                 </TableRow>
-            )} )}
+              );
+            })}
           </TableBody>
         </Table>
       </div>
@@ -269,7 +268,8 @@ InteractiveTable.propTypes = {
 };
 
 InteractiveTable.defaultProps = {
-  hiddenColumns: []
+  hiddenColumns: [],
+  onSelectionChange: () => {}
 };
 
 export default InteractiveTable;
