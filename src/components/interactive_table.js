@@ -49,7 +49,11 @@ class InteractiveTable extends Component {
     // clear all filter fields, update the content of the current field
     const headerFilter = { ...this.state.headerFilter };
     this.props.headers.forEach((header) => {
-      if (header.key === column) { headerFilter[header.key] = event.target.value; } else { headerFilter[header.key] = ''; }
+      if (header.key === column) {
+        headerFilter[header.key] = event.target.value;
+      } else {
+        headerFilter[header.key] = '';
+      }
     });
 
     this.setState({
@@ -58,6 +62,18 @@ class InteractiveTable extends Component {
     });
 
     return true;
+  }
+
+  onRowSelection(rows) {
+    const selectedRows = [];
+
+    this.state.tableData.forEach((row, i) => {
+      row.selected = rows.indexOf(i) > -1;
+      if (row.selected) { selectedRows.push(row); }
+    });
+    this.setState({ ...this.state, selectedRows });
+
+    if (this.props.onSelectionChange) { this.props.onSelectionChange(selectedRows); }
   }
 
   sortRowsBy(column) {
@@ -87,18 +103,6 @@ class InteractiveTable extends Component {
     });
 
     this.setState({ sortBy, sortDir, filteredData: rows });
-  }
-
-  onRowSelection(rows) {
-    const selectedRows = [];
-
-    this.state.tableData.forEach((row, i) => {
-      row.selected = rows.indexOf(i) > -1;
-      if (row.selected) { selectedRows.push(row); }
-    });
-    this.setState({ ...this.state, selectedRows });
-
-    if (this.props.onSelectionChange) { this.props.onSelectionChange(selectedRows); }
   }
 
   renderHeader(key, name) {
@@ -139,7 +143,8 @@ class InteractiveTable extends Component {
     );
   }
 
-  validateAndFixData(data) {
+  validateAndFixData(tableData) {
+    let data = tableData;
     if (data === undefined || data === null || !(data instanceof Array)) {
       console.error('Subject data is invalid! =>', data);
       data = [];
@@ -214,7 +219,7 @@ class InteractiveTable extends Component {
               }
 
               return (
-                <TableRow key={index} selected={row.selected}>
+                <TableRow key={row.id} selected={row.selected}>
                   { this.props.headers.map((header) => {
                     // don't render this column if it has been set to hidden
                     if (this.props.hiddenColumns.indexOf(header.key) > -1) { return ''; }
@@ -229,7 +234,7 @@ class InteractiveTable extends Component {
                           (<div>
                             <a
                               onClick={evt => this.expandObject(evt, row.id, header.key, false)}
-                              style={{ textDecoration: 'underline', paddingTop: 50 }}
+                              style={{ textDecoration: 'underline' }}
                             >
                               Collapse
                             </a>
