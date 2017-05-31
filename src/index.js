@@ -7,17 +7,19 @@ import hashHistory from 'react-router/es/hashHistory';
 
 import MainLayout from './layout';
 import SubjectsTableCard from './views/subjectsTableCard';
-import StatisticsCard from './views/blockingStatisticsCard';
+import BlockingStatisticsCard from './views/blockingStatisticsCard';
 import SimMeasureStatisticsCard from './views/simMeasureStatisticsCard';
 import GraphsCard from './views/graphsCard';
 import TasksCard from './views/tasksCard';
+import DuplicateTableCard from './views/duplicateTableCard';
 
 const Root = ({ store }) => (
   <Provider store={store}>
     <Router history={hashHistory}>
       <Route component={MainLayout}>
         <Route path="/" component={SubjectsTableCard} />
-        <Route path="statistics/blocking" component={StatisticsCard} />
+        <Route path="/duplicates" component={DuplicateTableCard} />
+        <Route path="statistics/blocking" component={BlockingStatisticsCard} />
         <Route path="statistics/simmeasure" component={SimMeasureStatisticsCard} />
         <Route path="graphs" component={GraphsCard} />
         <Route path="tasks" component={TasksCard} />

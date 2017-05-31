@@ -1,5 +1,5 @@
 const queryConfig = {
-  normal: ['category', 'name'],
+  normal: ['id', 'category', 'name'],
   lists: ['aliases'],
   maps: ['properties', 'relations'],
   uniqueKey: 'id',

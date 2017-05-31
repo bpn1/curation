@@ -6,13 +6,7 @@ module.exports = {
     },
     candidates: {
       type: 'list',
-      typeDef: '<frozen<candidate>>'
-    },
-    datasource: {
-      type: 'text'
-    },
-    subject_name: {
-      type: 'text'
+      typeDef: '<frozen<tuple<uuid, text, double>>>'
     }
   },
   key: ['subject_id'],

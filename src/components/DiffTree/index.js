@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
 import JSONTree from 'react-json-tree';
-import theme from './theme.js';
+import theme from './theme';
 
 class DiffTree extends Component {
   render() {
@@ -12,11 +12,12 @@ class DiffTree extends Component {
         <JSONTree
           data={this.props.json}
           theme={theme}
-          hideRoot={true}
+          hideRoot
           invertTheme={false}
           getItemString={(type, data, itemType, itemString) => <span>{itemString}</span>}
-          valueRenderer={raw => raw.replace(/"/g, '')}
-          shouldExpandNode={(keyName, data, level) => false} />
+          valueRenderer={raw => raw.toString().replace(/"/g, '')}
+          shouldExpandNode={(keyName, data, level) => false}
+        />
       </div>
     );
   }
@@ -24,7 +25,10 @@ class DiffTree extends Component {
 
 // TODO allow either array or object
 DiffTree.propTypes = {
-  json: PropTypes.object.isRequired
+  json: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ]).isRequired,
 };
 
 export default muiThemable()(DiffTree);

@@ -1,5 +1,6 @@
 import 'axios';
 import 'classnames';
+import 'extensible-duck/dist/extensible-duck.min';
 import 'material-ui';
 import 'material-ui-chip-input';
 import 'prop-types';

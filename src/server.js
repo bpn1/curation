@@ -28,7 +28,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 app.use(compression());
 
-if (isDeveloping) {
+if (isDeveloping && process.argv.indexOf('api') === -1) {
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -79,9 +79,11 @@ router.get('/', function (req, res) {
 
 app.use('/api', router);
 app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryConfig));
-app.use('/api/eval/subjects', modelRouter(evaluationModels, 'Subject_DBpedia', subjectsQueryConfig));
+app.use('/api/eval/subjects_dbpedia', modelRouter(evaluationModels, 'Subject_DBpedia', subjectsQueryConfig));
+app.use('/api/eval/subjects_wikidata', modelRouter(evaluationModels, 'Subject_Wikidata', subjectsQueryConfig));
 app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));
-app.use('/api/duplicateCandidates', modelRouter(datalakeModels, 'DuplicateCandidates', duplicateCandidatesQueryConfig));
+app.use('/api/duplicates', modelRouter(evaluationModels, 'DuplicateCandidates_DBpedia_Wikidata_OnlyUUID', duplicateCandidatesQueryConfig));
+app.use('/api/new_duplicates', modelRouter(evaluationModels, 'DBpedia_WikiData_Duplicates', duplicateCandidatesQueryConfig));
 app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', blockingStatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 

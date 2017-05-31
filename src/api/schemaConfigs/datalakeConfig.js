@@ -6,7 +6,7 @@ const schemaConfig = [
   },
   {
     name: 'DuplicateCandidates',
-    model: require('../models/DuplicateCandidatesModel'),
+    model: require('../models/DuplicateCandidatesModelWithSubject'),
     table_name: 'duplicatecandidates'
   },
   {

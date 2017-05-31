@@ -1,13 +1,18 @@
 const schemaConfig = [
   {
     name: 'DuplicateCandidates',
-    model: require('../models/DuplicateCandidatesModel'),
+    model: require('../models/DuplicateCandidatesModelWithSubject'),
     table_name: 'duplicatecandidates'
   },
   {
-    name: 'DuplicateCandidates_DBpedia_Wikidata',
+    name: 'DuplicateCandidates_DBpedia_Wikidata_OnlyUUID',
+    model: require('../models/DuplicateCandidatesModelOnlyUUID'),
+    table_name: 'dbpedia_wikidata_deduplication_only_uuid'
+  },
+  {
+    name: 'DBpedia_WikiData_Duplicates',
     model: require('../models/DuplicateCandidatesModel'),
-    table_name: 'dbpedia_wikidata_deduplication'
+    table_name: 'dbpedia_wikidata_duplicates'
   },
   {
     name: 'Goldstandard',

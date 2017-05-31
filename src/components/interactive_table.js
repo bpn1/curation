@@ -27,6 +27,24 @@ class InteractiveTable extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data) {
+      // if the data has changed, clear the selection
+      let selectedRows = this.state.selectedRows;
+      if (nextProps.data !== this.state.tableData) {
+        selectedRows = [];
+      }
+
+      const data = this.validateAndFixData(nextProps.data);
+
+      this.setState({
+        filteredData: data,
+        tableData: data,
+        selectedRows
+      });
+    }
+  }
+
   onFilterChange(column, event) {
     if (!event.target.value) {
       this.setState({
@@ -38,7 +56,9 @@ class InteractiveTable extends Component {
     const filteredList = this.state.tableData.filter((row) => {
       let data = row[column] ? row[column] : 'null';
 
-      if (!(typeof data === 'string') || !(data instanceof String)) { data = JSON.stringify(data); }
+      if (!(typeof data === 'string') || !(data instanceof String)) {
+        data = JSON.stringify(data);
+      }
 
       return data
         .toString()
@@ -69,11 +89,15 @@ class InteractiveTable extends Component {
 
     this.state.tableData.forEach((row, i) => {
       row.selected = rows.indexOf(i) > -1;
-      if (row.selected) { selectedRows.push(row); }
+      if (row.selected) {
+        selectedRows.push(row);
+      }
     });
     this.setState({ ...this.state, selectedRows });
 
-    if (this.props.onSelectionChange) { this.props.onSelectionChange(selectedRows); }
+    if (this.props.onSelectionChange) {
+      this.props.onSelectionChange(selectedRows);
+    }
   }
 
   sortRowsBy(column) {
@@ -105,6 +129,29 @@ class InteractiveTable extends Component {
     this.setState({ sortBy, sortDir, filteredData: rows });
   }
 
+  validateAndFixData(tableData) {
+    let data = tableData;
+    if (data === undefined || data === null || !(data instanceof Array)) {
+      console.error('Subject data is invalid! =>', data);
+      data = [];
+    }
+
+    return data;
+  }
+
+  expandObject(evt, expandKey, key, isExpanded) {
+    const expandedObjects = this.state.expandedObjects;
+    if (!expandedObjects.hasOwnProperty(expandKey)) {
+      expandedObjects[expandKey] = {};
+    }
+
+    expandedObjects[expandKey][key] = isExpanded;
+    this.setState({ expandedObjects });
+
+    evt.stopPropagation();
+    evt.preventDefault();
+  }
+
   renderHeader(key, name) {
     const sortDisabled = !(this.state.sortBy === key);
     const colors = this.props.muiTheme.palette;
@@ -121,7 +168,7 @@ class InteractiveTable extends Component {
     return (
       <TableHeaderColumn key={key}>
         <TextField
-          style={{ maxWidth: '100%', width: '100%' }}
+          style={{ maxWidth: '100%' }}
           ref={key + 'Header'}
           hintText={'Filter...'}
           floatingLabelText={name}
@@ -137,82 +184,46 @@ class InteractiveTable extends Component {
           touch
           tooltipPosition="bottom-center"
         >
-          { sortDirArrow }
+          {sortDirArrow}
         </IconButton>
       </TableHeaderColumn>
     );
   }
 
-  validateAndFixData(tableData) {
-    let data = tableData;
-    if (data === undefined || data === null || !(data instanceof Array)) {
-      console.error('Subject data is invalid! =>', data);
-      data = [];
-    }
-
-    return data;
-  }
-
-  expandObject(evt, id, key, isExpanded) {
-    const expandedObjects = this.state.expandedObjects;
-    if (!expandedObjects.hasOwnProperty(id)) { expandedObjects[id] = {}; }
-
-    expandedObjects[id][key] = isExpanded;
-    this.setState({ expandedObjects });
-
-    evt.stopPropagation();
-    evt.preventDefault();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data) {
-      // if the data has changed, clear the selection
-      let selectedRows = this.state.selectedRows;
-      if (nextProps.data !== this.state.tableData) { selectedRows = []; }
-
-      const data = this.validateAndFixData(nextProps.data);
-
-      this.setState({
-        filteredData: data,
-        tableData: data,
-        selectedRows
-      });
-    }
-  }
-
   render() {
     const { filteredData } = this.state;
-
     // TODO adapt Table height to window size changes (see http://stackoverflow.com/a/42141641)
     // TODO or use e.g. flexbox for adaptive sizing
-
     return (
       <div>
         <Table
           height={(window.innerHeight / 2).toString() + 'px'}
-          selectable
-          multiSelectable
+          selectable={this.props.selectable}
+          multiSelectable={this.props.multiSelectable}
           fixedHeader
+          onCellClick={this.props.onCellClick}
           onRowSelection={this.onRowSelection.bind(this)}
         >
           <TableHeader
             displaySelectAll={false}
-            adjustForCheckbox
+            adjustForCheckbox={this.props.showCheckboxes}
           >
             <TableRow>
-              { this.props.headers.map((header) => {
-                if (this.props.hiddenColumns.indexOf(header.key) > -1) { return ''; }
+              {this.props.headers.map((header) => {
+                if (this.props.hiddenColumns.indexOf(header.key) > -1) {
+                  return '';
+                }
                 return this.renderHeader(header.key, header.name);
-              }) }
+              })}
             </TableRow>
           </TableHeader>
           <TableBody
-            displayRowCheckbox
+            displayRowCheckbox={this.props.showCheckboxes}
             showRowHover
             deselectOnClickaway={false}
             stripedRows={false}
           >
-            { filteredData.map((row, index) => {
+            {filteredData.map((row, index) => {
               if (!row) {
                 console.error('Row #' + index + ' is undefined/ null!');
                 return '';
@@ -220,40 +231,43 @@ class InteractiveTable extends Component {
 
               return (
                 <TableRow key={row.id} selected={row.selected}>
-                  { this.props.headers.map((header) => {
+                  {this.props.headers.map((header) => {
                     // don't render this column if it has been set to hidden
-                    if (this.props.hiddenColumns.indexOf(header.key) > -1) { return ''; }
+                    if (this.props.hiddenColumns.indexOf(header.key) > -1) {
+                      return '';
+                    }
 
                     let content = '';
                     if (!(header.key in row) || row[header.key] === null) {
                       content = <span style={{ color: 'red' }}>null</span>;
                     } else if (typeof row[header.key] === 'object') {
-                      const expanded = this.state.expandedObjects[row.id];
-                      if (expanded && expanded[header.key]) {
+                      const expanded = this.state.expandedObjects[row[this.props.expandKey]];
+                      const expandTreeByDefault = this.props.expandTreeByDefaultColumns.indexOf(header.key) !== -1;
+                      if (expandTreeByDefault || (expanded && expanded[header.key])) {
                         content =
                           (<div>
-                            <a
-                              onClick={evt => this.expandObject(evt, row.id, header.key, false)}
+                            {!expandTreeByDefault && <a
+                              onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, false)}
                               style={{ textDecoration: 'underline' }}
                             >
                               Collapse
-                            </a>
+                            </a>}
                             <DiffTree json={row[header.key]} />
                           </div>);
                       } else {
                         content =
                           (<a
-                            onClick={evt => this.expandObject(evt, row.id, header.key, true)}
+                            onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, true)}
                             style={{ textDecoration: 'underline' }}
                           >
-                            { Object.keys(row[header.key]).length } values
+                            {Object.keys(row[header.key]).length} values
                           </a>);
                       }
                     } else {
                       content = row[header.key].toString();
                     }
                     return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-                  }) }
+                  })}
                 </TableRow>
               );
             })}
@@ -268,13 +282,25 @@ InteractiveTable.propTypes = {
   headers: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   muiTheme: PropTypes.object.isRequired,
+  expandKey: PropTypes.string.isRequired,
+  expandTreeByDefaultColumns: PropTypes.array,
+  onCellClick: PropTypes.func,
+  showCheckboxes: PropTypes.bool,
+  selectable: PropTypes.bool,
+  multiSelectable: PropTypes.bool,
   onSelectionChange: PropTypes.func,
   hiddenColumns: PropTypes.array
 };
 
 InteractiveTable.defaultProps = {
-  hiddenColumns: [],
-  onSelectionChange: () => {}
+  showCheckboxes: true,
+  expandTreeByDefaultColumns: [],
+  selectable: true,
+  multiSelectable: true,
+  onCellClick: () => {
+  },
+  onSelectionChange: undefined,
+  hiddenColumns: []
 };
 
 export default InteractiveTable;

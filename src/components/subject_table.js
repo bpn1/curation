@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
 
@@ -19,18 +20,9 @@ import SettingsIcon from 'material-ui/svg-icons/action/settings';
 
 import InteractiveTable from './interactive_table';
 import SubjectDialog from './subject_dialog';
-import { fetchSubjects, addSubject, updateSubject, deleteSubject } from '../actions/apiActions';
+import { subjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
 
 class SubjectTable extends Component {
-  headers = [
-    { key: 'id', name: 'ID' },
-    { key: 'name', name: 'Name' },
-    { key: 'aliases', name: 'Aliases' },
-    { key: 'category', name: 'Category' },
-    { key: 'properties', name: 'Properties' },
-    { key: 'relations', name: 'Relations' }
-  ];
-
   constructor(props) {
     super(props);
 
@@ -47,23 +39,25 @@ class SubjectTable extends Component {
       toBeDeletedID: null,
       toBeDeletedNames: [],
       settingsOpen: false,
-      refreshStatus: 'loading',
+      refreshStatus: props.fetchOnMount ? 'loading' : 'hide',
       selectedRows: []
     };
   }
 
   componentDidMount() {
-    this.listeners.reloadSubjects();
+    if (this.props.fetchOnMount) {
+      this.listeners.reloadSubjects();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.tableData) {
+    if (nextProps.tableData) {
       this.setState({
         tableData: nextProps.tableData
       });
     }
 
-    if(nextProps.loading !== null) {
+    if (nextProps.loading !== null) {
       this.setState({
         refreshStatus: nextProps.loading ? "loading" : "hide"
       });
@@ -168,13 +162,14 @@ class SubjectTable extends Component {
         </div>
         <InteractiveTable
           ref="table"
-          headers={this.headers}
+          expandKey={'id'}
+          headers={this.props.headers}
           data={this.state.tableData}
           muiTheme={this.props.muiTheme}
           onSelectionChange={this.listeners.handleSelectionChange}
           hiddenColumns={this.state.hiddenColumns} />
 
-        { /* these elements are hidden by default */ }
+        {/* these elements are hidden by default */}
         <SubjectDialog
           ref="subjectDialog"
           type="add"
@@ -186,26 +181,27 @@ class SubjectTable extends Component {
           title="Are you sure?"
           modal={true}
           actions={[
-            <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeDeleteConfirmation} keyboardFocused={true} />,
+            <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeDeleteConfirmation}
+                        keyboardFocused={true} />,
             <FlatButton label="Submit" primary={true} onTouchTap={this.listeners.deleteSelectedSubjects} />
           ]}>
-          Do you really want to delete the selected subject{this.state.multipleDeletions ? " entries" : ""}?<br/>
+          Do you really want to delete the selected subject{this.state.multipleDeletions ? " entries" : ""}?<br />
           This will result in the loss of {this.state.multipleDeletions ? "these subjects" : "this subject"}:
-          <ul>{ this.state.toBeDeletedNames.map(name => <li key={name}>{name}</li>) }</ul>
+          <ul>{this.state.toBeDeletedNames.map(name => <li key={name}>{name}</li>)}</ul>
         </Dialog>
         <Dialog
           ref="settingsDialog"
-            open={this.state.settingsOpen}
-            backgroundColor
-            title={
-              <span style={this.styles.dialogTitle}>
+          open={this.state.settingsOpen}
+          backgroundColor
+          title={
+            <span style={this.styles.dialogTitle}>
                 <span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.chiliIcon}>🌶️</span>
               </span>}
-            modal={true}
-            actions={[
-              <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
-              <FlatButton label="Save" primary={true} onTouchTap={this.listeners.saveSettings} keyboardFocused={true} />
-            ]}>
+          modal={true}
+          actions={[
+            <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
+            <FlatButton label="Save" primary={true} onTouchTap={this.listeners.saveSettings} keyboardFocused={true} />
+          ]}>
           <TextField
             style={{ maxWidth: '100%', width: '100%' }}
             ref="setting_hiddenColumns"
@@ -225,11 +221,11 @@ class SubjectTable extends Component {
       this.setState({ selectedRows });
     },
     reloadSubjects: () => {
-      this.props.fetchSubjects();
+      this.props.actions.subject.fetch();
     },
     addSubject: () => {
-      this.refs['subjectDialog'].setState({id: null, type: 'add'});
-      this.setState({editorOpen: true});
+      this.refs['subjectDialog'].setState({ id: null, type: 'add' });
+      this.setState({ editorOpen: true });
     },
     editSelectedSubject: () => {
       if(this.state.selectedRows.length !== 1) {
@@ -242,7 +238,7 @@ class SubjectTable extends Component {
       this.setState({editorOpen: true});
     },
     closeEditor: () => {
-      this.setState({editorOpen: false});
+      this.setState({ editorOpen: false });
     },
     openDeleteConfirmationIfSelected: () => {
       const selected = this.state.selectedRows;
@@ -257,11 +253,11 @@ class SubjectTable extends Component {
       }
     },
     closeDeleteConfirmation: () => {
-      this.setState({deleteConfirmationOpen: false});
+      this.setState({ deleteConfirmationOpen: false });
     },
     deleteSelectedSubjects: () => {
       let selected;
-      if(this.state.toBeDeletedID) {
+      if (this.state.toBeDeletedID) {
         selected = [this.state.toBeDeletedID];
         this.setState({ toBeDeletedID: null });
       } else {
@@ -278,10 +274,10 @@ class SubjectTable extends Component {
       this.closeDeleteConfirmation();
     },
     showSettings: () => {
-      this.setState({settingsOpen: true});
+      this.setState({ settingsOpen: true });
     },
     closeSettings: () => {
-      this.setState({settingsOpen: false});
+      this.setState({ settingsOpen: false });
     },
     saveSettings: () => {
       // TODO add Redux action and connect it to this component
@@ -298,6 +294,24 @@ class SubjectTable extends Component {
   };
 }
 
+SubjectTable.defaultProps = {
+  fetchOnMount: true,
+  headers: [
+    { key: 'id', name: 'ID' },
+    { key: 'name', name: 'Name' },
+    { key: 'aliases', name: 'Aliases' },
+    { key: 'category', name: 'Category' },
+    { key: 'properties', name: 'Properties' },
+    { key: 'relations', name: 'Relations' }
+  ]
+};
+
+SubjectTable.propTypes = {
+  fetchOnMount: PropTypes.bool,
+  headers: PropTypes.array
+
+};
+
 const CustomButton = ({tooltip, onClick, children, visible = true}) => {
   return (visible &&
   <IconButton
@@ -311,15 +325,24 @@ const CustomButton = ({tooltip, onClick, children, visible = true}) => {
 
 /* connection to Redux */
 function mapStateToProps(state) {
+  const tableData = state.subject.entities;
+  // load candidateScores from duplicate.store
+  if (tableData && state.duplicate.store && state.duplicate.store.candidateScores) {
+    tableData.forEach((subject) => subject.candidateScore = state.duplicate.store.candidateScores[subject.id])
+  }
   return {
-    tableData: state.api.subjects,
-    error: state.api.error,
-    loading: state.api.fetching
+    tableData: tableData,
+    error: state.subject.error,
+    loading: state.subject.status === 'LOADING' // TODO does not work for duplicates because status is cleared before finishing all tasks
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchSubjects, addSubject, updateSubject, deleteSubject }, dispatch);
+  return {
+    actions: {
+      subject: bindActionCreators(subjects.creators, dispatch)
+    }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(muiThemable()(SubjectTable));

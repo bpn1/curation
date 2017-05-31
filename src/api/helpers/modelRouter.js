@@ -9,8 +9,27 @@ module.exports = function (models, modelName, queryConfig) {
     res.json({ message: 'An error occurred' });
   }
 
+  function schema() {
+    // access private _properties, may be subject to change
+    return models.instance[modelName]._properties.schema.fields;
+  }
+
   function buildQuery(getParams) {
-    const query = pick(getParams, queryConfig.normal);
+    const query = {};
+    queryConfig.normal.forEach((property) => {
+      if (getParams[property]) {
+        if (getParams[property].indexOf(',') !== -1) {
+          splitParams = getParams[property].split(',');
+          if (schema()[property].type === 'uuid') {
+            splitParams = splitParams.map(models.timeuuidFromString);
+          }
+          query[property] = { $in: splitParams };
+        } else {
+          query[property] =
+            schema()[property].type === 'uuid' ? models.timeuuidFromString(getParams[property]) : getParams[property];
+        }
+      }
+    });
     queryConfig.lists.forEach((property) => {
       if (getParams[property]) {
         query[property] = { $contains: getParams[property] };
