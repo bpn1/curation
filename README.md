@@ -14,7 +14,7 @@ or by using brew on macOS:
     
 After you installed yarn you can setup the project by running `yarn` in the root directory.
 
-You can begin developing by running the wepack-dev-server using the command:
+You can begin developing the frontend by running the wepack-dev-server using the command:
 
     npm install
     npm run dev
@@ -25,7 +25,11 @@ To start the NodeJS backend, use:
 
 To start the Curation frontend as well as its backend, use:
 
-    npm run node react
+    npm run server:dev
+    
+To build the production version of the interface, use:
+
+    npm run build:client
     
 The interface will be served under http://localhost:8080
 
