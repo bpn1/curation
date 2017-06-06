@@ -1,38 +1,52 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Col, Grid, Row } from 'react-flexbox-grid';
+import { sizeMe } from 'react-sizeme';
 
 import DuplicateTable from '../components/duplicateTable';
 import SubjectTable from '../components/subject_table';
 import ContentCard from '../components/content_card';
 
+const headers = [
+  { key: 'id', name: 'ID' },
+  { key: 'name', name: 'Name' },
+  { key: 'aliases', name: 'Aliases' },
+  { key: 'category', name: 'Category' },
+  { key: 'properties', name: 'Properties' },
+  { key: 'relations', name: 'Relations' },
+  { key: 'candidateScore', name: 'Score' }
+];
+
 class DuplicateTableCard extends Component {
-  headers = [
-    { key: 'id', name: 'ID' },
-    { key: 'name', name: 'Name' },
-    { key: 'aliases', name: 'Aliases' },
-    { key: 'category', name: 'Category' },
-    { key: 'properties', name: 'Properties' },
-    { key: 'relations', name: 'Relations' },
-    { key: 'candidateScore', name: 'Score' }
-  ];
   render() {
+    const topAndBottomPadding = 2 * 16;
     return (
-      <Grid fluid>
-        <Row>
-          <Col xs={6}>
+      <Grid fluid style={{ padding: 0, height: '100%' }} >
+        <Row style={{ height: '100%' }}>
+          <Col xs>
             <ContentCard>
-              <DuplicateTable />
+              <DuplicateTable height={this.props.size.height - topAndBottomPadding} />
             </ContentCard>
           </Col>
-          <Col xs={6}>
+          <Col xs>
             <ContentCard>
-              <SubjectTable fetchOnMount={false} headers={this.headers} />
+              <SubjectTable
+                height={this.props.size.height - topAndBottomPadding}
+                fetchOnMount={false}
+                headers={headers}
+              />
             </ContentCard>
           </Col>
         </Row>
-      </Grid>
-    );
+      </Grid>);
   }
 }
 
-export default DuplicateTableCard;
+DuplicateTableCard.propTypes = {
+  size: PropTypes.shape({
+    height: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired,
+  }).isRequired
+};
+
+export default sizeMe({ monitorHeight: true })(DuplicateTableCard);

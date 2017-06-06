@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
@@ -9,7 +9,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import ChipInput from 'material-ui-chip-input';
 
 import Histogram from './histogram';
-import {fetchStatsActions} from '../actions/apiActions';
+import { fetchStatsActions } from '../actions/apiActions';
 
 class APIHistogram extends Component {
   constructor(props) {
@@ -82,7 +82,7 @@ class APIHistogram extends Component {
   filterHistogramData = (histogramData, max, min, excludes) => {
     const filteredData = histogramData
       .filter(entry => excludes.indexOf(entry[this.props.nameKey].toString().toLowerCase()) === -1
-      && this.filterMinMax(entry, min, max));
+        && this.filterMinMax(entry, min, max));
     this.setState({
       histogramData: histogramData,
       filteredHistogramData: filteredData
@@ -104,6 +104,7 @@ class APIHistogram extends Component {
   }
 
   render() {
+    const optionsBarHeight = 86;
     return (
       <Grid fluid>
         <Row middle="xs">
@@ -159,13 +160,16 @@ class APIHistogram extends Component {
           </Col>
         </Row>
         <Row>
-          <Histogram
-            data={this.state.filteredHistogramData}
-            keyList={this.state.keyList}
-            nameKey={this.props.nameKey}
-            showLabels={this.props.showLabels}
-            showDots={this.state.showDots}
-          />
+          <Col xs={12}>
+            <Histogram
+              height={this.props.height - optionsBarHeight}
+              data={this.state.filteredHistogramData}
+              keyList={this.state.keyList}
+              nameKey={this.props.nameKey}
+              showLabels={this.props.showLabels}
+              showDots={this.state.showDots}
+            />
+          </Col>
         </Row>
       </Grid>
     );
@@ -175,6 +179,7 @@ class APIHistogram extends Component {
 APIHistogram.propTypes = {
   type: PropTypes.string.isRequired,
   keyList: PropTypes.array.isRequired,
+  height: PropTypes.number.isRequired,
   filterKeys: PropTypes.array.isRequired,
   fetchIdKey: PropTypes.string.isRequired,
   fetchDataKey: PropTypes.string.isRequired,

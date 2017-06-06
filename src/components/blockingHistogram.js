@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import getDateFromTimeUUID from '../helpers/timeUUIDParser';
 import APIHistogram from './apiHistogram';
@@ -10,6 +11,7 @@ class BlockingHistogram extends Component {
     return (
       <APIHistogram
         type="blocking"
+        height={this.props.height}
         keyList={DATA_KEYS}
         filterKeys={['comparisons']}
         fetchIdKey={'fetchBlockingStatsIds'}
@@ -22,5 +24,9 @@ class BlockingHistogram extends Component {
     );
   }
 }
+
+BlockingHistogram.propTypes = {
+  height: PropTypes.number.isRequired
+};
 
 export default BlockingHistogram;

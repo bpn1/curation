@@ -17,8 +17,8 @@ function randomColor() {
   return '#' + c;
 }
 const lineColors = ['#F44336', '#2196F3', '#FF9800', '#9C27B0'];
-const Histogram = ({ data, nameKey, keyList, showLabels, showGrid, showDots }) => (
-  <ResponsiveContainer aspect={3}>
+const Histogram = ({ data, nameKey, keyList, height, showLabels, showGrid, showDots }) => (
+  <ResponsiveContainer height={height}>
     <LineChart
       data={data}
       margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
@@ -58,6 +58,7 @@ Histogram.propTypes = {
   data: PropTypes.array.isRequired,
   keyList: PropTypes.array.isRequired,
   nameKey: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
   showDots: PropTypes.bool,
   showLabels: PropTypes.bool,
   showGrid: PropTypes.bool

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
-
 import UpArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import DownArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
@@ -167,113 +166,112 @@ class InteractiveTable extends Component {
 
     return (
       <TableHeaderColumn key={key}>
-        <TextField
-          style={{ maxWidth: '100%' }}
-          ref={key + 'Header'}
-          hintText={'Filter...'}
-          floatingLabelText={name}
-          floatingLabelFixed={false}
-          floatingLabelStyle={{ color: colors.interactiveColor1, fontWeight: 'bold' }}
-          floatingLabelFocusStyle={{ color: colors.interactiveColor1, fontWeight: 'normal' }}
-          value={filterValue}
-          onChange={this.onFilterChange.bind(this, key)}
-        />
-        <IconButton
-          onClick={this.sortRowsBy.bind(this, key)}
-          tooltip="Sort"
-          touch
-          tooltipPosition="bottom-center"
-        >
-          {sortDirArrow}
-        </IconButton>
+        <div style={{ maxWidth: '80%' }}>
+          <TextField
+            style={{ maxWidth: '100%' }}
+            ref={key + 'Header'}
+            hintText={'Filter...'}
+            floatingLabelText={name}
+            floatingLabelFixed={false}
+            floatingLabelStyle={{ color: colors.interactiveColor1, fontWeight: 'bold' }}
+            floatingLabelFocusStyle={{ color: colors.interactiveColor1, fontWeight: 'normal' }}
+            value={filterValue}
+            onChange={this.onFilterChange.bind(this, key)}
+          />
+          <IconButton
+            onClick={this.sortRowsBy.bind(this, key)}
+            tooltip="Sort"
+            touch
+            tooltipPosition="bottom-center"
+          >
+            {sortDirArrow}
+          </IconButton>
+        </div>
       </TableHeaderColumn>
     );
   }
 
   render() {
     const { filteredData } = this.state;
-    // TODO adapt Table height to window size changes (see http://stackoverflow.com/a/42141641)
-    // TODO or use e.g. flexbox for adaptive sizing
+    const fixedHeaderHeight = 75;
     return (
-      <div>
-        <Table
-          height={(window.innerHeight / 2).toString() + 'px'}
-          selectable={this.props.selectable}
-          multiSelectable={this.props.multiSelectable}
-          fixedHeader
-          onCellClick={this.props.onCellClick}
-          onRowSelection={this.onRowSelection.bind(this)}
+      <Table
+        height={(this.props.height - fixedHeaderHeight).toString() + 'px'}
+        selectable={this.props.selectable}
+        multiSelectable={this.props.multiSelectable}
+        fixedHeader
+        onCellClick={this.props.onCellClick}
+        onRowSelection={this.onRowSelection.bind(this)}
+      >
+        <TableHeader
+          displaySelectAll={false}
+          adjustForCheckbox={this.props.showCheckboxes}
         >
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={this.props.showCheckboxes}
-          >
-            <TableRow>
-              {this.props.headers.map((header) => {
-                if (this.props.hiddenColumns.indexOf(header.key) > -1) {
-                  return '';
-                }
-                return this.renderHeader(header.key, header.name);
-              })}
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={this.props.showCheckboxes}
-            showRowHover
-            deselectOnClickaway={false}
-            stripedRows={false}
-          >
-            {filteredData.map((row, index) => {
-              if (!row) {
-                console.error('Row #' + index + ' is undefined/ null!');
+          <TableRow>
+            {this.props.headers.map((header) => {
+              if (this.props.hiddenColumns.indexOf(header.key) > -1) {
                 return '';
               }
+              return this.renderHeader(header.key, header.name);
+            })}
+          </TableRow>
+        </TableHeader>
+        <TableBody
+          displayRowCheckbox={this.props.showCheckboxes}
+          showRowHover
+          deselectOnClickaway={false}
+          stripedRows={false}
+        >
+          {filteredData.map((row, index) => {
+            if (!row) {
+              console.error('Row #' + index + ' is undefined/ null!');
+              return '';
+            }
 
-              return (
-                <TableRow key={row.id} selected={row.selected}>
-                  {this.props.headers.map((header) => {
-                    // don't render this column if it has been set to hidden
-                    if (this.props.hiddenColumns.indexOf(header.key) > -1) {
-                      return '';
-                    }
+            return (
+              <TableRow key={JSON.stringify(row)} selected={row.selected}>
+                {this.props.headers.map((header) => {
+                  // don't render this column if it has been set to hidden
+                  if (this.props.hiddenColumns.indexOf(header.key) > -1) {
+                    return '';
+                  }
 
-                    let content = '';
-                    if (!(header.key in row) || row[header.key] === null) {
-                      content = <span style={{ color: 'red' }}>null</span>;
-                    } else if (typeof row[header.key] === 'object') {
-                      const expanded = this.state.expandedObjects[row[this.props.expandKey]];
-                      const expandTreeByDefault = this.props.expandTreeByDefaultColumns.indexOf(header.key) !== -1;
-                      if (expandTreeByDefault || (expanded && expanded[header.key])) {
-                        content =
-                          (<div>
-                            {!expandTreeByDefault && <a
-                              onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, false)}
-                              style={{ textDecoration: 'underline' }}
-                            >
-                              Collapse
-                            </a>}
-                            <DiffTree json={row[header.key]} />
-                          </div>);
-                      } else {
-                        content =
-                          (<a
-                            onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, true)}
+                  let content = '';
+                  if (!(header.key in row) || row[header.key] === null) {
+                    content = <span style={{ color: 'red' }}>null</span>;
+                  } else if (typeof row[header.key] === 'object') {
+                    const expanded = this.state.expandedObjects[row[this.props.expandKey]];
+                    const expandTreeByDefault = this.props.expandTreeByDefaultColumns.indexOf(header.key) !== -1;
+                    if (expandTreeByDefault || (expanded && expanded[header.key])) {
+                      content =
+                        (<div>
+                          {!expandTreeByDefault && <a
+                            onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, false)}
                             style={{ textDecoration: 'underline' }}
                           >
-                            {Object.keys(row[header.key]).length} values
-                          </a>);
-                      }
+                            Collapse
+                          </a>}
+                          <DiffTree json={row[header.key]} />
+                        </div>);
                     } else {
-                      content = row[header.key].toString();
+                      content =
+                        (<a
+                          onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, true)}
+                          style={{ textDecoration: 'underline' }}
+                        >
+                          {Object.keys(row[header.key]).length} values
+                        </a>);
                     }
-                    return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+                  } else {
+                    content = row[header.key].toString();
+                  }
+                  return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
+                })}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
     );
   }
 }
@@ -283,6 +281,7 @@ InteractiveTable.propTypes = {
   data: PropTypes.array.isRequired,
   muiTheme: PropTypes.object.isRequired,
   expandKey: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
   expandTreeByDefaultColumns: PropTypes.array,
   onCellClick: PropTypes.func,
   showCheckboxes: PropTypes.bool,

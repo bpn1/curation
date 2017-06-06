@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import muiThemable from 'material-ui/styles/muiThemeable';
 import { Card, CardText } from 'material-ui/Card';
 
 class ContentCard extends Component {
@@ -8,7 +7,6 @@ class ContentCard extends Component {
     const styles = {
       width: '100%',
       height: '100%',
-      margin: '10px',
       transition: 'all .45s ease-out'
     };
 
@@ -29,4 +27,4 @@ ContentCard.defaultProps = {
   children: null
 };
 
-export default muiThemable()(ContentCard);
+export default ContentCard;

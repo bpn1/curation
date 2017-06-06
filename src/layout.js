@@ -34,7 +34,9 @@ class MainLayout extends Component {
           <ToolBar />
           <section className={styles.appMainContainer} style={{ backgroundColor: theme.palette.canvasColor }}>
             <SideBar />
-              { this.props.children }
+            <div style={{ padding: 10 }}>
+              {this.props.children}
+            </div>
             <DetailBar />
           </section>
         </div>

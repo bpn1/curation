@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import getDateFromTimeUUID from '../helpers/timeUUIDParser';
 import APIHistogram from './apiHistogram';
@@ -10,6 +11,7 @@ class SimilarityHistogram extends Component {
     return (
       <APIHistogram
         type="similarity"
+        height={this.props.height}
         keyList={DATA_KEYS}
         filterKeys={DATA_KEYS}
         fetchIdKey={'fetchSimMeasureStatsIds'}
@@ -21,5 +23,10 @@ class SimilarityHistogram extends Component {
     );
   }
 }
+
+
+SimilarityHistogram.propTypes = {
+  height: PropTypes.number.isRequired
+};
 
 export default SimilarityHistogram;

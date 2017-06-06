@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
 import muiThemeable from 'material-ui/styles/muiThemeable';
@@ -59,6 +60,7 @@ class DuplicateTable extends Component {
     return (
       <InteractiveTable
         ref="table"
+        height={this.props.height}
         expandKey={'subject_id'}
         expandTreeByDefaultColumns={['subject']}
         headers={this.headers}
@@ -73,10 +75,14 @@ class DuplicateTable extends Component {
 
   listeners = {
     reloadDuplicates: () => {
-      this.props.actions.duplicate.fetch(50); // TODO make count a user option
+      this.props.actions.duplicate.fetch(20); // TODO make count a user option
     }
   };
 }
+
+DuplicateTable.propTypes = {
+  height: PropTypes.number.isRequired
+};
 
 /* connection to Redux */
 function mapStateToProps(state) {
