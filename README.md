@@ -19,10 +19,6 @@ You can begin developing the frontend by running the wepack-dev-server using the
     npm install
     npm run dev
 
-To start the NodeJS backend, use:
-
-    npm run node
-
 To start the Curation frontend as well as its backend, use:
 
     npm run server:dev
@@ -30,6 +26,10 @@ To start the Curation frontend as well as its backend, use:
 To build the production version of the interface, use:
 
     npm run build:client
+    
+To start only the NodeJS API, use:
+
+    npm run server:dev api
     
 The interface will be served under http://localhost:8080
 
