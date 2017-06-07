@@ -94,7 +94,7 @@
     "dev": "webpack-dev-server --env development",
     "api": "cross-env NODE_ENV=development node src/server.js api",
     "server": "cross-env NODE_ENV=production node src/server.js",
-    "server:dev": "node src/server.js",
+    "server:dev": "cross-env NODE_ENV=development node src/server.js",
     "debug": "node-nightly --inspect --debug-brk node_modules/.bin/webpack --env debug",
     "debug:dev": "npm run debug -- --env development",
     "debug:prod": "npm run debug -- --env production",
