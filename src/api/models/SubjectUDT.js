@@ -10,4 +10,6 @@ module.exports = {
   properties_history: 'map<text, frozen<list<frozen<version>>>>',
   relations: 'map<uuid, frozen<map<text, text>>>',
   relations_history: 'map<uuid, frozen<map<text, frozen<list<frozen<version>>>>>>',
+  master: 'uuid',
+  master_history: 'list<frozen<version>>'
 };

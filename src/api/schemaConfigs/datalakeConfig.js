@@ -21,7 +21,7 @@ const schemaConfig = [
   },
   {
     name: 'SubjectTemp',
-    model: require('../models/SubjectModel'),
+    model: require('../models/SubjectModelWithMaster'),
     table_name: 'subject_temp'
   },
   {
