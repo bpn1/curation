@@ -78,7 +78,7 @@
     "stylelint": "^7.10.1",
     "stylelint-config-standard": "^16.0.0",
     "url-loader": "^0.5.8",
-    "webpack": "^2.6.1",
+    "webpack": "^3.0.0-rc.1",
     "webpack-config-utils": "2.3.0",
     "webpack-dev-middleware": "^1.10.2",
     "webpack-dev-server": "^2.4.5",
@@ -86,7 +86,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build:client": "rimraf dist && cross-env NODE_ENV=production webpack --config ./webpack.config.babel.js --progress --profile --colors",
+    "build:client": "cross-env NODE_ENV=production rimraf dist && cross-env NODE_ENV=production webpack --config ./webpack.config.babel.js --progress --profile --colors",
     "prebuild:dev": "rimraf dist",
     "build:client:dev": "cross-env NODE_ENV=development webpack --config ./webpack.config.babel.js",
     "start": "npm run build:client && npm run server",
