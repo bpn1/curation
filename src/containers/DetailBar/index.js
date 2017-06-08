@@ -6,9 +6,9 @@ import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 
 import { toggleDetailNav } from '../../actions/index';
+import { commerzbankYellow } from '../../themes/curation';
+import SubjectEditor from '../../components/subject_editor';
 import styles from './detailbar.css';
-import { layoutBreakpoint } from '../../layout';
-import {commerzbankYellow} from "../../themes/curation";
 
 class DetailBar extends Component {
   constructor(props) {
@@ -16,39 +16,72 @@ class DetailBar extends Component {
 
     this.state = {
       showDetailNav: false,
-      content: (<p>There would be details here</p>)
-    }
+      content: props.content,
+      editorId: null,
+      editorEdge: null
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.content) {
-      this.setState({
-        content: nextProps.content
-      });
+    const nextState = {};
+
+    if (nextProps.hasOwnProperty('showDetailNav')) {
+      nextState.showDetailNav = nextProps.showDetailNav;
     }
+
+    if (nextProps.content) {
+      nextState.content = nextProps.content;
+    }
+
+    if (nextProps.editorType) {
+      nextState.editorType = nextProps.editorType;
+    }
+
+    if (nextProps.editorValue) {
+      if (typeof nextProps.editorValue === 'string') {
+        nextState.editorId = nextProps.editorValue;
+        nextState.editorEdge = null;
+      } else {
+        nextState.editorId = null;
+        nextState.editorEdge = nextProps.editorValue;
+      }
+    }
+
+    this.setState(nextState);
   }
 
   render() {
     // responsive sidebar styling
-    const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
-                                    { top: 'auto', position: 'relative', width: '100%', boxShadow: 'none' } :
-                                    { position: 'absolute', top: 'auto', boxShadow: 'none' };
-    const overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.props.showDetailNav ?
-                                    styles.shadowedOverlay : styles.transparentOverlay;
+    const sideBarStyle = { top: 'auto', position: 'relative', width: '100%', boxShadow: 'none' };
+    const overlayClass = styles.transparentOverlay; // styles.shadowedOverlay
+
+    const showContent = this.state.content !== null && this.state.content !== '';
+    const showSubjectEditor = !showContent && this.state.editorType === 'subject';
+    const showRelationEditor = !showContent && !showSubjectEditor && this.state.editorType === 'relation';
+
     return (
       <div className={styles.sidebarWrapper}>
         <div className={overlayClass} onClick={() => this.props.toggleDetailNav()} />
         <Drawer
           docked
           openSecondary
-          open={this.props.showDetailNav}
-          className={this.props.showDetailNav && window.matchMedia(layoutBreakpoint).matches ? // The sidebar should not
-              styles.sideBarOpen : styles.sideBarClosed} // take any width in parent container on mobile devices
+          open={this.state.showDetailNav}
+          width={400}
+          className={this.state.showDetailNav ? styles.sideBarOpen : styles.sideBarClosed}
           containerClassName={styles.sideNav}
-          containerStyle={sideBarStyle}>
-          <h1 style={{color: commerzbankYellow}}>Detail</h1>
-          <Divider />
-          { this.state.content }
+          containerStyle={sideBarStyle}
+        >
+          <div style={{ padding: 15 }}>
+            { showContent && this.state.content }
+            { showSubjectEditor && <SubjectEditor
+              id={this.state.editorId}
+              load
+              enableReinitialize
+              width={300}
+              editorType="edit"
+            /> }
+            { showRelationEditor && <p>TODO: Implement RelationEditor component!</p> }
+          </div>
         </Drawer>
       </div>
     );
@@ -57,12 +90,29 @@ class DetailBar extends Component {
 
 DetailBar.propTypes = {
   showDetailNav: PropTypes.bool.isRequired,
-  toggleDetailNav: PropTypes.func.isRequired
+  toggleDetailNav: PropTypes.func.isRequired,
+  editorType: PropTypes.oneOf(['subject', 'relation']),
+  editorValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ]),
+  content: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.element
+  ])
+};
+
+DetailBar.defaultProps = {
+  editorType: 'subject',
+  editorValue: '',
+  content: ''
 };
 
 function mapStateToProps(state) {
   return {
     showDetailNav: state.detailNav.isOpen,
+    editorType: state.detailNav.editorType,
+    editorValue: state.detailNav.editorValue,
     content: state.detailNav.content
   };
 }

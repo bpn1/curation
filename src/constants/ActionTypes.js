@@ -1,7 +1,9 @@
 // UI action types
-export const SIDENAV_TOGGLED          = 'SIDENAV_TOGGLED';
-export const DETAILNAV_TOGGLED        = 'DETAILNAV_TOGGLED';
-export const DETAILNAV_UPDATE_CONTENT = 'DETAILNAV_UPDATE_CONTENT';
+export const SIDENAV_TOGGLED           = 'SIDENAV_TOGGLED';
+export const DETAILBAR_OPENED          = 'DETAILBAR_OPENED';
+export const DETAILBAR_CLOSED          = 'DETAILBAR_CLOSED';
+export const DETAILNAV_TOGGLED         = 'DETAILNAV_TOGGLED';
+export const DETAILNAV_UPDATE_CONTENT  = 'DETAILNAV_UPDATE_CONTENT';
 
 // API action types
 export const FETCH_SUBJECTS            = 'FETCH_SUBJECTS';

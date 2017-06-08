@@ -11,6 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 
 import uuid from 'uuid/v4';
 
+import {List, ListItem} from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -18,11 +19,19 @@ import AddIcon from 'material-ui/svg-icons/content/add-circle';
 import SaveIcon from 'material-ui/svg-icons/content/save';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import RemoveIcon from 'material-ui/svg-icons/content/remove-circle-outline';
+import PropsIcon from 'material-ui/svg-icons/action/build';
+import GeneralIcon from 'material-ui/svg-icons/action/settings';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
 import { fetchSubject, addSubject, updateSubject } from '../actions/apiActions';
 
 import TagInput from './tag_input';
+
+const InputListItem = ({ style, index, children }) => (
+  <ListItem key={'listItem'+index} innerDivStyle={{ padding: 0 }} disabled>
+    { children }
+  </ListItem>
+);
 
 class SubjectEditor extends Component {
   constructor(props) {
@@ -39,8 +48,8 @@ class SubjectEditor extends Component {
   }
 
   componentDidMount() {
-    if(this.props.load)
-      this.reload();
+    if (this.props.load)
+      this.reload(this.props.id);
   }
 
   updateTheme(theme) {
@@ -57,19 +66,23 @@ class SubjectEditor extends Component {
     this.updateTheme(nextProps.muiTheme);
 
     // load prop transitioning to true
-    if(nextProps.load && !this.props.load) {
-      this.reload();
+    if (nextProps.id !== this.props.id && nextProps.load) {
+      this.reload(nextProps.id);
+    }
+
+    // reset form when new values arrive
+    if (nextProps.initialValues && nextProps.initialValues !== this.props.initialValues) {
       this.props.reset();
     }
   }
 
-  reload() {
-    console.log("Reload subject #", this.state.id);
-    if(this.state.id && this.props.editorType !== "add") {
-      this.props.fetchSubject(this.state.id);
+  reload(id) {
+    console.log("Load subject #", id);
+    if (id && this.props.editorType !== "add") {
+      this.props.fetchSubject(id);
     }
   }
-  
+
   renderTextField = props => (
     <TextField
       errorText={props.touched && props.error}
@@ -100,41 +113,37 @@ class SubjectEditor extends Component {
       onChange={props.input.onChange} />
   );
 
-  renderTextFieldArray = ({ fields, meta: { error } }) => (
+  renderTextFieldArray = ({ fields, meta: { error }, inputWidth = 500 }) => (
     <div>
-      <h3>Properties</h3>
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        <li>
-          <FlatButton
-            onClick={() => fields.push()}
-            type="button"
-            label="Add property"
-            icon={<AddIcon color={this.state.colors.positiveColor1} hoverColor={this.state.colors.positiveColor2} />} />
-        </li>
-        { fields.map((field, index) =>
-          <li key={index}>
-            <Field
-              name={`${field}.name`}
-              type="text"
-              component={this.renderTextField}
-              style={{marginRight: 10}}
-              placeholder={`Property Name #${index + 1}`} />
-            <Field
-              name={`${field}.value`}
-              type="text"
-              component={this.renderTextField}
-              placeholder={`Property Value #${index + 1}`} />
-            <IconButton
-              onClick={() => fields.remove(index)}
-              tooltip="Remove property"
-              touch={true}
-              tooltipPosition="top-center">
-              <RemoveIcon color={this.state.colors.negativeColor1} hoverColor={this.state.colors.negativeColor2} />
-            </IconButton>
-          </li>
-        )}
-        { error && <li className="error">{ error }</li> }
-      </ul>
+      <FlatButton
+        onClick={() => fields.push()}
+        type="button"
+        label="Add property"
+        icon={<AddIcon color={this.state.colors.positiveColor1} hoverColor={this.state.colors.positiveColor2} />} />
+      { fields.map((field, index) => // (inputWidth / 2.0) - 30 | (inputWidth / 2.0) - 10
+        <InputListItem index={index} key={index}>
+          <Field
+            name={`${field}.name`}
+            type="text"
+            component={this.renderTextField}
+            style={{ marginRight: 10, maxWidth: '30%' }}
+            placeholder={`Property Name #${index + 1}`} />
+          <Field
+            name={`${field}.value`}
+            type="text"
+            component={this.renderTextField}
+            style={{ maxWidth: '40%' }}
+            placeholder={`Property Value #${index + 1}`} />
+          <IconButton
+            onClick={() => fields.remove(index)}
+            tooltip="Remove property"
+            touch={true}
+            tooltipPosition="top-center">
+            <RemoveIcon color={this.state.colors.negativeColor1} hoverColor={this.state.colors.negativeColor2} />
+          </IconButton>
+        </InputListItem>
+      )}
+      { error && <ListItem className="error">{ error }</ListItem> }
     </div>
   );
 
@@ -166,48 +175,68 @@ class SubjectEditor extends Component {
     this.props.onRequestClose();
   };
 
+  styles = {
+    checkBox: {
+      paddingTop: 15,
+      paddingBottom: 15
+    }
+  };
+
   render() {
     let { width, pristine, submitting, handleSubmit, reset } = this.props;
     let { id } = this.state;
     width = width ? width : 500;
     let fieldStyle = { width };
 
-    // TODO load initialValues like this: http://redux-form.com/6.7.0/examples/initializeFromState/
-
     return (
       <form onSubmit={handleSubmit((values) => this.handleSubmit(values))}>
-        <div>
-          <Field name="id" component={this.renderTextField}
-                 floatingLabelText="ID" floatingLabelFixed={true}
-                 hintText={id} disabled={true} style={fieldStyle} />
-        </div>
-        <div>
-          <Field name="name" component={this.renderTextField}
-                 floatingLabelText="Name" floatingLabelFixed={false}
-                 hintText="Enter a name..." style={fieldStyle} />
-        </div>
-        <div>
-          <Field name="aliases" component={this.renderTagInput}
-                 floatingLabelText="Aliases" floatingLabelFixed={false}
-                 hintText="Type and press Enter to add..." style={fieldStyle} />
-        </div>
-        <div>
-          <Field name="type" component={this.renderSelectField}
-                 floatingLabelText="Type" floatingLabelFixed={false}
-                 hintText="Select a subject type..." style={fieldStyle}>
-            <MenuItem value="business" primaryText="Business" />
-            <MenuItem value="organization" primaryText="Organization" />
-            <MenuItem value="country" primaryText="Country" />
-            <MenuItem value="city" primaryText="City" />
-            <MenuItem value="person" primaryText="Person" />
-          </Field>
-        </div>
-        <div>
-          <FieldArray name="properties" component={this.renderTextFieldArray} />
-        </div>
-        <div style={{ marginTop: 10, marginBottom: 10 }}>
-          <Field name="isMaster" component={this.renderCheckbox} style={fieldStyle} label="Master node" />
-        </div>
+        <List>
+          <ListItem
+            primaryText="General"
+            leftIcon={<GeneralIcon />}
+            initiallyOpen={true}
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <InputListItem index={0}>
+                <Field name="id" component={this.renderTextField}
+                       floatingLabelText="ID" floatingLabelFixed={true}
+                       hintText={id} disabled={true} style={fieldStyle} />
+              </InputListItem>,
+              <InputListItem index={1}>
+                <Field name="name" component={this.renderTextField}
+                       floatingLabelText="Name" floatingLabelFixed={false}
+                       hintText="Enter a name..." style={fieldStyle} />
+              </InputListItem>,
+              <InputListItem index={2}>
+                <Field name="aliases" component={this.renderTagInput}
+                       floatingLabelText="Aliases" floatingLabelFixed={false}
+                       hintText="Type and press Enter to add..." style={fieldStyle} />
+              </InputListItem>,
+              <InputListItem index={3}>
+                <Field name="type" component={this.renderSelectField}
+                       floatingLabelText="Type" floatingLabelFixed={false}
+                       hintText="Select a subject type..." style={fieldStyle}>
+                  <MenuItem value="business" primaryText="Business" />
+                  <MenuItem value="organization" primaryText="Organization" />
+                  <MenuItem value="country" primaryText="Country" />
+                  <MenuItem value="city" primaryText="City" />
+                  <MenuItem value="person" primaryText="Person" />
+                </Field>
+              </InputListItem>,
+              <InputListItem index={4}>
+                <Field name="isMaster" label="Master node"
+                       component={this.renderCheckbox} style={this.styles.checkBox} />
+              </InputListItem>
+            ]} />
+          <ListItem
+            primaryText="Properties"
+            leftIcon={<PropsIcon />}
+            initiallyOpen={false}
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <FieldArray name="properties" component={this.renderTextFieldArray} inputWidth={width} />
+            ]} />
+        </List>
         <div>
           <RaisedButton
             style={{ marginRight: 10, marginTop: 10 }}
@@ -229,13 +258,17 @@ class SubjectEditor extends Component {
 }
 
 SubjectEditor.propTypes = {
-  editorType: PropTypes.string.isRequired,
-  onRequestClose: PropTypes.func.isRequired,
+  editorType: PropTypes.oneOf(['edit', 'add']).isRequired,
+  onRequestClose: PropTypes.func,
   load: PropTypes.bool,
   id: PropTypes.string,
   width: PropTypes.number,
   name: PropTypes.string,
   master: PropTypes.string
+};
+
+SubjectEditor.defaultProps = {
+  onRequestClose: () => {}
 };
 
 // Redux connection for loading and saving subject data

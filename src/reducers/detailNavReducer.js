@@ -1,16 +1,32 @@
-import { DETAILNAV_TOGGLED, DETAILNAV_UPDATE_CONTENT } from '../constants/ActionTypes';
+import {
+  DETAILNAV_TOGGLED, DETAILBAR_OPENED, DETAILBAR_CLOSED, DETAILNAV_UPDATE_CONTENT
+} from '../constants/ActionTypes';
 
-export default function(state = {isOpen: false, content: null}, action) {
+export default function(state = {
+  isOpen: false,
+  content: null,
+  editorType: null,
+  editorValue: null
+}, action) {
+  const newState = Object.assign({}, state);
   switch (action.type) {
     case DETAILNAV_TOGGLED:
-      state.isOpen = !state.isOpen;
+      newState.isOpen = !state.isOpen;
+      break;
+    case DETAILBAR_OPENED:
+      newState.editorType = action.payload.editorType;
+      newState.editorValue = action.payload.editorValue;
+      newState.isOpen = true;
+      break;
+    case DETAILBAR_CLOSED:
+      newState.isOpen = false;
       break;
     case DETAILNAV_UPDATE_CONTENT:
-      state.content = action.payload;
+      newState.content = action.payload;
       break;
     default:
       break;
   }
 
-  return state;
+  return newState;
 }

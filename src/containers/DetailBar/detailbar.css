@@ -4,7 +4,7 @@
 
 .sideBarOpen {
   transition: width 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-  width: 240px;
+  width: 400px;
   height: 100%;
 }
 
