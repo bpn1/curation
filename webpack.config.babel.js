@@ -118,7 +118,7 @@ const config = {
       title: 'Curation',
       template: PATHS.TEMPLATE
     }),
-    new AddAssetHtmlPlugin({ includeSourcemap: false, filepath: resolve(__dirname, 'dist/dll/dll.vendor.js') }),
+    ifNotProduction(new AddAssetHtmlPlugin({ includeSourcemap: false, filepath: resolve(__dirname, 'dist/dll/dll.vendor.js') })),
   ]),
   /* devServer: {
     historyApiFallback: true,
