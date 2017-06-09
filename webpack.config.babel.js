@@ -2,6 +2,7 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const { getIfUtils, removeEmpty } = require('webpack-config-utils');
 
 const { ifProduction, ifNotProduction } = getIfUtils(process.env.NODE_ENV || 'development');
@@ -17,6 +18,7 @@ const PATHS = {
 };
 
 const config = {
+  cache: true,
   context: PATHS.SRC,
   entry: removeEmpty({
     vendor: ifProduction(PATHS.VENDOR),
@@ -32,7 +34,7 @@ const config = {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use: ['babel-loader'],
+        use: ['babel-loader?cacheDirectory'],
         include: PATHS.SRC,
         exclude: /node_modules/
       },
@@ -69,6 +71,9 @@ const config = {
       },
     ]
   },
+  resolve: {
+    unsafeCache: true
+  },
   performance: {
     hints: ifProduction('warning', false)
   },
@@ -84,6 +89,10 @@ const config = {
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
       },
+    })),
+    ifNotProduction(new webpack.DllReferencePlugin({
+      context: PATHS.SRC,
+      manifest: require('./dll/vendor-manifest.json')
     })),
     ifProduction(new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' })),
     ifProduction(new webpack.optimize.OccurrenceOrderPlugin()),
@@ -108,9 +117,10 @@ const config = {
     new HtmlWebpackPlugin({
       title: 'Curation',
       template: PATHS.TEMPLATE
-    })
+    }),
+    new AddAssetHtmlPlugin({ includeSourcemap: false, filepath: resolve(__dirname, 'dist/dll/dll.vendor.js') }),
   ]),
-  /*devServer: {
+  /* devServer: {
     historyApiFallback: true,
     hotOnly: true,
     stats: {

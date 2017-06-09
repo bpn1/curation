@@ -28,7 +28,7 @@ const port = process.env.PORT || 3000;
 const app = express();
 app.use(compression());
 
-if (isDeveloping && process.argv.indexOf('api') === -1) {
+if (isDeveloping) {
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');

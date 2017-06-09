@@ -37,6 +37,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "add-asset-html-webpack-plugin": "^2.0.1",
     "autoprefixer": "^7.1.1",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
@@ -88,11 +89,11 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build:client": "cross-env NODE_ENV=production rimraf dist && cross-env NODE_ENV=production webpack --config ./webpack.config.babel.js --progress --profile --colors",
-    "prebuild:dev": "rimraf dist",
+    "build:dll": "cross-env NODE_ENV=development webpack --config webpack.config.dll.js",
     "build:client:dev": "cross-env NODE_ENV=development webpack --config ./webpack.config.babel.js",
     "start": "npm run build:client && npm run server",
-    "dev": "webpack-dev-server --env development",
-    "api": "cross-env NODE_ENV=development node src/server.js api",
+    "dev": "cross-env NODE_ENV=development node src/server.js",
+    "dev-server": "webpack-dev-server --env development",
     "server": "cross-env NODE_ENV=production node src/server.js",
     "server:dev": "cross-env NODE_ENV=development node src/server.js",
     "debug": "node-nightly --inspect --debug-brk node_modules/.bin/webpack --env debug",

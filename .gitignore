@@ -96,6 +96,7 @@ tags
 
 # webpack generated files
 dist
+dll
 
 # Config files
 datalake.cassandra.config.js
