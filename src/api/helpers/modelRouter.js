@@ -1,4 +1,3 @@
-const pick = require('lodash/pick');
 const express = require('express');
 
 const PAGING_LIMIT = 20;

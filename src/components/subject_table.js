@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
-import { Col, Grid, Row } from "react-flexbox-grid";
+import { Col, Grid, Row } from 'react-flexbox-grid';
 
 import Dialog from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
@@ -28,12 +28,12 @@ class SubjectTable extends Component {
     super(props);
 
     // TODO load from/ save to Redux settings?
-    const defaultHiddenColumns = ["id", "aliases", "category", "relations"];
+    const defaultHiddenColumns = ['id', 'aliases', 'category', 'relations'];
 
     this.state = {
       tableData: [],
       hiddenColumns: defaultHiddenColumns,
-      hiddenColumnsVal: defaultHiddenColumns.join(", "),
+      hiddenColumnsVal: defaultHiddenColumns.join(', '),
       editorOpen: false,
       deleteConfirmationOpen: false,
       multipleDeletions: false,
@@ -60,7 +60,7 @@ class SubjectTable extends Component {
 
     if (nextProps.loading !== null) {
       this.setState({
-        refreshStatus: nextProps.loading ? "loading" : "hide"
+        refreshStatus: nextProps.loading ? 'loading' : 'hide'
       });
     }
   }
@@ -118,40 +118,47 @@ class SubjectTable extends Component {
             <CustomButton
               tooltip="Edit selected"
               visible={showSingleSelectionButtons}
-              onClick={evt => this.preventSelection(evt, () => this.listeners.editSelectedSubject())}>
+              onClick={evt => this.preventSelection(evt, () => this.listeners.editSelectedSubject())}
+            >
               <EditIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Merge selected"
               visible={showMultipleSelectionButtons}
-              onClick={evt => console.log("TODO: Add merge function")}>
+              onClick={evt => console.log('TODO: Add merge function')}
+            >
               <MergeIcon color={colors.semiNegativeColor1} hoverColor={colors.semiNegativeColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Delete selected"
               visible={showSelectionButtons}
-              onClick={this.listeners.openDeleteConfirmationIfSelected}>
+              onClick={this.listeners.openDeleteConfirmationIfSelected}
+            >
               <DeleteIcon color={colors.negativeColor1} hoverColor={colors.negativeColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Show selection graph"
               visible={showSelectionButtons}
-              onClick={evt => this.preventSelection(evt, () => console.log("TODO implement graph function"))}>
+              onClick={evt => this.preventSelection(evt, () => console.log('TODO implement graph function'))}
+            >
               <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Add new"
-              onClick={this.listeners.addSubject}>
+              onClick={this.listeners.addSubject}
+            >
               <AddIcon color={colors.positiveColor1} hoverColor={colors.positiveColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Reload"
-              onClick={this.listeners.reloadSubjects}>
+              onClick={this.listeners.reloadSubjects}
+            >
               <RefreshIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Settings"
-              onClick={this.listeners.showSettings}>
+              onClick={this.listeners.showSettings}
+            >
               <SettingsIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
             </CustomButton>
           </Col>
@@ -164,7 +171,8 @@ class SubjectTable extends Component {
                 style={this.styles.refreshIndicator}
                 size={40}
                 left={-20}
-                top={-50} />
+                top={-50}
+              />
             </div>
             <InteractiveTable
               height={this.props.height - buttonBarHeight}
@@ -174,26 +182,31 @@ class SubjectTable extends Component {
               data={this.state.tableData}
               muiTheme={this.props.muiTheme}
               onSelectionChange={this.listeners.handleSelectionChange}
-              hiddenColumns={this.state.hiddenColumns} /></Col>
+              hiddenColumns={this.state.hiddenColumns}
+            /></Col>
         </Row>
         {/* these elements are hidden by default */}
         <SubjectDialog
           ref="subjectDialog"
           type="add"
           open={this.state.editorOpen}
-          onRequestClose={this.listeners.closeEditor} />
+          onRequestClose={this.listeners.closeEditor}
+        />
         <Dialog
           ref="deleteConfirmationDialog"
           open={this.state.deleteConfirmationOpen}
           title="Are you sure?"
-          modal={true}
+          modal
           actions={[
-            <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeDeleteConfirmation}
-                        keyboardFocused={true} />,
-            <FlatButton label="Submit" primary={true} onTouchTap={this.listeners.deleteSelectedSubjects} />
-          ]}>
-          Do you really want to delete the selected subject{this.state.multipleDeletions ? " entries" : ""}?<br />
-          This will result in the loss of {this.state.multipleDeletions ? "these subjects" : "this subject"}:
+            <FlatButton
+              label="Cancel" primary={false} onTouchTap={this.listeners.closeDeleteConfirmation}
+              keyboardFocused
+            />,
+            <FlatButton label="Submit" primary onTouchTap={this.listeners.deleteSelectedSubjects} />
+          ]}
+        >
+          Do you really want to delete the selected subject{this.state.multipleDeletions ? ' entries' : ''}?<br />
+          This will result in the loss of {this.state.multipleDeletions ? 'these subjects' : 'this subject'}:
           <ul>{this.state.toBeDeletedNames.map(name => <li key={name}>{name}</li>)}</ul>
         </Dialog>
         <Dialog
@@ -202,13 +215,14 @@ class SubjectTable extends Component {
           backgroundColor
           title={
             <span style={this.styles.dialogTitle}>
-                <span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.chiliIcon}>🌶️</span>
-              </span>}
-          modal={true}
+              <span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.chiliIcon}>🌶️</span>
+            </span>}
+          modal
           actions={[
             <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
-            <FlatButton label="Save" primary={true} onTouchTap={this.listeners.saveSettings} keyboardFocused={true} />
-          ]}>
+            <FlatButton label="Save" primary onTouchTap={this.listeners.saveSettings} keyboardFocused />
+          ]}
+        >
           <TextField
             style={{ maxWidth: '100%', width: '100%' }}
             ref="setting_hiddenColumns"
@@ -231,7 +245,7 @@ class SubjectTable extends Component {
       this.props.actions.subject.fetch();
     },
     addSubject: () => {
-      this.refs['subjectDialog'].setState({ id: null, type: 'add' });
+      this.refs.subjectDialog.setState({ id: null, type: 'add' });
       this.setState({ editorOpen: true });
     },
     editSelectedSubject: () => {
@@ -241,7 +255,7 @@ class SubjectTable extends Component {
       }
 
       const id = this.state.selectedRows[0].id;
-      this.refs['subjectDialog'].setState({ id: id, type: 'edit' });
+      this.refs.subjectDialog.setState({ id: id, type: 'edit' });
       this.setState({ editorOpen: true });
     },
     closeEditor: () => {
@@ -268,14 +282,14 @@ class SubjectTable extends Component {
         selected = [this.state.toBeDeletedID];
         this.setState({ toBeDeletedID: null });
       } else {
-        selected = this.refs["table"].state.selectedRows.map(row => row.id);
+        selected = this.refs.table.state.selectedRows.map(row => row.id);
       }
 
-      console.log("Deleting subjects", selected);
-      selected.forEach(id => {
+      console.log('Deleting subjects', selected);
+      selected.forEach((id) => {
         // TODO re-enable once the server has been updated to use tombstones instead of deletions
         // this.props.deleteSubject(id);
-        console.log("Deleting subject #", id);
+        console.log('Deleting subject #', id);
       });
 
       this.closeDeleteConfirmation();
@@ -319,23 +333,22 @@ SubjectTable.propTypes = {
   headers: PropTypes.array
 };
 
-const CustomButton = ({ tooltip, onClick, children, visible = true }) => {
-  return (visible &&
-    <IconButton
-      tooltip={tooltip}
-      touch={true}
-      tooltipPosition="top-center"
-      onClick={onClick}>
-      {children}
-    </IconButton>);
-};
+const CustomButton = ({ tooltip, onClick, children, visible = true }) => (visible &&
+<IconButton
+  tooltip={tooltip}
+  touch
+  tooltipPosition="top-center"
+  onClick={onClick}
+>
+  {children}
+</IconButton>);
 
 /* connection to Redux */
 function mapStateToProps(state) {
   const tableData = state.subject.entities;
   // load candidateScores from duplicate.store
   if (tableData && state.duplicate.store && state.duplicate.store.candidateScores) {
-    tableData.forEach((subject) => subject.candidateScore = state.duplicate.store.candidateScores[subject.id])
+    tableData.forEach(subject => subject.candidateScore = state.duplicate.store.candidateScores[subject.id]);
   }
   return {
     tableData: tableData,

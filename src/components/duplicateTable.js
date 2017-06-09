@@ -6,7 +6,7 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import InteractiveTable from './interactive_table';
 import duplicateDuck from '../ducks/duplicateDuck';
-import { dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
+import { subjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
 
 class DuplicateTable extends Component {
   headers = [
@@ -28,11 +28,11 @@ class DuplicateTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.tableData) {
       const tableData = nextProps.tableData;
-      tableData.forEach(function (e, i) {
-        if (nextProps.subjectFetched && e.subject_id === nextProps.subjectFetched.id) {
+      tableData.forEach(function (entry, i) {
+        if (nextProps.subjectFetched && entry.subject_id === nextProps.subjectFetched.id) {
           tableData[i].subject = nextProps.subjectFetched;
         } else {
-          tableData[i].subject = ''
+          tableData[i].subject = entry.subject_name;
         }
       });
       this.setState({
@@ -45,9 +45,9 @@ class DuplicateTable extends Component {
     const id = this.state.tableData[rowNumber].subject_id;
     const candidateIds = [];
     const candidateScores = [];
-    this.state.tableData[rowNumber].candidates.forEach(entry => {
-      candidateIds.push(entry[0]);
-      candidateScores[entry[0]] = entry[2];
+    this.state.tableData[rowNumber].candidates.forEach((entry) => {
+      candidateIds.push(entry.id);
+      candidateScores[entry.id] = entry.score;
     });
     if (typeof id === 'string') {
       this.props.actions.subject_dbpedia.get(id);
@@ -69,13 +69,14 @@ class DuplicateTable extends Component {
         multiSelectable={false}
         selectable
         onCellClick={(rowNumber, columnId) => this.handleCellClick(rowNumber)}
-        muiTheme={this.props.muiTheme} />
+        muiTheme={this.props.muiTheme}
+      />
     );
   }
 
   listeners = {
     reloadDuplicates: () => {
-      this.props.actions.duplicate.fetch(20); // TODO make count a user option
+      this.props.actions.duplicate.fetch(100); // TODO make count a user option
     }
   };
 }
@@ -97,7 +98,7 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: {
       duplicate: bindActionCreators(duplicateDuck.creators, dispatch),
-      subject_dbpedia: bindActionCreators(dbpediaSubjects.creators, dispatch),
+      subject_dbpedia: bindActionCreators(subjects.creators, dispatch),
       subject_wikidata: bindActionCreators(wikiDataSubjects.creators, dispatch)
     }
   };

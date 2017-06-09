@@ -25,6 +25,16 @@ const schemaConfig = [
     table_name: 'subject_temp'
   },
   {
+    name: 'Subject_DBpedia',
+    model: require('../models/SubjectModelWithMaster'),
+    table_name: 'subject_dbpedia'
+  },
+  {
+    name: 'Subject_Wikidata',
+    model: require('../models/SubjectModelWithMaster'),
+    table_name: 'subject_wikidata'
+  },
+  {
     name: 'Version',
     model: require('../models/VersionModel'),
     table_name: 'version'
