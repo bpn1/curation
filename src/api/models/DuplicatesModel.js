@@ -16,5 +16,5 @@ module.exports = {
     }
   },
   key: ['subject_id'],
-  table_name: 'duplicatecandidates'
+  table_name: 'duplicates'
 };

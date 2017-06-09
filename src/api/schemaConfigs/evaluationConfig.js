@@ -11,7 +11,7 @@ const schemaConfig = [
   },
   {
     name: 'DBpedia_WikiData_Duplicates',
-    model: require('../models/DuplicateCandidatesModel'),
+    model: require('../models/DuplicatesModel'),
     table_name: 'dbpedia_wikidata_duplicates'
   },
   {

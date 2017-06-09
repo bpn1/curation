@@ -5,9 +5,9 @@ const schemaConfig = [
     table_name: 'blockingstats'
   },
   {
-    name: 'DuplicateCandidates',
-    model: require('../models/DuplicateCandidatesModelWithSubject'),
-    table_name: 'duplicatecandidates'
+    name: 'Duplicates',
+    model: require('../models/DuplicatesModel'),
+    table_name: 'duplicates'
   },
   {
     name: 'Object',
