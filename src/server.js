@@ -79,6 +79,7 @@ router.get('/', function (req, res) {
 
 app.use('/api', router);
 app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryConfig));
+app.use('/api/subjects_temp', modelRouter(datalakeModels, 'Subject_Temp', subjectsQueryConfig));
 app.use('/api/subjects_dbpedia', modelRouter(datalakeModels, 'Subject_DBpedia', subjectsQueryConfig));
 app.use('/api/subjects_wikidata', modelRouter(datalakeModels, 'Subject_Wikidata', subjectsQueryConfig));
 app.use('/api/eval/subjects_dbpedia', modelRouter(evaluationModels, 'Subject_DBpedia', subjectsQueryConfig));

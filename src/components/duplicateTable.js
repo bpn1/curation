@@ -6,7 +6,7 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import InteractiveTable from './interactive_table';
 import duplicateDuck from '../ducks/duplicateDuck';
-import { subjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
+import { subjects, tempSubjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
 
 class DuplicateTable extends Component {
   headers = [
@@ -43,6 +43,7 @@ class DuplicateTable extends Component {
 
   handleCellClick(rowNumber) {
     const id = this.state.tableData[rowNumber].subject_id;
+    const datasource = this.state.tableData[rowNumber].datasource;
     const candidateIds = [];
     const candidateScores = [];
     this.state.tableData[rowNumber].candidates.forEach((entry) => {
@@ -50,9 +51,9 @@ class DuplicateTable extends Component {
       candidateScores[entry.id] = entry.score;
     });
     if (typeof id === 'string') {
-      this.props.actions.subject_dbpedia.get(id);
+      this.props.actions.subject.get(id);
     }
-    this.props.actions.subject_wikidata.getSome(candidateIds, 200); // TODO make count a user option
+    this.props.actions[datasource].getSome(candidateIds, 200); // TODO make count a user option
     this.props.actions.duplicate.store({ candidateScores });
   }
 
@@ -98,8 +99,10 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: {
       duplicate: bindActionCreators(duplicateDuck.creators, dispatch),
-      subject_dbpedia: bindActionCreators(subjects.creators, dispatch),
-      subject_wikidata: bindActionCreators(wikiDataSubjects.creators, dispatch)
+      subject: bindActionCreators(subjects.creators, dispatch),
+      subject_wikidata: bindActionCreators(wikiDataSubjects.creators, dispatch),
+      subject_dbpedia: bindActionCreators(dbpediaSubjects.creators, dispatch),
+      subject_temp: bindActionCreators(tempSubjects.creators, dispatch),
     }
   };
 }

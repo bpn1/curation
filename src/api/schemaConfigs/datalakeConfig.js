@@ -20,7 +20,7 @@ const schemaConfig = [
     table_name: 'subject'
   },
   {
-    name: 'SubjectTemp',
+    name: 'Subject_Temp',
     model: require('../models/SubjectModelWithMaster'),
     table_name: 'subject_temp'
   },
