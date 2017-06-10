@@ -35,7 +35,22 @@ module.exports = {
       context: path.resolve(__dirname, 'src')
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: false,
+      compress: {
+        unsafe: true,
+        screw_ie8: true,
+        unused: true,
+        dead_code: true,
+        warnings: false,
+        drop_debugger: false,
+        conditionals: true,
+        evaluate: true,
+        drop_console: false,
+        sequences: true,
+        booleans: true,
+      },
+    }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new ProgressBarPlugin(),
   ]
