@@ -6,6 +6,7 @@ const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const { getIfUtils, removeEmpty } = require('webpack-config-utils');
 
 const { ifProduction, ifNotProduction } = getIfUtils(process.env.NODE_ENV || 'development');
+const isNotProduction = process.env.NODE_ENV === 'development';
 
 const PATHS = {
   APP: ['./bootstrap.js'],
@@ -92,7 +93,7 @@ const config = {
     })),
     ifNotProduction(new webpack.DllReferencePlugin({
       context: PATHS.SRC,
-      manifest: require('./dll/vendor-manifest.json')
+      manifest: isNotProduction && require('./dll/vendor-manifest.json')
     })),
     ifProduction(new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' })),
     ifProduction(new webpack.optimize.OccurrenceOrderPlugin()),
