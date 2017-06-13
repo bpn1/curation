@@ -117,6 +117,19 @@ const SpecialEdgeShape = (
   </symbol>
 );
 
+const MultipleEdgeShape = (
+  <symbol viewBox="0 0 50 50" id="multipleEdge">
+    <rect transform="rotate(45)" x="25" y="-4.5" width="15" height="15" fill="currentColor" />
+  </symbol>
+);
+
+const ManyEdgeShape = (
+  <symbol viewBox="0 0 50 50" id="manyEdge">
+    <circle cx="25" cy="25" r="14" fill={symbolFill} />
+    <rect transform="rotate(45)" x="28" y="-7.5" width="15" height="15" fill="currentColor" />
+  </symbol>
+);
+
 const CoOccurrenceEdgeShape = (
   <symbol viewBox="0 0 50 50" id="coOccurenceEdge">
     <rect transform="rotate(45)" x="25" y="-4.5" width="15" height="15" fill="currentColor" />
@@ -176,6 +189,14 @@ export default {
     specialEdge: {
       shapeId: '#specialEdge',
       shape: SpecialEdgeShape
+    },
+    multipleEdge: {
+      shapeId: '#multipleEdge',
+      shape: MultipleEdgeShape
+    },
+    manyEdge: {
+      shapeId: '#manyEdge',
+      shape: ManyEdgeShape
     },
     coOccurrenceEdge: {
       shapeId: '#coOccurenceEdge',

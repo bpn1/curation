@@ -8,6 +8,7 @@ import Divider from 'material-ui/Divider';
 import { toggleDetailNav } from '../../actions/index';
 import { commerzbankYellow } from '../../themes/curation';
 import SubjectEditor from '../../components/subject_editor';
+import RelationEditor from '../../components/relation_editor';
 import styles from './detailbar.css';
 
 class DetailBar extends Component {
@@ -80,7 +81,11 @@ class DetailBar extends Component {
               width={300}
               editorType="edit"
             /> }
-            { showRelationEditor && <p>TODO: Implement RelationEditor component!</p> }
+            { showRelationEditor && <RelationEditor
+              sourceKey={this.state.editorEdge.source}
+              targetKey={this.state.editorEdge.target}
+              enableReinitialize
+            /> }
           </div>
         </Drawer>
       </div>

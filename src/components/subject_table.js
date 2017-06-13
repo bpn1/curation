@@ -139,7 +139,7 @@ class SubjectTable extends Component {
             <CustomButton
               tooltip="Show selection graph"
               visible={showSelectionButtons}
-              onClick={evt => this.preventSelection(evt, () => console.log('TODO implement graph function'))}
+              onClick={this.listeners.showSelectionGraph}
             >
               <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
             </CustomButton>
@@ -311,6 +311,11 @@ class SubjectTable extends Component {
       const hiddenColumnsVal = event.target.value;
       const hiddenColumns = hiddenColumnsVal.split(',').map(str => str.trim().toLowerCase());
       this.setState({ hiddenColumns, hiddenColumnsVal });
+    },
+    showSelectionGraph: () => {
+      const selectedIDs = this.state.selectedRows.map(row => row.id);
+      window.location.hash = '#/graphs?nodes=' + selectedIDs.join(',');
+      window.location.reload();
     }
   };
 }

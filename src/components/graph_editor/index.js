@@ -14,13 +14,14 @@ import { subjects } from '../../ducks/subjectDuck';
 import GraphConfig from './graph_config';
 
 import {
-  dataSources, IMPLISENSE_SUBTYPE, WIKIDATA_SUBTYPE, DBPEDIA_SUBTYPE, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, PERSON_TYPE, BUSINESS_TYPE,
-  CITY_TYPE, ORGANIZATION_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE, COOCCURRENCE_EDGE_TYPE, SUBTYPE_POSTFIX
+  dataSources, IMPLISENSE_SUBTYPE, WIKIDATA_SUBTYPE, DBPEDIA_SUBTYPE, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, PERSON_TYPE,
+  BUSINESS_TYPE, CITY_TYPE, ORGANIZATION_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE, COOCCURRENCE_EDGE_TYPE,
+  SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE
 } from './constants';
 
 const centerPointOffset = { x: 650, y: 650 };
 const clusterRadius = 225;
-const clusterColumnCount = 2;
+const clusterColumnCount = 3;
 const sampleCenterNode = {
   id: '0fbf120e-a140-4d7e-b51a-9d6042f5ba16',
   title: 'Start subject',
@@ -28,52 +29,26 @@ const sampleCenterNode = {
   subtype: WIKIDATA_SUBTYPE
 };
 const sampleOtherNodes = [
-  {
-    id: uuid(),
-    title: 'DBpedia subject',
-    type: SPECIAL_TYPE,
-    subtype: DBPEDIA_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'ImpliSense subject',
-    type: EMPTY_TYPE,
-    subtype: IMPLISENSE_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'WikiData subject',
-    type: PERSON_TYPE,
-    subtype: WIKIDATA_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'DBpedia subject',
-    type: BUSINESS_TYPE,
-    subtype: DBPEDIA_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'WikiData subject',
-    type: CITY_TYPE,
-    subtype: WIKIDATA_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'ImpliSense subject',
-    type: BUSINESS_TYPE,
-    subtype: IMPLISENSE_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'WikiData subject',
-    type: ORGANIZATION_TYPE,
-    subtype: WIKIDATA_SUBTYPE
-  }, {
-    id: uuid(),
-    title: 'ImpliSense subject',
-    type: PERSON_TYPE,
-    subtype: IMPLISENSE_SUBTYPE
-  }
+  { id: uuid(), title: 'DBpedia subject', type: SPECIAL_TYPE, subtype: DBPEDIA_SUBTYPE },
+  { id: uuid(), title: 'ImpliSense subject', type: EMPTY_TYPE, subtype: IMPLISENSE_SUBTYPE },
+  { id: uuid(), title: 'WikiData subject', type: PERSON_TYPE, subtype: WIKIDATA_SUBTYPE },
+  { id: uuid(), title: 'DBpedia subject', type: BUSINESS_TYPE, subtype: DBPEDIA_SUBTYPE },
+  { id: uuid(), title: 'WikiData subject', type: CITY_TYPE, subtype: WIKIDATA_SUBTYPE },
+  { id: uuid(), title: 'ImpliSense subject', type: BUSINESS_TYPE, subtype: IMPLISENSE_SUBTYPE },
+  { id: uuid(), title: 'WikiData subject', type: ORGANIZATION_TYPE, subtype: WIKIDATA_SUBTYPE },
+  { id: uuid(), title: 'ImpliSense subject', type: PERSON_TYPE, subtype: IMPLISENSE_SUBTYPE }
 ];
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+const defaultLoadKeys = [
+  '44615941-644f-4384-a9c3-c654ad3cc96e',
+  '37268457-8520-4f1f-880e-ee64b385e27b',
+  'd960a95f-240b-4613-822b-830c73e39ab0',
+  // 'f3554407-4219-4443-ae8e-d4cf3e234102', // too many duplicates => long lines
+];
 
 class GraphEditor extends Component {
 
@@ -86,6 +61,16 @@ class GraphEditor extends Component {
     const edges = centerEdges.concat(randomEdges);
     const graph = { nodes, edges };
 
+    let loadKeys = window.location.hash.indexOf('?') === -1 ? [] :
+      window.location.hash
+        .split('?')[1]
+        .split('&')
+        .map(str => str.split('='))
+        .filter(param => param[0] === 'nodes' && param.length > 1 && param[1] !== '')
+        .map(param => param[1].split(',').map(key => key.trim()));
+    loadKeys = loadKeys.length > 0 && loadKeys[0].length > 0 ? loadKeys[0] : defaultLoadKeys;
+    console.log('GraphEditor loadKeys:', loadKeys);
+
     this.state = {
       graph: graph,
       selected: nodes[0],
@@ -96,6 +81,7 @@ class GraphEditor extends Component {
       edgeFilter: this.filters.allEdges,
       dataSourceVisibility: {},
       searchInput: '',
+      loadKeys: loadKeys,
       centerSubjects: [],
       neighborSubjects: [],
       isLoadingCenters: false,
@@ -120,12 +106,7 @@ class GraphEditor extends Component {
   }
 
   componentDidMount() {
-    this.loadGraph([
-      '44615941-644f-4384-a9c3-c654ad3cc96e',
-      'f3554407-4219-4443-ae8e-d4cf3e234102',
-      '37268457-8520-4f1f-880e-ee64b385e27b',
-      'd960a95f-240b-4613-822b-830c73e39ab0'
-    ]);
+    this.loadGraph(this.state.loadKeys);
   }
 
   loadGraph(centerNodes) {
@@ -136,11 +117,11 @@ class GraphEditor extends Component {
   updateGraph(centerSubjects, neighborSubjects) {
     const allSubjects = [].concat(neighborSubjects).concat(centerSubjects);
     const edges = this.extractEdges(allSubjects);
+    const centerKeys = [];
     let clusterIndex = 0;
     let nodes = [];
-    let centerKeys = [];
 
-    centerSubjects.forEach(centerSubject => {
+    centerSubjects.forEach((centerSubject) => {
       const centerNode = this.extractNode(centerSubject);
 
       // filter out neighbors of current not that haven't been added to the graph yet
@@ -178,27 +159,61 @@ class GraphEditor extends Component {
     return {
       id: subject.id,
       title: subject.name,
-      type: subject.category ? subject.category : BUSINESS_TYPE,
+      type: subject.category ? subject.category : NONE_TYPE,
       subtype: dataSource + SUBTYPE_POSTFIX
     };
   }
 
-  extractEdges(subjects) {
-    const edges = subjects.map(subject => {
-      if(!subject.relations) return [];
+  extractEdges(sourceSubjects) {
+    const edges = sourceSubjects.map((subject) => {
+      if (!subject.relations) return [];
       return Object.keys(subject.relations).map(target => ({
         source: subject.id,
         target: target,
-        type: EMPTY_EDGE_TYPE // TODO add & map corresponding edge types
+        // type: EMPTY_EDGE_TYPE // TODO add & map corresponding edge types
       }));
     });
 
-    return [].concat.apply([], edges); // merge arrays
+    const mergedEdges = [].concat(...edges); // merge arrays
+
+    const deduplicatedEdges = mergedEdges.reduce((acc, edge) => {
+      if (!acc.hasOwnProperty(edge.source)) acc[edge.source] = {};
+      if (!acc[edge.source].hasOwnProperty(edge.target)) acc[edge.source][edge.target] = 0;
+
+      acc[edge.source][edge.target] += 1;
+
+      return acc;
+    }, {});
+
+    const countedEdges = mergedEdges.map((edge) => {
+      let edgeCount = deduplicatedEdges[edge.source][edge.target];
+
+      // if reverse edge exists, add its value as well
+      if (deduplicatedEdges.hasOwnProperty(edge.target) && deduplicatedEdges[edge.target].hasOwnProperty(edge.source)) {
+        edgeCount += deduplicatedEdges[edge.target][edge.source];
+      }
+
+      // const edgeCount = 10;
+      let relationType = EMPTY_EDGE_TYPE;
+      if (edgeCount >= 2) relationType = MULTIPLE_EDGE_TYPE;
+      if (edgeCount >= 10) relationType = MANY_EDGE_TYPE;
+
+      return {
+        source: edge.source,
+        target: edge.target,
+        type: relationType,
+        count: edgeCount
+      };
+    });
+
+    console.log('Counted edges > 1', countedEdges.filter(edge => edge.count > 1));
+
+    return countedEdges;
   }
 
-  extractNeighbors(subjects) {
-    const idLists = subjects.map(subject => Object.keys(subject.relations));
-    return [].concat.apply([], idLists); // merge arrays
+  extractNeighbors(sourceSubjects) {
+    const idLists = sourceSubjects.map(subject => Object.keys(subject.relations));
+    return [].concat(...idLists); // merge arrays
   }
 
   componentWillReceiveProps(nextProps) {
@@ -286,6 +301,8 @@ class GraphEditor extends Component {
 
   // Deletes a node from the graph
   onDeleteNode(viewNode) {
+    if (this.props.disableDeletions) return;
+
     const graph = this.state.graph;
     const nodeIndex = this.getNodeIndex(viewNode);
     graph.nodes.splice(nodeIndex, 1);
@@ -329,6 +346,8 @@ class GraphEditor extends Component {
 
   // Called when an edge is deleted
   onDeleteEdge(viewEdge) {
+    if (this.props.disableDeletions) return;
+
     const graph = this.state.graph;
     const i = this.getEdgeIndex(viewEdge);
     graph.edges.splice(i, 1);
@@ -359,7 +378,7 @@ class GraphEditor extends Component {
   toggleDataSourceVisibility(dataSource) {
     const dataSourceVisibility = this.state.dataSourceVisibility;
 
-    if(!dataSourceVisibility.hasOwnProperty(dataSource)) {
+    if (!dataSourceVisibility.hasOwnProperty(dataSource)) {
       dataSourceVisibility[dataSource] = true;
     }
 
@@ -422,15 +441,15 @@ class GraphEditor extends Component {
       const centerKeys = this.state.centerKeys;
       return centerKeys.indexOf(edge.source) >= 0 || centerKeys.indexOf(edge.target) >= 0;
     },
-    nodesByDataSource: (node) => this.isDataSourceShown(node.subtype),
+    nodesByDataSource: node => this.isDataSourceShown(node.subtype),
     nodesByKey: (node, key) => node[NODE_KEY] === key,
     subjectsByNeighbor: (subject, neighborSubject) => {
-      if(!neighborSubject.relations) return false;
+      if (!neighborSubject.relations) return false;
       return (Object.keys(neighborSubject.relations).filter(target => target === subject.id).length > 0);
     },
     edgesByDataSource: (edge, nodes) => {
-      const sourceNodes = nodes.filter((node) => this.filters.nodesByKey(node, edge.source));
-      const targetNodes = nodes.filter((node) => this.filters.nodesByKey(node, edge.target));
+      const sourceNodes = nodes.filter(node => this.filters.nodesByKey(node, edge.source));
+      const targetNodes = nodes.filter(node => this.filters.nodesByKey(node, edge.target));
 
       return (
         sourceNodes.length !== 0 && targetNodes.length !== 0 &&
@@ -445,13 +464,13 @@ class GraphEditor extends Component {
   getFilteredGraph() {
     let nodes = this.state.graph.nodes.slice();
     const edges = this.state.graph.edges.slice()
-      .filter((edge) => (
+      .filter(edge => (
         this.filters.edgesByDataSource(edge, nodes) && this.state.edgeFilter(edge)
       ));
 
     nodes = nodes.filter(this.filters.nodesByDataSource);
 
-    if(!this.state.showDataSources) {
+    if (!this.state.showDataSources) {
       nodes = nodes.map((node) => {
         const newNode = Object.assign({}, node);
         delete newNode.subtype;
@@ -476,16 +495,16 @@ class GraphEditor extends Component {
     }),
     handleSearchRequest: (searchInput, index) => {
       // disable enter to search feature => must select from list
-      if(index < 0 || !searchInput.hasOwnProperty('key')) return;
+      if (index < 0 || !searchInput.hasOwnProperty('key')) return;
 
       // select the first found node
       const selectedNodes = this.state.graph.nodes
         .filter(node => this.filters.nodesByKey(node, searchInput.key));
-      if(selectedNodes.length > 0) {
+      if (selectedNodes.length > 0) {
         this.setState({ selected: selectedNodes[0] });
       }
     },
-    handleSearchUpdate: (searchInput, dataSource, params) => {
+    handleSearchUpdate: (searchInput) => {
       this.setState({ searchInput });
     },
     handleSearchFocus: () => {
@@ -517,8 +536,8 @@ class GraphEditor extends Component {
       right: 15
     };
     const legendEntryStyle = (color, subtype) => ({
-      backgroundColor: 'rgba(' + color + ', ' + (this.isDataSourceShown(subtype) ? 0.5 : 0.2) +')',
-      border: this.isDataSourceShown(subtype) ? '3px solid rgb('+color+')' : '0',
+      backgroundColor: 'rgba(' + color + ', ' + (this.isDataSourceShown(subtype) ? 0.5 : 0.2) + ')',
+      border: this.isDataSourceShown(subtype) ? '3px solid rgb(' + color + ')' : '0',
       padding: 15,
       margin: 5,
       borderRadius: 15,
@@ -540,14 +559,17 @@ class GraphEditor extends Component {
             <p
               key={source.type}
               style={legendEntryStyle(source.color, source.type)}
-              onClick={() => this.toggleDataSourceVisibility(source.type)}>
+              onClick={() => this.toggleDataSourceVisibility(source.type)}
+            >
               { source.name }
             </p>
           )) }
         </div>
         <div id="controls" style={controlsStyle}>
-          <SearchIcon color="#666" style={{
-            position: 'relative', top: 7 }} />
+          <SearchIcon
+            color="#666"
+            style={{ position: 'relative', top: 7 }}
+          />
           <AutoComplete
             onFocus={this.listeners.handleSearchFocus}
             onUpdateInput={this.listeners.handleSearchUpdate}
@@ -561,7 +583,8 @@ class GraphEditor extends Component {
               text: 'name',
               value: 'key'
             }}
-            maxSearchResults={15} />
+            maxSearchResults={15}
+          />
           <Checkbox
             label="Neighbor edges"
             defaultChecked
@@ -606,13 +629,19 @@ class GraphEditor extends Component {
 }
 
 GraphEditor.propTypes = {
-  fetchedSubject: PropTypes.object,
-  fetchedNeighbors: PropTypes.array,
-  disableEditing: PropTypes.bool
+  fetchedSubjects: PropTypes.array,
+  disableEditing: PropTypes.bool,
+  disableDeletions: PropTypes.bool,
+  actions: PropTypes.shape({
+    detailBar: PropTypes.object,
+    subject: PropTypes.object
+  }).isRequired
 };
 
 GraphEditor.defaultProps = {
-  disableEditing: false
+  disableEditing: false,
+  disableDeletions: true,
+  fetchedSubjects: []
 };
 
 function mapStateToProps(state) {
@@ -627,7 +656,7 @@ function mapDispatchToProps(dispatch) {
       detailBar: bindActionCreators({ openDetailBar, closeDetailBar }, dispatch),
       subject: bindActionCreators(subjects.creators, dispatch)
     }
-  }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GraphEditor);

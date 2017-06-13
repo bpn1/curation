@@ -92,13 +92,13 @@ StatusIndicator.defaultProps = {
 /* connection to Redux */
 function mapStateToProps(state) {
   return {  // TODO better way to use multiple reducers/stores
-    status: { ...state.duplicate.status, ...state.subject.status }, // TODO change to a different reducer later (controllable from different reducers)?
-    error: { ...state.duplicate.error, ...state.subject.error }
+    // TODO change to a different reducer later (controllable from other reducers)?
+    status: { ...state.duplicate.status, ...state.subject.status, ...state.graph.status },
+    error: { ...state.duplicate.error, ...state.subject.error, ...state.graph.error }
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  // return bindActionCreators({ <ACTION CREATORS> }, dispatch);
   return {};
 }
 
