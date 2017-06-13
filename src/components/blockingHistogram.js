@@ -17,7 +17,13 @@ class BlockingHistogram extends Component {
         fetchIdKey={'fetchBlockingStatsIds'}
         fetchDataKey={'fetchBlockingStatsData'}
         primaryKeys={['jobid', 'schemetag']}
-        dropDownText={stat => stat.comment + ' - ' + stat.schemetag + ': ' + getDateFromTimeUUID(stat.jobid).toLocaleString()}
+        dropDownText={stat =>
+          stat.comment.replace('Blocking', '').replace(';', '')
+          + ' ' + stat.schemetag + ': '
+          + (stat.comparisoncount ? ('CC: ' + stat.comparisoncount + ', ') : '')
+          + (stat.pairscompleteness ? ('PC: ' + stat.pairscompleteness + ', ') : '')
+          + (stat.blockcount ? ('BC: ' + stat.blockcount + ', ') : '')
+          + getDateFromTimeUUID(stat.jobid).toLocaleString()}
         nameKey={'key'}
         min={1000}
       />

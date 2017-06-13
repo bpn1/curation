@@ -177,7 +177,6 @@ class APIHistogram extends Component {
 }
 
 APIHistogram.propTypes = {
-  type: PropTypes.string.isRequired,
   keyList: PropTypes.array.isRequired,
   height: PropTypes.number.isRequired,
   filterKeys: PropTypes.array.isRequired,

@@ -10,6 +10,15 @@ module.exports = {
     comment: {
       type: 'text'
     },
+    blockcount: {
+      type: 'int'
+    },
+    comparisoncount: {
+      type: 'bigint'
+    },
+    pairscompleteness: {
+      type: 'double'
+    },
     data: {
       type: 'frozen',
       typeDef: '<set<frozen<blockstats>>'
