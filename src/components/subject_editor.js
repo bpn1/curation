@@ -11,7 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 
 import uuid from 'uuid/v4';
 
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
@@ -27,8 +27,8 @@ import { fetchSubject, addSubject, updateSubject } from '../actions/apiActions';
 
 import TagInput from './tag_input';
 
-const InputListItem = ({ style, index, children }) => (
-  <ListItem key={'listItem'+index} innerDivStyle={{ padding: 0 }} disabled>
+const InputListItem = ({ index, children, ...props }) => (
+  <ListItem key={'listItem' + index} innerDivStyle={{ padding: 0 }} disabled>
     { children }
   </ListItem>
 );
@@ -39,7 +39,7 @@ class SubjectEditor extends Component {
 
     // TODO do the UUID generation in Redux or in the backend
     // generate a new UUID if necessary
-    let id = props.id ? props.id : uuid();
+    const id = props.id ? props.id : uuid();
     this.state = {
       id,
       colors: props.muiTheme.palette,
@@ -48,13 +48,12 @@ class SubjectEditor extends Component {
   }
 
   componentDidMount() {
-    if (this.props.load)
-      this.reload(this.props.id);
+    if (this.props.load) { this.reload(this.props.id); }
   }
 
   updateTheme(theme) {
     // add theme to state so it will adapt on the fly when the theme changes
-    if(theme) {
+    if (theme) {
       this.setState({
         colors: theme.palette,
         theme: theme
@@ -77,8 +76,8 @@ class SubjectEditor extends Component {
   }
 
   reload(id) {
-    console.log("Load subject #", id);
-    if (id && this.props.editorType !== "add") {
+    console.log('Load subject #', id);
+    if (id && this.props.editorType !== 'add') {
       this.props.fetchSubject(id);
     }
   }
@@ -86,7 +85,8 @@ class SubjectEditor extends Component {
   renderTextField = props => (
     <TextField
       errorText={props.touched && props.error}
-      {...props} />
+      {...props}
+    />
   );
 
   renderTagInput = props => (
@@ -94,7 +94,8 @@ class SubjectEditor extends Component {
       hintText={props.label}
       errorText={props.touched && props.error}
       onChange={props.input.onChange}
-      {...props} />
+      {...props}
+    />
   );
 
   renderCheckbox = props => (
@@ -102,7 +103,8 @@ class SubjectEditor extends Component {
       label={props.label}
       checked={!!props.value}
       onCheck={props.input.onChange}
-      {...props} />
+      {...props}
+    />
   );
 
   renderSelectField = props => (
@@ -110,67 +112,73 @@ class SubjectEditor extends Component {
       label={props.label}
       errorText={props.touched && props.error}
       {...props}
-      onChange={props.input.onChange} />
+      onChange={props.input.onChange}
+    />
   );
 
-  renderTextFieldArray = ({ fields, meta: { error }, inputWidth = 500 }) => (
+  renderTextFieldArray = ({ fields, meta: { error } }) => (
     <div>
       <FlatButton
         onClick={() => fields.push()}
         type="button"
         label="Add property"
-        icon={<AddIcon color={this.state.colors.positiveColor1} hoverColor={this.state.colors.positiveColor2} />} />
+        icon={<AddIcon color={this.state.colors.positiveColor1} hoverColor={this.state.colors.positiveColor2} />}
+      />
       { fields.map((field, index) => // (inputWidth / 2.0) - 30 | (inputWidth / 2.0) - 10
-        <InputListItem index={index} key={index}>
+        (<InputListItem index={index} key={index}>
           <Field
             name={`${field}.name`}
             type="text"
             component={this.renderTextField}
             style={{ marginRight: 10, maxWidth: '30%' }}
-            placeholder={`Property Name #${index + 1}`} />
+            placeholder={`Property Name #${index + 1}`}
+          />
           <Field
             name={`${field}.value`}
             type="text"
             component={this.renderTextField}
             style={{ maxWidth: '40%' }}
-            placeholder={`Property Value #${index + 1}`} />
+            placeholder={`Property Value #${index + 1}`}
+          />
           <IconButton
             onClick={() => fields.remove(index)}
             tooltip="Remove property"
-            touch={true}
-            tooltipPosition="top-center">
+            touch
+            tooltipPosition="top-center"
+          >
             <RemoveIcon color={this.state.colors.negativeColor1} hoverColor={this.state.colors.negativeColor2} />
           </IconButton>
-        </InputListItem>
+        </InputListItem>)
       )}
       { error && <ListItem className="error">{ error }</ListItem> }
     </div>
   );
 
   handleSubmit = (data) => {
-    let newData = Object.assign({}, data);
+    const newData = Object.assign({}, data);
     newData.id = this.state.id;
 
     // rework properties FieldArray into an object
-    let newProps = {};
+    const newProps = {};
 
-    if(data.hasOwnProperty("properties")) {
-      data.properties.forEach(prop => {
+    if (data.hasOwnProperty('properties')) {
+      data.properties.forEach((prop) => {
         newProps[prop.name] = prop.value;
       });
     }
 
-    console.log("Updating subject #", this.state.id, " with the data: ", data, " and new properties:", newProps);
+    console.log('Updating subject #', this.state.id, ' with the data: ', data, ' and new properties:', newProps);
 
     newData.properties = newProps;
 
     // update an old subject or create a new one depending on the type of the editor (edit or add)
-    if(this.props.editorType === "edit")
+    if (this.props.editorType === 'edit') {
       this.props.updateSubject(newData);
-    else if(this.props.editorType === "add")
+    } else if (this.props.editorType === 'add') {
       this.props.addSubject(newData);
-    else
-      console.error("No Redux action for the editorType " + this.props.editorType + " configured!");
+    } else {
+      console.error('No Redux action for the editorType ' + this.props.editorType + ' configured!');
+    }
 
     this.props.onRequestClose();
   };
@@ -184,38 +192,47 @@ class SubjectEditor extends Component {
 
   render() {
     let { width, pristine, submitting, handleSubmit, reset } = this.props;
-    let { id } = this.state;
-    width = width ? width : 500;
-    let fieldStyle = { width };
+    const { id } = this.state;
+    width = width || 500;
+    const fieldStyle = { width };
 
     return (
-      <form onSubmit={handleSubmit((values) => this.handleSubmit(values))}>
+      <form onSubmit={handleSubmit(values => this.handleSubmit(values))}>
         <List>
           <ListItem
             primaryText="General"
             leftIcon={<GeneralIcon />}
-            initiallyOpen={true}
-            primaryTogglesNestedList={true}
+            initiallyOpen
+            primaryTogglesNestedList
             nestedItems={[
               <InputListItem index={0}>
-                <Field name="id" component={this.renderTextField}
-                       floatingLabelText="ID" floatingLabelFixed={true}
-                       hintText={id} disabled={true} style={fieldStyle} />
+                <Field
+                  name="id" component={this.renderTextField}
+                  hintStyle={{ whiteSpace: 'nowrap' }}
+                  floatingLabelText="ID" floatingLabelFixed
+                  hintText={id} disabled style={fieldStyle}
+                />
               </InputListItem>,
               <InputListItem index={1}>
-                <Field name="name" component={this.renderTextField}
-                       floatingLabelText="Name" floatingLabelFixed={false}
-                       hintText="Enter a name..." style={fieldStyle} />
+                <Field
+                  name="name" component={this.renderTextField}
+                  floatingLabelText="Name" floatingLabelFixed={false}
+                  hintText="Enter a name..." style={fieldStyle}
+                />
               </InputListItem>,
               <InputListItem index={2}>
-                <Field name="aliases" component={this.renderTagInput}
-                       floatingLabelText="Aliases" floatingLabelFixed={false}
-                       hintText="Type and press Enter to add..." style={fieldStyle} />
+                <Field
+                  name="aliases" component={this.renderTagInput}
+                  floatingLabelText="Aliases" floatingLabelFixed={false}
+                  hintText="Type and press Enter to add..." style={fieldStyle}
+                />
               </InputListItem>,
               <InputListItem index={3}>
-                <Field name="type" component={this.renderSelectField}
-                       floatingLabelText="Type" floatingLabelFixed={false}
-                       hintText="Select a subject type..." style={fieldStyle}>
+                <Field
+                  name="type" component={this.renderSelectField}
+                  floatingLabelText="Type" floatingLabelFixed={false}
+                  hintText="Select a subject type..." style={fieldStyle}
+                >
                   <MenuItem value="business" primaryText="Business" />
                   <MenuItem value="organization" primaryText="Organization" />
                   <MenuItem value="country" primaryText="Country" />
@@ -224,18 +241,22 @@ class SubjectEditor extends Component {
                 </Field>
               </InputListItem>,
               <InputListItem index={4}>
-                <Field name="isMaster" label="Master node"
-                       component={this.renderCheckbox} style={this.styles.checkBox} />
+                <Field
+                  name="isMaster" label="Master node"
+                  component={this.renderCheckbox} style={this.styles.checkBox}
+                />
               </InputListItem>
-            ]} />
+            ]}
+          />
           <ListItem
             primaryText="Properties"
             leftIcon={<PropsIcon />}
             initiallyOpen={false}
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <FieldArray name="properties" component={this.renderTextFieldArray} inputWidth={width} />
-            ]} />
+            ]}
+          />
         </List>
         <div>
           <RaisedButton
@@ -244,13 +265,15 @@ class SubjectEditor extends Component {
             icon={<SaveIcon />}
             backgroundColor={this.props.muiTheme.palette.positiveColor1}
             type="submit"
-            disabled={pristine || submitting} />
+            disabled={pristine || submitting}
+          />
           <RaisedButton
             label="Cancel"
             icon={<DeleteIcon />}
             backgroundColor={this.props.muiTheme.palette.negativeColor1}
             disabled={pristine || submitting}
-            onClick={(e) => { reset(e); this.props.onRequestClose(); }} />
+            onClick={(e) => { reset(e); this.props.onRequestClose(); }}
+          />
         </div>
       </form>
     );

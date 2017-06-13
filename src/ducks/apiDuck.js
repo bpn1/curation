@@ -2,13 +2,13 @@ import axios from 'axios';
 // use minified version of package, normal import is 500kb big
 import Duck from 'extensible-duck/dist/extensible-duck.min';
 
-const apiPath = '/api';
+export const apiPath = '/api';
 
 function countParam(count) {
   return count ? `count=${count}` : '';
 }
 
-function makeError(actionType, payload) {
+export function makeError(actionType, payload) {
   let error = actionType;
   error = error.replace(/_/g, ' ').toLowerCase();         // spaces to underscore, all lower case
   error = error.charAt(0).toUpperCase() + error.slice(1); // first letter to upper case
@@ -20,13 +20,14 @@ function makeError(actionType, payload) {
   return error;
 }
 
+export const statuses = ['NEW', 'LOADING', 'READY', 'SAVING', 'SAVED', 'ERROR'];
+
 export default function createDuck({ namespace, store, substore, path, initialState = {} }) {
   return new Duck({
     namespace,
     store,
 
-    consts: { statuses: ['NEW', 'LOADING', 'READY', 'SAVING', 'SAVED', 'ERROR'] },
-
+    consts: { statuses },
     types: [
       'UPDATE',
       'GET', 'GET_PENDING', 'GET_FULFILLED', 'GET_REJECTED',
