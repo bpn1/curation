@@ -5,6 +5,7 @@ import Field from 'redux-form/es/Field';
 import FieldArray from 'redux-form/es/FieldArray';
 import reduxForm from 'redux-form/es/reduxForm';
 import connect from 'react-redux/es/connect/connect';
+import bindActionCreators from 'redux/es/bindActionCreators';
 
 import { Checkbox, SelectField, TextField } from 'redux-form-material-ui';
 import MenuItem from 'material-ui/MenuItem';
@@ -23,13 +24,14 @@ import PropsIcon from 'material-ui/svg-icons/action/build';
 import GeneralIcon from 'material-ui/svg-icons/action/settings';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
-import { fetchSubject, addSubject, updateSubject } from '../actions/apiActions';
+import { subjects } from '../ducks/subjectDuck';
 
 import TagInput from './tag_input';
+import { LinearProgress } from 'material-ui';
 
-const InputListItem = ({ index, children, ...props }) => (
-  <ListItem key={'listItem' + index} innerDivStyle={{ padding: 0 }} disabled>
-    { children }
+const InputListItem = ({ children, ...props }) => (
+  <ListItem innerDivStyle={{ padding: 0 }} disabled>
+    {children}
   </ListItem>
 );
 
@@ -48,7 +50,9 @@ class SubjectEditor extends Component {
   }
 
   componentDidMount() {
-    if (this.props.load) { this.reload(this.props.id); }
+    if (this.props.load) {
+      this.reload(this.props.id);
+    }
   }
 
   updateTheme(theme) {
@@ -78,7 +82,7 @@ class SubjectEditor extends Component {
   reload(id) {
     console.log('Load subject #', id);
     if (id && this.props.editorType !== 'add') {
-      this.props.fetchSubject(id);
+      this.props.actions.subject.get(id);
     }
   }
 
@@ -124,7 +128,7 @@ class SubjectEditor extends Component {
         label="Add property"
         icon={<AddIcon color={this.state.colors.positiveColor1} hoverColor={this.state.colors.positiveColor2} />}
       />
-      { fields.map((field, index) => // (inputWidth / 2.0) - 30 | (inputWidth / 2.0) - 10
+      {fields.map((field, index) => // (inputWidth / 2.0) - 30 | (inputWidth / 2.0) - 10
         (<InputListItem index={index} key={index}>
           <Field
             name={`${field}.name`}
@@ -150,7 +154,7 @@ class SubjectEditor extends Component {
           </IconButton>
         </InputListItem>)
       )}
-      { error && <ListItem className="error">{ error }</ListItem> }
+      {error && <ListItem className="error">{error}</ListItem>}
     </div>
   );
 
@@ -173,9 +177,9 @@ class SubjectEditor extends Component {
 
     // update an old subject or create a new one depending on the type of the editor (edit or add)
     if (this.props.editorType === 'edit') {
-      this.props.updateSubject(newData);
+      this.props.actions.subject.update(newData);
     } else if (this.props.editorType === 'add') {
-      this.props.addSubject(newData);
+      this.props.actions.subject.create(newData);
     } else {
       console.error('No Redux action for the editorType ' + this.props.editorType + ' configured!');
     }
@@ -191,91 +195,102 @@ class SubjectEditor extends Component {
   };
 
   render() {
-    let { width, pristine, submitting, handleSubmit, reset } = this.props;
+    let { width, pristine, submitting, handleSubmit, reset, isLoading } = this.props;
     const { id } = this.state;
     width = width || 500;
     const fieldStyle = { width };
 
     return (
-      <form onSubmit={handleSubmit(values => this.handleSubmit(values))}>
-        <List>
-          <ListItem
-            primaryText="General"
-            leftIcon={<GeneralIcon />}
-            initiallyOpen
-            primaryTogglesNestedList
-            nestedItems={[
-              <InputListItem index={0}>
-                <Field
-                  name="id" component={this.renderTextField}
-                  hintStyle={{ whiteSpace: 'nowrap' }}
-                  floatingLabelText="ID" floatingLabelFixed
-                  hintText={id} disabled style={fieldStyle}
+      <div>
+        {isLoading && <LinearProgress mode="indeterminate" /> }
+        <form onSubmit={handleSubmit(values => this.handleSubmit(values))}>
+          <List>
+            <ListItem
+              primaryText="General"
+              leftIcon={<GeneralIcon />}
+              initiallyOpen
+              primaryTogglesNestedList
+              nestedItems={[
+                <InputListItem key={'listItem' + 0}>
+                  <Field
+                    name="id" component={this.renderTextField}
+                    hintStyle={{ whiteSpace: 'nowrap' }}
+                    floatingLabelText="ID" floatingLabelFixed
+                    hintText={id} disabled style={fieldStyle}
+                  />
+                </InputListItem>,
+                <InputListItem key={'listItem' + 1}>
+                  <Field
+                    name="name" component={this.renderTextField}
+                    floatingLabelText="Name" floatingLabelFixed={false}
+                    hintText="Enter a name..." style={fieldStyle}
+                  />
+                </InputListItem>,
+                <InputListItem key={'listItem' + 2}>
+                  <Field
+                    name="aliases" component={this.renderTagInput}
+                    floatingLabelText="Aliases" floatingLabelFixed={false}
+                    hintText="Type and press Enter to add..." style={fieldStyle}
+                  />
+                </InputListItem>,
+                <InputListItem key={'listItem' + 3}>
+                  <Field
+                    name="type" component={this.renderSelectField}
+                    floatingLabelText="Type" floatingLabelFixed={false}
+                    hintText="Select a subject type..." style={fieldStyle}
+                  >
+                    <MenuItem value="business" primaryText="Business" />
+                    <MenuItem value="organization" primaryText="Organization" />
+                    <MenuItem value="country" primaryText="Country" />
+                    <MenuItem value="city" primaryText="City" />
+                    <MenuItem value="person" primaryText="Person" />
+                  </Field>
+                </InputListItem>,
+                <InputListItem key={'listItem' + 4}>
+                  <Field
+                    name="isMaster" label="Master node"
+                    component={this.renderCheckbox} style={this.styles.checkBox}
+                  />
+                </InputListItem>
+              ]}
+            />
+            <ListItem
+              primaryText="Properties"
+              leftIcon={<PropsIcon />}
+              initiallyOpen={false}
+              primaryTogglesNestedList
+              nestedItems={[
+                <FieldArray
+                  key="fieldArrayProperties"
+                  name="properties"
+                  component={this.renderTextFieldArray}
+                  inputWidth={width}
                 />
-              </InputListItem>,
-              <InputListItem index={1}>
-                <Field
-                  name="name" component={this.renderTextField}
-                  floatingLabelText="Name" floatingLabelFixed={false}
-                  hintText="Enter a name..." style={fieldStyle}
-                />
-              </InputListItem>,
-              <InputListItem index={2}>
-                <Field
-                  name="aliases" component={this.renderTagInput}
-                  floatingLabelText="Aliases" floatingLabelFixed={false}
-                  hintText="Type and press Enter to add..." style={fieldStyle}
-                />
-              </InputListItem>,
-              <InputListItem index={3}>
-                <Field
-                  name="type" component={this.renderSelectField}
-                  floatingLabelText="Type" floatingLabelFixed={false}
-                  hintText="Select a subject type..." style={fieldStyle}
-                >
-                  <MenuItem value="business" primaryText="Business" />
-                  <MenuItem value="organization" primaryText="Organization" />
-                  <MenuItem value="country" primaryText="Country" />
-                  <MenuItem value="city" primaryText="City" />
-                  <MenuItem value="person" primaryText="Person" />
-                </Field>
-              </InputListItem>,
-              <InputListItem index={4}>
-                <Field
-                  name="isMaster" label="Master node"
-                  component={this.renderCheckbox} style={this.styles.checkBox}
-                />
-              </InputListItem>
-            ]}
-          />
-          <ListItem
-            primaryText="Properties"
-            leftIcon={<PropsIcon />}
-            initiallyOpen={false}
-            primaryTogglesNestedList
-            nestedItems={[
-              <FieldArray name="properties" component={this.renderTextFieldArray} inputWidth={width} />
-            ]}
-          />
-        </List>
-        <div>
-          <RaisedButton
-            style={{ marginRight: 10, marginTop: 10 }}
-            label="Save"
-            icon={<SaveIcon />}
-            backgroundColor={this.props.muiTheme.palette.positiveColor1}
-            type="submit"
-            disabled={pristine || submitting}
-          />
-          <RaisedButton
-            label="Cancel"
-            icon={<DeleteIcon />}
-            backgroundColor={this.props.muiTheme.palette.negativeColor1}
-            disabled={pristine || submitting}
-            onClick={(e) => { reset(e); this.props.onRequestClose(); }}
-          />
-        </div>
-      </form>
+              ]}
+            />
+          </List>
+          <div>
+            <RaisedButton
+              style={{ marginRight: 10, marginTop: 10 }}
+              label="Save"
+              icon={<SaveIcon />}
+              backgroundColor={this.props.muiTheme.palette.positiveColor1}
+              type="submit"
+              disabled={pristine || submitting}
+            />
+            <RaisedButton
+              label="Cancel"
+              icon={<DeleteIcon />}
+              backgroundColor={this.props.muiTheme.palette.negativeColor1}
+              disabled={pristine || submitting}
+              onClick={(e) => {
+                reset(e);
+                this.props.onRequestClose();
+              }}
+            />
+          </div>
+        </form>
+      </div>
     );
   }
 }
@@ -286,12 +301,14 @@ SubjectEditor.propTypes = {
   load: PropTypes.bool,
   id: PropTypes.string,
   width: PropTypes.number,
+  isLoading: PropTypes.bool,
   name: PropTypes.string,
   master: PropTypes.string
 };
 
 SubjectEditor.defaultProps = {
-  onRequestClose: () => {}
+  onRequestClose: () => {},
+  isLoading: true
 };
 
 // Redux connection for loading and saving subject data
@@ -299,13 +316,28 @@ const reduxConnectedForm = reduxForm({
   form: 'subjectEditorForm'
 })(SubjectEditor);
 
-// API connection (pull initial values from API reducer if not an 'add' dialog)
-const apiConnectedForm = connect(
-  (state, ownProps) => ({
-    initialValues: state.api.editableSubjects[ownProps.id]
-  }),
-  { fetchSubject, addSubject, updateSubject } // bind loading and updating action creators
-)(reduxConnectedForm);
+// pull initial values from API reducer if not an 'add' dialog
+function mapStateToProps(state, ownProps) {
+  const isNotLoading = state.subject.status['curation/subject/GET'] === 'READY';
+
+  const newProps = {
+    initialValues: state.subject.editableSubjects[ownProps.id],
+    isLoading: false
+  };
+
+  return isNotLoading ? newProps : { isLoading: true };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: {
+      subject: bindActionCreators(subjects.creators, dispatch)
+    }
+  };
+}
+
+// API connection
+const apiConnectedForm = connect(mapStateToProps, mapDispatchToProps)(reduxConnectedForm);
 
 // Connect to MaterialUI for theme & color information
 const themedForm = muiThemable()(apiConnectedForm);

@@ -12,6 +12,9 @@ import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
 import DetailBar from './containers/DetailBar';
 
+import StatusIndicator from './components/status_indicator';
+import CommitIndicator from './components/commit_indicator';
+
 export const layoutBreakpoint = '(min-width: 769px)';
 
 class MainLayout extends Component {
@@ -31,7 +34,10 @@ class MainLayout extends Component {
             left={<Avatar backgroundColor="#0000" size={64} src={image} />}
             middle={appTitle}
           />
-          <ToolBar />
+          <ToolBar>
+            <CommitIndicator />
+            <StatusIndicator />
+          </ToolBar>
           <section className={styles.appMainContainer} style={{ backgroundColor: theme.palette.canvasColor }}>
             <SideBar />
             <div style={{ padding: 10, width: '100%' }}>

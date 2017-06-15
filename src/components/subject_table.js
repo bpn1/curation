@@ -37,7 +37,6 @@ class SubjectTable extends Component {
       editorOpen: false,
       deleteConfirmationOpen: false,
       multipleDeletions: false,
-      toBeDeletedID: null,
       toBeDeletedNames: [],
       settingsOpen: false,
       refreshStatus: props.fetchOnMount ? 'loading' : 'hide',
@@ -188,7 +187,6 @@ class SubjectTable extends Component {
         {/* these elements are hidden by default */}
         <SubjectDialog
           ref="subjectDialog"
-          type="add"
           open={this.state.editorOpen}
           onRequestClose={this.listeners.closeEditor}
         />
@@ -277,22 +275,9 @@ class SubjectTable extends Component {
       this.setState({ deleteConfirmationOpen: false });
     },
     deleteSelectedSubjects: () => {
-      let selected;
-      if (this.state.toBeDeletedID) {
-        selected = [this.state.toBeDeletedID];
-        this.setState({ toBeDeletedID: null });
-      } else {
-        selected = this.refs.table.state.selectedRows.map(row => row.id);
-      }
+      this.props.actions.subject.delete(this.state.selectedRows);
 
-      console.log('Deleting subjects', selected);
-      selected.forEach((id) => {
-        // TODO re-enable once the server has been updated to use tombstones instead of deletions
-        // this.props.deleteSubject(id);
-        console.log('Deleting subject #', id);
-      });
-
-      this.closeDeleteConfirmation();
+      this.listeners.closeDeleteConfirmation();
     },
     showSettings: () => {
       this.setState({ settingsOpen: true });
@@ -339,14 +324,14 @@ SubjectTable.propTypes = {
 };
 
 const CustomButton = ({ tooltip, onClick, children, visible = true }) => (visible &&
-<IconButton
-  tooltip={tooltip}
-  touch
-  tooltipPosition="top-center"
-  onClick={onClick}
->
-  {children}
-</IconButton>);
+  <IconButton
+    tooltip={tooltip}
+    touch
+    tooltipPosition="top-center"
+    onClick={onClick}
+  >
+    {children}
+  </IconButton>);
 
 /* connection to Redux */
 function mapStateToProps(state) {
@@ -358,7 +343,8 @@ function mapStateToProps(state) {
   return {
     tableData: tableData,
     error: state.subject.error,
-    loading: state.subject.status === 'LOADING' // TODO does not work for duplicates because status is cleared before finishing all tasks
+    // TODO does not work for duplicates because status is cleared before finishing all tasks
+    loading: state.subject.status === 'LOADING'
   };
 }
 

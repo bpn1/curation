@@ -22,26 +22,24 @@ export function makeError(actionType, payload) {
 
 export const statuses = ['NEW', 'LOADING', 'READY', 'SAVING', 'SAVED', 'ERROR'];
 
-export default function createDuck({ namespace, store, substore, path, initialState = {} }) {
+export default function createDuck({ namespace, store, path, initialState = {} }) {
   return new Duck({
     namespace,
     store,
 
     consts: { statuses },
     types: [
-      'UPDATE',
       'GET', 'GET_PENDING', 'GET_FULFILLED', 'GET_REJECTED',
       'GET_MULTIPLE', 'GET_MULTIPLE_PENDING', 'GET_MULTIPLE_FULFILLED', 'GET_MULTIPLE_REJECTED',
       'FETCH', 'FETCH_PENDING', 'FETCH_FULFILLED', 'FETCH_REJECTED',
       'POST', 'POST_PENDING', 'POST_FULFILLED', 'POST_REJECTED',
+      'PATCH', 'PATCH_PENDING', 'PATCH_FULFILLED', 'PATCH_REJECTED',
     ],
 
     // TODO handle status of mutliple actions started simultaniously
 
     reducer: (state, action, { types, statuses, initialState }) => {
       switch (action.type) {
-        case types.UPDATE:
-          return { ...state, entity: { ...state.entity, ...action.payload } };
         case types.FETCH_PENDING:
           return {
             ...state,
@@ -113,7 +111,6 @@ export default function createDuck({ namespace, store, substore, path, initialSt
     },
 
     creators: ({ types }) => ({
-      update: fields => ({ type: types.UPDATE, payload: fields }),
       fetch: count => ({
         type: types.FETCH,
         payload: axios.get(`${apiPath}${path}?` + countParam(count))
@@ -124,7 +121,7 @@ export default function createDuck({ namespace, store, substore, path, initialSt
         payload: axios.get(`${apiPath}${path}?id=${ids.join(',')}&` + countParam(count))
       }),
       post: () => ({ type: types.POST, payload: axios.post(`${apiPath}${path}`, obj) }),
-      patch: () => ({ type: types.PATCH, payload: axios.patch(`${apiPath}${path}/${id}`, obj) })
+      patch: id => ({ type: types.PATCH, payload: axios.patch(`${apiPath}${path}/${id}`, obj) })
     }),
 
     initialState:

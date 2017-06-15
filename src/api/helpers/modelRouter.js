@@ -66,7 +66,9 @@ module.exports = function (models, modelName, queryConfig) {
           console.log('Query: ', query);
           models.instance[modelName].findAsync(query, options)
             .then(row => res.json(row))
-            .catch(err => logError(err, res));
+            .catch((err) => {
+              logError(err, res);
+            });
         });
     });
   }
@@ -119,8 +121,18 @@ module.exports = function (models, modelName, queryConfig) {
       const query = buildQuery(req.query, queryConfig);
       models.instance[modelName]
         .findOneAsync(Object.assign(query, { [queryConfig.uniqueKey]: models.timeuuidFromString(req.params.id) }))
-        .then(row => res.json(row))
-        .catch(err => logError(err, res));
+        .then((row) => {
+          if (!row || row === '') {
+            throw new Error(`UUID ${req.params.id} not found`);
+          }
+          res.json(row);
+        })
+        .catch((err) => {
+          res.send({
+            message: `UUID ${req.params.id} not found`,
+            id: req.params.id
+          });
+        });
     })
     .put(function (req, res) {
       const options = {

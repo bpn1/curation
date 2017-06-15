@@ -16,36 +16,38 @@ class SubjectDialog extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // opening transition
-    if(nextProps.open && !this.props.open)
+    if (nextProps.open && !this.props.open) {
       this.setState({ load: true });
-    // closing transition
-    else if(!nextProps.open && this.props.open)
+    }
+    else if (!nextProps.open && this.props.open) {
       this.setState({ load: false });
+    }
   }
 
   render() {
     // Capitalize first word of header
-    let headerAction = this.state.type.replace(/\b\w/g, l => l.toUpperCase());
+    const headerAction = this.state.type.replace(/\b\w/g, l => l.toUpperCase());
 
     return (
       <Dialog
-        title={headerAction + " subject"}
+        title={headerAction + ' subject'}
         modal={false}
-        autoScrollBodyContent={true}
-        {...this.props}>
+        autoScrollBodyContent
+        {...this.props}
+      >
         <SubjectEditor
           id={this.state.id}
           load={this.state.load}
+          enableReinitialize
           editorType={this.state.type}
-          onRequestClose={this.props.onRequestClose} />
+          onRequestClose={this.props.onRequestClose}
+        />
       </Dialog>
     );
   }
 }
 
 SubjectDialog.propTypes = {
-  type: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired
 };

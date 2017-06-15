@@ -8,8 +8,6 @@ import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 
-import StatusIndicator from '../../components/status_indicator';
-
 import styles from './toolbar.css';
 import toggleSideNav from '../../actions/index';
 
@@ -29,7 +27,7 @@ class ToolBar extends Component {
             </IconButton>
           </ToolbarGroup>
           <ToolbarGroup className={styles.rightGroup}>
-            <StatusIndicator />
+            {this.props.children}
           </ToolbarGroup>
         </Toolbar>
       </Paper>

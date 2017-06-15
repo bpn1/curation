@@ -33,10 +33,6 @@ const curationTheme = getMuiTheme({
     pickerHeaderColor: fade(fullWhite, 0.12),
     clockCircleColor: fade(fullWhite, 0.12),
 
-    // TODO remove these or adapt them to positive & negative color (see below)?
-    acceptColor: green600,
-    denyColor: red600,
-
     positiveColor1: green600,
     positiveColor2: fade(green600, highlightFade),
     negativeColor1: red600,

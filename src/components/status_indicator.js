@@ -21,11 +21,9 @@ class StatusIndicator extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.status)
-      this.setState({ status: nextProps.status });
+    if (nextProps.status) { this.setState({ status: nextProps.status }); }
 
-    if (nextProps.error)
-      this.setState({ error: nextProps.error });
+    if (nextProps.error) { this.setState({ error: nextProps.error }); }
   }
 
   capitalize(str) {
@@ -37,8 +35,7 @@ class StatusIndicator extends Component {
   }
 
   handleClick = (evt) => {
-    if (this.hasErrorMessage())
-      console.warn("Redux Error: ", this.state.error);
+    if (this.hasErrorMessage()) { console.warn('Redux Error: ', this.state.error); }
   };
 
   render() {
@@ -58,8 +55,8 @@ class StatusIndicator extends Component {
 
     const { error } = this.state;
     const hasErrorMessage = this.hasErrorMessage();
-    const formattedError = hasErrorMessage ? Object.values(error).map(v => v && <div key={v}>{v}</div>) : "";
-    const tooltipPosition = hasErrorMessage ? "top-left" : "top-center";
+    const formattedError = hasErrorMessage ? Object.values(error).map(v => v && <div key={v}>{v}</div>) : '';
+    const tooltipPosition = hasErrorMessage ? 'top-left' : 'top-center';
     const tooltip = formattedError;
 
     // TODO show dialog/ popup onClick
@@ -67,13 +64,14 @@ class StatusIndicator extends Component {
     return (
       <IconButton
         tooltip={tooltip}
-        touch={true}
+        touch
         onClick={this.handleClick}
         tooltipPosition={tooltipPosition}
-        style={this.iconButtonStyle}>
-        {iconVisible.ok && <OkIcon color={iconColors.ok[0]} hoverColor={iconColors.ok[1]}/>}
-        {iconVisible.warning && <WarningIcon color={iconColors.warning[0]} hoverColor={iconColors.warning[1]}/>}
-        {iconVisible.error && <ErrorIcon color={iconColors.error[0]} hoverColor={iconColors.error[1]}/>}
+        style={this.iconButtonStyle}
+      >
+        {iconVisible.ok && <OkIcon color={iconColors.ok[0]} hoverColor={iconColors.ok[1]} />}
+        {iconVisible.warning && <WarningIcon color={iconColors.warning[0]} hoverColor={iconColors.warning[1]} />}
+        {iconVisible.error && <ErrorIcon color={iconColors.error[0]} hoverColor={iconColors.error[1]} />}
       </IconButton>
     );
   }
@@ -91,7 +89,8 @@ StatusIndicator.defaultProps = {
 
 /* connection to Redux */
 function mapStateToProps(state) {
-  return {  // TODO better way to use multiple reducers/stores
+  return {
+    // TODO better way to use multiple reducers/stores
     // TODO change to a different reducer later (controllable from other reducers)?
     status: { ...state.duplicate.status, ...state.subject.status, ...state.graph.status },
     error: { ...state.duplicate.error, ...state.subject.error, ...state.graph.error }
