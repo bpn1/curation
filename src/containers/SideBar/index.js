@@ -7,7 +7,7 @@ import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
+import ContentLink from 'material-ui/svg-icons/content/link';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionAssessment from "material-ui/svg-icons/action/assessment";
 import SocialGroup from "material-ui/svg-icons/social/group";
@@ -82,10 +82,10 @@ class SideBar extends Component {
           <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
             <ListItem value={1} primaryText="Subjects" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
             <ListItem value={2} primaryText="Duplicates" containerElement={<Link to={'/duplicates'} />} leftIcon={<SocialGroup />} />
-            <ListItem value={3} primaryText="Graphs" containerElement={<Link to={'graphs'} />} leftIcon={<GraphIcon />} />
+            <ListItem value={3} primaryText="Graphs" containerElement={<Link to={'/graphs'} />} leftIcon={<GraphIcon />} />
             <ListItem value={4} primaryText="Blocking&nbsp;Statistics" containerElement={<Link to={'/statistics/blocking'} />} leftIcon={<ActionAssessment />} />
             <ListItem value={5} primaryText="Similarity&nbsp;Measure" containerElement={<Link to={'/statistics/simmeasure'} />} leftIcon={<ActionAssessment />} />
-            <ListItem value={6} primaryText="Tasks" containerElement={<Link to={'tasks'} />} leftIcon={<ActionGrade />} />
+            <ListItem value={6} primaryText="Entity Linking" containerElement={<Link to={'/entity_linking'} />} leftIcon={<ContentLink />} />
           </SelectableList>
           <Divider className={styles.sideDivider} />
           <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()} >

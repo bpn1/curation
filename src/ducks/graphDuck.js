@@ -1,5 +1,5 @@
 import axios from 'axios';
-import createDuck, { apiPath, makeError } from './apiDuck';
+import createDuck, { apiPath, makeError, makeAxiosTypes } from './apiDuck';
 
 function extractSourceAndTarget(fetchedSubjects, sourceKey, targetKey) {
   const sourceSubjects = fetchedSubjects.filter(s => s.id === sourceKey);
@@ -46,10 +46,6 @@ function extractRelations(source, target) {
     if (a.type > b.type) return 1;
     return 0;
   });
-}
-
-function makeAxiosTypes(baseType) {
-  return [ baseType, baseType + '_PENDING', baseType + '_REJECTED', baseType + '_FULFILLED' ];
 }
 
 const apiRoute = '/subjects';

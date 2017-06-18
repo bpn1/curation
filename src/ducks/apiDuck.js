@@ -20,6 +20,10 @@ export function makeError(actionType, payload) {
   return error;
 }
 
+export function makeAxiosTypes(baseType) {
+  return [baseType, baseType + '_PENDING', baseType + '_REJECTED', baseType + '_FULFILLED'];
+}
+
 export const statuses = ['NEW', 'LOADING', 'READY', 'SAVING', 'SAVED', 'ERROR'];
 
 export default function createDuck({ namespace, store, path, initialState = {} }) {

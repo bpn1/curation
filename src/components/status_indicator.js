@@ -92,8 +92,18 @@ function mapStateToProps(state) {
   return {
     // TODO better way to use multiple reducers/stores
     // TODO change to a different reducer later (controllable from other reducers)?
-    status: { ...state.duplicate.status, ...state.subject.status, ...state.graph.status },
-    error: { ...state.duplicate.error, ...state.subject.error, ...state.graph.error }
+    status: {
+      ...state.duplicate.status,
+      ...state.subject.status,
+      ...state.graph.status,
+      ...state.linkedArticles.status
+    },
+    error: {
+      ...state.duplicate.error,
+      ...state.subject.error,
+      ...state.graph.error,
+      ...state.linkedArticles.error
+    }
   };
 }
 

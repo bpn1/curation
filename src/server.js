@@ -7,8 +7,10 @@ const path = require('path');
 const config = require('../webpack.config.babel');
 const datalakeConfig = require('./api/keyspaceConfigs/datalake.config');
 const evaluationConfig = require('./api/keyspaceConfigs/evaluation.config');
+const wikidumpsConfig = require('./api/keyspaceConfigs/wikidumps.config');
 const datalakeSchemaConfig = require('./api/schemaConfigs/datalakeConfig');
 const evaluationSchemaConfig = require('./api/schemaConfigs/evaluationConfig');
+const wikidumpsSchemaConfig = require('./api/schemaConfigs/wikidumpsConfig');
 
 const modelLoader = require('./api/helpers/modelLoader');
 const modelRouter = require('./api/helpers/modelRouter');
@@ -17,10 +19,12 @@ const versionsQueryConfig = require('./api/queryConfigs/versions');
 const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCandidates');
 const blockingStatsQueryConfig = require('./api/queryConfigs/blockingstats');
 const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats');
+const linkedArticlesQueryConfig = require('./api/queryConfigs/linkedArticles');
 
 // setup cassandra ORM
 const datalakeModels = modelLoader(datalakeConfig, datalakeSchemaConfig);
 const evaluationModels = modelLoader(evaluationConfig, evaluationSchemaConfig);
+const wikidumpsModels = modelLoader(wikidumpsConfig, wikidumpsSchemaConfig);
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 3000;
@@ -89,6 +93,7 @@ app.use('/api/duplicates', modelRouter(datalakeModels, 'Duplicates', duplicateCa
 app.use('/api/new_duplicates', modelRouter(evaluationModels, 'DBpedia_WikiData_Duplicates', duplicateCandidatesQueryConfig));
 app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', blockingStatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
+app.use('/api/wiki/linkedarticles', modelRouter(wikidumpsModels, 'LinkedArticles', linkedArticlesQueryConfig));
 
 app.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {

@@ -9,6 +9,7 @@
     "express": "^4.15.3",
     "express-cassandra": "^1.9.0",
     "extensible-duck": "^1.0.0",
+    "html-to-react": "^1.2.11",
     "lodash": "^4.17.4",
     "lost": "^8.0.0",
     "material-ui": "^0.18.3",
