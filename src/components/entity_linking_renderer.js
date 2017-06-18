@@ -222,8 +222,8 @@ EntityLinkingRenderer.propTypes = {
 };
 
 EntityLinkingRenderer.defaultProps = {
-  pageContent: sampleHtml,
-  pageTitles: sampleTitles,
+  pageContent: '',
+  pageTitles: [],
   height: 500
 };
 
