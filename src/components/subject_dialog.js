@@ -9,7 +9,7 @@ class SubjectDialog extends Component {
     super(props);
 
     this.state = {
-      type: 'add',
+      type: 'new',
       id: null,
       load: false
     };
@@ -31,6 +31,7 @@ class SubjectDialog extends Component {
     return (
       <Dialog
         title={headerAction + ' subject'}
+        titleStyle={{ color: this.state.titleColor }}
         modal={false}
         autoScrollBodyContent
         {...this.props}

@@ -243,7 +243,7 @@ class SubjectTable extends Component {
       this.props.actions.subject.fetch();
     },
     addSubject: () => {
-      this.refs.subjectDialog.setState({ id: null, type: 'add' });
+      this.refs.subjectDialog.setState({ id: null, type: 'new' });
       this.setState({ editorOpen: true });
     },
     editSelectedSubject: () => {
@@ -253,7 +253,7 @@ class SubjectTable extends Component {
       }
 
       const id = this.state.selectedRows[0].id;
-      this.refs.subjectDialog.setState({ id: id, type: 'edit' });
+      this.refs.subjectDialog.setState({ id: id, type: 'database' });
       this.setState({ editorOpen: true });
     },
     closeEditor: () => {

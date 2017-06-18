@@ -9,9 +9,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
 
-import InteractiveTable from './interactive_table';
+import { materialIcon, count } from '../helpers/index';
+import SubjectDialog from './subject_dialog';
 
 const changeCountStyle = {
   marginRight: 8,
@@ -19,12 +19,23 @@ const changeCountStyle = {
   fontWeight: 'normal'
 };
 
-function isNotEmpty(obj) {
-  return Object.keys(obj).length > 0;
-}
-
-function materialIcon(iconName, color) {
-  return <FontIcon className="material-icons" color={color}>{iconName}</FontIcon>;
+class StagedListEntry extends Component {
+  constructor() {
+    super();
+    this.onTouchTap = this.onTouchTap.bind(this);
+  }
+  onTouchTap() {
+    this.props.openEditor(this.props.id, this.props.stage);
+  }
+  render() {
+    return (
+      <ListItem
+        primaryText={this.props.name}
+        secondaryText={this.props.id}
+        onTouchTap={this.onTouchTap}
+      />
+    );
+  }
 }
 
 class CommitIndicator extends Component {
@@ -33,37 +44,11 @@ class CommitIndicator extends Component {
 
     this.state = {
       open: false,
-      createdCount: 0,
-      updatedCount: 0,
-      deletedCount: 0,
-      created: {},
-      updated: {},
-      deleted: {},
+      editorOpen: false,
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.created) {
-      this.setState({
-        created: nextProps.created,
-        createdCount: Object.keys(nextProps.created).length
-      });
-    }
-    if (nextProps.updated) {
-      this.setState({
-        updated: nextProps.updated,
-        updatedCount: Object.keys(nextProps.updated).length
-      });
-    }
-    if (nextProps.deleted) {
-      this.setState({
-        deleted: nextProps.deleted,
-        deletedCount: Object.keys(nextProps.deleted).length
-      });
-    }
-  }
-
-  handleTouchTap = (event) => {
+  openCommitView = (event) => {
     // This prevents ghost click.
     event.preventDefault();
 
@@ -73,92 +58,107 @@ class CommitIndicator extends Component {
     });
   };
 
+  closeEditor = () => {
+    this.setState({ editorOpen: false });
+  };
+
   handleRequestClose = () => {
     this.setState({
       open: false,
     });
   };
 
-  renderDetails() {
-    return (
-      <div>
-        {isNotEmpty(created) &&
-        <div>
-          <div>{this.state.createdCount} subjects created</div>
-          <ul>
-            {isNotEmpty(created) && Object.values(created).map(subject =>
-              <li>{subject.name}</li>
-            )}
-          </ul>
-        </div>}
-        {isNotEmpty(updated) &&
-        <div>
-          <div>{this.state.updatedCount} subjects updated</div>
-          <ul>
-            {Object.values(updated).map(subject =>
-              <li>{subject.name}</li>
-            )}
-          </ul>
-        </div>}
-        {isNotEmpty(deleted) &&
-        <div>
-          <div>{this.state.deletedCount} subjects deleted</div>
-          <ul>
-            {isNotEmpty(deleted) && Object.values(deleted).map(subject =>
-              <li>{subject.name}</li>
-            )}
-          </ul>
-        </div>}
-      </div>
-    );
-  }
-
   addIcon = materialIcon('add_box', this.props.muiTheme.palette.positiveColor1);
   warningIcon = materialIcon('warning');
   updateIcon = materialIcon('mode_edit', this.props.muiTheme.palette.primary1Color);
   deleteIcon = materialIcon('delete', this.props.muiTheme.palette.negativeColor1);
 
+  openEditor = (id, stage) => {
+    this.refs.subjectDialog.setState({ id: id, type: stage, titleColor: this.editorTypeColor(stage) });
+    this.setState({ editorOpen: true });
+  };
+
+  editorTypeColor(type) {
+    if (type === 'created' || type === 'new') {
+      return this.props.muiTheme.palette.positiveColor1;
+    }
+    if (type === 'updated') {
+      return this.props.muiTheme.palette.primary1Color;
+    }
+    if (type === 'deleted') {
+      return this.props.muiTheme.palette.negativeColor1;
+    }
+    return this.props.muiTheme.palette.textColor;
+  }
+
+  editorTypeIcon(type) {
+    if (type === 'created') {
+      return this.addIcon;
+    }
+    if (type === 'updated') {
+      return this.updateIcon;
+    }
+    if (type === 'deleted') {
+      return this.deleteIcon;
+    }
+  }
+
+  renderStagedEntry(entry, stage) {
+    return (
+      <StagedListEntry
+        key={entry.id}
+        name={entry.name}
+        id={entry.id}
+        openEditor={this.openEditor}
+        stage={stage}
+      />
+    );
+  }
+
+  renderStagedList(stage, color, icon) {
+    const stageCount = count(this.props[stage]);
+    return (
+      <ListItem
+        key={stage}
+        primaryText={`${stageCount} ${stage} subjects`}
+        style={{ color }}
+        leftIcon={icon}
+        initiallyOpen={false}
+        primaryTogglesNestedList
+        nestedItems={Object.values(this.props[stage]).map(entry => this.renderStagedEntry(entry, stage))}
+      />
+    );
+  }
+
   render() {
-    const { created, updated, deleted } = this.state;
-    const { createdCount, updatedCount, deletedCount } = this.state;
+    const { createdCount, updatedCount, deletedCount } = this.props;
     const totalCount = createdCount + updatedCount + deletedCount;
-
-    const headers = [
-      { key: 'id', name: 'ID' },
-      { key: 'name', name: 'Name' },
-      { key: 'aliases', name: 'Aliases' },
-      { key: 'category', name: 'Category' },
-      { key: 'properties', name: 'Properties' },
-      { key: 'relations', name: 'Relations' }
-    ];
-
-    const hiddenColumns = ['id', 'aliases', 'category', 'relations'];
 
     return (
       <div>
         <FlatButton
-          onTouchTap={this.handleTouchTap}
+          onTouchTap={this.openCommitView}
         >
           <Grid fluid>
             <Row middle="xs">
-              {this.addIcon}
+              {this.editorTypeIcon('created')}
               <span style={{
                 ...changeCountStyle,
-                color: this.props.muiTheme.palette.positiveColor1
+                color: this.editorTypeColor('created')
               }}
-              >{this.state.createdCount}</span>
-              {this.updateIcon}
+              >{createdCount}</span>
+              {this.editorTypeIcon('updated')}
               <span style={{
                 ...changeCountStyle,
-                color: this.props.muiTheme.palette.primary1Color
+                color: this.editorTypeColor('updated')
               }}
-              >{this.state.updatedCount}</span>
-              {this.deleteIcon}
+              >{updatedCount}</span>
+              {this.editorTypeIcon('deleted')}
               <span style={{
                 ...changeCountStyle,
-                color: this.props.muiTheme.palette.negativeColor1
+                color: this.editorTypeColor('deleted')
               }}
-              >{this.state.deletedCount}</span>
+              >{deletedCount}</span>
             </Row>
           </Grid>
         </FlatButton>
@@ -173,57 +173,9 @@ class CommitIndicator extends Component {
         >
           <List>
             {/* TODO: extract listItem to function */}
-            <ListItem
-              primaryText={createdCount + ' created subjects'}
-              style={{ color: this.props.muiTheme.palette.positiveColor1 }}
-              leftIcon={this.addIcon}
-              initiallyOpen={false}
-              primaryTogglesNestedList
-              nestedItems={[
-                <InteractiveTable
-                  headers={headers}
-                  hiddenColumns={hiddenColumns}
-                  data={Object.values(created)}
-                  muiTheme={this.props.muiTheme}
-                  expandKey="id"
-                  height={250}
-                />
-              ]}
-            />
-            <ListItem
-              primaryText={updatedCount + ' updated subjects'}
-              style={{ color: this.props.muiTheme.palette.primary1Color }}
-              leftIcon={this.updateIcon}
-              initiallyOpen={false}
-              primaryTogglesNestedList
-              nestedItems={[
-                <InteractiveTable
-                  headers={headers}
-                  hiddenColumns={hiddenColumns}
-                  data={Object.values(updated)}
-                  muiTheme={this.props.muiTheme}
-                  expandKey="id"
-                  height={250}
-                />
-              ]}
-            />
-            <ListItem
-              primaryText={deletedCount + ' deleted subjects'}
-              style={{ color: this.props.muiTheme.palette.negativeColor1 }}
-              leftIcon={this.deleteIcon}
-              initiallyOpen={false}
-              primaryTogglesNestedList
-              nestedItems={[
-                <InteractiveTable
-                  headers={headers}
-                  hiddenColumns={hiddenColumns}
-                  data={Object.values(deleted)}
-                  muiTheme={this.props.muiTheme}
-                  expandKey="id"
-                  height={250}
-                />
-              ]}
-            />
+            {['created', 'updated', 'deleted'].map(type =>
+              this.renderStagedList(type, this.editorTypeColor(type), this.editorTypeIcon(type))
+            )}
           </List>
           <div style={{ textAlign: 'right' }}>
             <RaisedButton
@@ -236,6 +188,11 @@ class CommitIndicator extends Component {
             />
           </div>
         </Dialog>
+        <SubjectDialog
+          ref="subjectDialog"
+          open={this.state.editorOpen}
+          onRequestClose={this.closeEditor}
+        />
       </div>
     );
   }
@@ -246,6 +203,9 @@ function mapStateToProps(state) {
     created: state.subject.created,
     updated: state.subject.updated,
     deleted: state.subject.deleted,
+    createdCount: count(state.subject.created),
+    updatedCount: count(state.subject.updated),
+    deletedCount: count(state.subject.deleted),
   };
 }
 

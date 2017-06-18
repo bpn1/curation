@@ -20,11 +20,18 @@ export function makeError(actionType, payload) {
   return error;
 }
 
+export const statuses = {
+  NEW: 'NEW',
+  LOADING: 'LOADING',
+  READY: 'READY',
+  SAVING: 'SAVING',
+  SAVED: 'SAVED',
+  ERROR: 'ERROR'
+};
+
 export function makeAxiosTypes(baseType) {
   return [baseType, baseType + '_PENDING', baseType + '_REJECTED', baseType + '_FULFILLED'];
 }
-
-export const statuses = ['NEW', 'LOADING', 'READY', 'SAVING', 'SAVED', 'ERROR'];
 
 export default function createDuck({ namespace, store, path, initialState = {} }) {
   return new Duck({
@@ -42,7 +49,7 @@ export default function createDuck({ namespace, store, path, initialState = {} }
 
     // TODO handle status of mutliple actions started simultaniously
 
-    reducer: (state, action, { types, statuses, initialState }) => {
+    reducer: (state, action, { types, initialState }) => {
       switch (action.type) {
         case types.FETCH_PENDING:
           return {

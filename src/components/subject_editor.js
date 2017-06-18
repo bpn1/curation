@@ -7,6 +7,7 @@ import reduxForm from 'redux-form/es/reduxForm';
 import connect from 'react-redux/es/connect/connect';
 import bindActionCreators from 'redux/es/bindActionCreators';
 
+import LinearProgress from 'material-ui/LinearProgress';
 import { Checkbox, SelectField, TextField } from 'redux-form-material-ui';
 import MenuItem from 'material-ui/MenuItem';
 
@@ -24,10 +25,10 @@ import PropsIcon from 'material-ui/svg-icons/action/build';
 import GeneralIcon from 'material-ui/svg-icons/action/settings';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
+import { statuses } from '../ducks/apiDuck';
 import { subjects } from '../ducks/subjectDuck';
 
 import TagInput from './tag_input';
-import { LinearProgress } from 'material-ui';
 
 const InputListItem = ({ children, ...props }) => (
   <ListItem innerDivStyle={{ padding: 0 }} disabled>
@@ -44,6 +45,7 @@ class SubjectEditor extends Component {
     const id = props.id ? props.id : uuid();
     this.state = {
       id,
+      disabled: props.editorType === 'deleted',
       colors: props.muiTheme.palette,
       theme: props.muiTheme
     };
@@ -81,7 +83,7 @@ class SubjectEditor extends Component {
 
   reload(id) {
     console.log('Load subject #', id);
-    if (id && this.props.editorType !== 'add') {
+    if (id && this.props.editorType !== 'new') {
       this.props.actions.subject.get(id);
     }
   }
@@ -89,12 +91,14 @@ class SubjectEditor extends Component {
   renderTextField = props => (
     <TextField
       errorText={props.touched && props.error}
+      disabled={this.state.disabled}
       {...props}
     />
   );
 
   renderTagInput = props => (
     <TagInput
+      disabled={this.state.disabled}
       hintText={props.label}
       errorText={props.touched && props.error}
       onChange={props.input.onChange}
@@ -104,6 +108,7 @@ class SubjectEditor extends Component {
 
   renderCheckbox = props => (
     <Checkbox
+      disabled={this.state.disabled}
       label={props.label}
       checked={!!props.value}
       onCheck={props.input.onChange}
@@ -113,6 +118,7 @@ class SubjectEditor extends Component {
 
   renderSelectField = props => (
     <SelectField
+      disabled={this.state.disabled}
       label={props.label}
       errorText={props.touched && props.error}
       {...props}
@@ -164,7 +170,6 @@ class SubjectEditor extends Component {
 
     // rework properties FieldArray into an object
     const newProps = {};
-
     if (data.hasOwnProperty('properties')) {
       data.properties.forEach((prop) => {
         newProps[prop.name] = prop.value;
@@ -176,9 +181,9 @@ class SubjectEditor extends Component {
     newData.properties = newProps;
 
     // update an old subject or create a new one depending on the type of the editor (edit or add)
-    if (this.props.editorType === 'edit') {
+    if (this.props.editorType === 'database' || this.props.editorType === 'created' || this.props.editorType === 'updated') {
       this.props.actions.subject.update(newData);
-    } else if (this.props.editorType === 'add') {
+    } else if (this.props.editorType === 'new') {
       this.props.actions.subject.create(newData);
     } else {
       console.error('No Redux action for the editorType ' + this.props.editorType + ' configured!');
@@ -202,7 +207,7 @@ class SubjectEditor extends Component {
 
     return (
       <div>
-        {isLoading && <LinearProgress mode="indeterminate" /> }
+        {isLoading && <LinearProgress mode="indeterminate" />}
         <form onSubmit={handleSubmit(values => this.handleSubmit(values))}>
           <List>
             <ListItem
@@ -269,6 +274,7 @@ class SubjectEditor extends Component {
               ]}
             />
           </List>
+          {this.props.editorType !== 'deleted' &&
           <div>
             <RaisedButton
               style={{ marginRight: 10, marginTop: 10 }}
@@ -288,7 +294,7 @@ class SubjectEditor extends Component {
                 this.props.onRequestClose();
               }}
             />
-          </div>
+          </div>}
         </form>
       </div>
     );
@@ -296,9 +302,10 @@ class SubjectEditor extends Component {
 }
 
 SubjectEditor.propTypes = {
-  editorType: PropTypes.oneOf(['edit', 'add']).isRequired,
+  editorType: PropTypes.oneOf(['new', 'database', 'created', 'updated', 'deleted']).isRequired,
   onRequestClose: PropTypes.func,
   load: PropTypes.bool,
+  disabled: PropTypes.bool,
   id: PropTypes.string,
   width: PropTypes.number,
   isLoading: PropTypes.bool,
@@ -307,25 +314,25 @@ SubjectEditor.propTypes = {
 };
 
 SubjectEditor.defaultProps = {
-  onRequestClose: () => {},
+  onRequestClose: () => {
+  },
+  disabled: false,
   isLoading: true
 };
 
-// Redux connection for loading and saving subject data
-const reduxConnectedForm = reduxForm({
-  form: 'subjectEditorForm'
-})(SubjectEditor);
-
-// pull initial values from API reducer if not an 'add' dialog
+// pull initial values from API reducer if not an 'new' dialog
 function mapStateToProps(state, ownProps) {
-  const isNotLoading = state.subject.status['curation/subject/GET'] === 'READY';
+  if (ownProps.editorType === 'new') {
+    return { isLoading: false };
+  }
+  const subjectGetTag = 'curation/subject/GET';
+  const isLoading = state.subject.status.hasOwnProperty(subjectGetTag)
+    && state.subject.status[subjectGetTag] === statuses.LOADING;
 
-  const newProps = {
+  return {
     initialValues: state.subject.editableSubjects[ownProps.id],
-    isLoading: false
+    isLoading
   };
-
-  return isNotLoading ? newProps : { isLoading: true };
 }
 
 function mapDispatchToProps(dispatch) {
@@ -335,6 +342,11 @@ function mapDispatchToProps(dispatch) {
     }
   };
 }
+
+// Redux connection for loading and saving subject data
+const reduxConnectedForm = reduxForm({
+  form: 'subjectEditorForm'
+})(SubjectEditor);
 
 // API connection
 const apiConnectedForm = connect(mapStateToProps, mapDispatchToProps)(reduxConnectedForm);

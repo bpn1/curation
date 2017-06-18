@@ -1,13 +1,26 @@
+import { statuses } from './apiDuck';
 // used for the SubjectEditor format, property lists get seperated by ';'
 function convertToEditable(subject) {
   const transformedSubject = subject;
 
   if (transformedSubject.hasOwnProperty('properties')) {
-    transformedSubject.properties = Object.keys(transformedSubject.properties).map(key => ({
+    transformedSubject.properties = Object.entries(transformedSubject.properties).map(([key, value]) => ({
       name: key,
-      value: transformedSubject.properties[key].join('; ') // TODO display differently?
+      value: value.join('; ') // TODO display differently?
     }));
   }
+  return { [transformedSubject.id]: transformedSubject };
+}
+
+function convertFromEditable(subject) {
+  const transformedSubject = Object.assign({}, subject);
+  let newProps = {};
+  if (subject.hasOwnProperty('properties')) {
+    newProps = Object.entries(transformedSubject.properties).map(([key, value]) => ({
+      [key]: value.split('; ') // TODO display differently?
+    }));
+  }
+  transformedSubject.properties = Object.assign({}, ...newProps);
   return { [transformedSubject.id]: transformedSubject };
 }
 
@@ -29,34 +42,30 @@ function replaceWithStaged(entity, staged, stagedAlternative) {
 }
 
 export const commitExtension = {
-  types: ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE', 'GET_FULFILLED'],
+  types: ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE'],
 
-  // TODO handle status of mutliple actions started simultaniously
+  // TODO handle status of mutliple actions started simultaneously
 
-  reducer: (state, action, { types, statuses }) => {
+  reducer: (state, action, { types }) => {
     switch (action.type) {
       case types.CREATE:
         return {
           ...state,
           status: { ...state.status, [types.CREATE]: statuses.SAVED },
-          created: { ...state.created, [action.createdObj.id]: action.createdObj },
+          created: { ...state.created, ...convertFromEditable(action.createdObj) },
           entities: [action.createdObj, ...state.entities]
         };
       case types.UPDATE:
-        const updated = { ...state.updated, [action.updatedObj.id]: action.updatedObj };
-        // updated object was newly created, updating created entry instead of adding to update
-        if (action.updatedObj.id in state.created) {
-          return {
-            ...state,
-            status: { ...state.status, [types.UPDATE]: statuses.SAVED },
-            created: { ...state.created, [action.updatedObj.id]: action.updatedObj },
-            entities: state.entities.map(entity => replaceWithStaged(entity, updated))
-          };
-        }
+        const obj = convertFromEditable(action.updatedObj);
+        const created = { ...state.created, ...obj };
+        const updated = { ...state.updated, ...obj };
+        // newly created object changes does not create an entry in updated
+        const isNewlyCreated = action.updatedObj.id in state.created;
+        const stage = isNewlyCreated ? { created } : { updated };
         return {
           ...state,
+          ...stage,
           status: { ...state.status, [types.UPDATE]: statuses.SAVED },
-          updated,
           entities: state.entities.map(entity => replaceWithStaged(entity, updated))
         };
       case types.DELETE:
@@ -79,8 +88,14 @@ export const commitExtension = {
               .filter(entity => !(entity.id in state.deleted))),
           status: { ...state.status, [types.FETCH]: statuses.READY }
         };
+      case types.GET_PENDING:
+        return {
+          ...state,
+          status: { ...state.status, [types.GET]: statuses.LOADING },
+          error: { ...state.error, [types.GET]: undefined }
+        };
       case types.GET_FULFILLED:
-        const getEntity = replaceWithStaged(action.payload.data, state.updated, state.created);
+        const getEntity = Object.assign({}, replaceWithStaged(action.payload.data, state.updated, state.created));
         return {
           ...state,
           entity: getEntity,
