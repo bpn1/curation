@@ -116,7 +116,6 @@ const config = {
     })),
     new ProgressBarPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Curation',
       template: PATHS.TEMPLATE
     }),
     ifNotProduction(new AddAssetHtmlPlugin({ includeSourcemap: false, filepath: resolve(__dirname, 'dist/dll/dll.vendor.js') })),
