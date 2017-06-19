@@ -1,7 +1,7 @@
 import { statuses } from './apiDuck';
 // used for the SubjectEditor format, property lists get seperated by ';'
 function convertToEditable(subject) {
-  const transformedSubject = subject;
+  const transformedSubject = Object.assign({}, subject);
 
   if (transformedSubject.hasOwnProperty('properties')) {
     transformedSubject.properties = Object.entries(transformedSubject.properties).map(([key, value]) => ({
