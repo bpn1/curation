@@ -1,6 +1,6 @@
 const express = require('express');
 
-const PAGING_LIMIT = 20;
+const PAGING_LIMIT = 50;
 
 module.exports = function (models, modelName, queryConfig) {
   function logError(err, res) {

@@ -82,7 +82,7 @@ export function deleteSubject(id) {
 export function fetchBlockingStatsIds() {
   return function (dispatch) {
     dispatch({ type: FETCH_BLOCKING_STATS });
-    axios.get(apiPath + 'blockingstats?noData')
+    axios.get(apiPath + 'blockingstats?noData&count=200')
       .then((response) => {
         dispatch({ type: FETCH_BLOCKING_STATS_FULFILLED, payload: response.data });
       })
@@ -108,7 +108,7 @@ export function fetchBlockingStatsData(primaryKeys) {
 export function fetchSimMeasureStatsIds() {
   return function (dispatch) {
     dispatch({ type: FETCH_SIM_MEASURE_STATS });
-    axios.get(apiPath + 'simstats?noData')
+    axios.get(apiPath + 'simstats?noData&count=200')
       .then((response) => {
         dispatch({ type: FETCH_SIM_MEASURE_STATS_FULFILLED, payload: response.data });
       })
