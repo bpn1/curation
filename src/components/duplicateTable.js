@@ -51,7 +51,7 @@ class DuplicateTable extends Component {
       candidateScores[entry.id] = entry.score;
     });
     if (typeof id === 'string') {
-      this.props.actions.subject.get(id);
+      this.props.actions.subject_temp.get(id);
     }
     this.props.actions[datasource].getSome(candidateIds, 200); // TODO make count a user option
     this.props.actions.duplicate.store({ candidateScores });
