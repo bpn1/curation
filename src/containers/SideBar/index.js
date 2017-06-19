@@ -9,6 +9,7 @@ import Divider from 'material-ui/Divider';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ContentLink from 'material-ui/svg-icons/content/link';
 import ActionInfo from 'material-ui/svg-icons/action/info';
+import ActionHistory from 'material-ui/svg-icons/action/history';
 import ActionAssessment from "material-ui/svg-icons/action/assessment";
 import SocialGroup from "material-ui/svg-icons/social/group";
 import GraphIcon from 'material-ui/svg-icons/social/share';
@@ -81,11 +82,12 @@ class SideBar extends Component {
             <div className={styles.avatarContainer}> <Avatar size={80} src={image} /> </div> }
           <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
             <ListItem value={1} primaryText="Subjects" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
-            <ListItem value={2} primaryText="Duplicates" containerElement={<Link to={'/duplicates'} />} leftIcon={<SocialGroup />} />
-            <ListItem value={3} primaryText="Graphs" containerElement={<Link to={'/graphs'} />} leftIcon={<GraphIcon />} />
-            <ListItem value={4} primaryText="Blocking&nbsp;Statistics" containerElement={<Link to={'/statistics/blocking'} />} leftIcon={<ActionAssessment />} />
-            <ListItem value={5} primaryText="Similarity&nbsp;Measure" containerElement={<Link to={'/statistics/simmeasure'} />} leftIcon={<ActionAssessment />} />
-            <ListItem value={6} primaryText="Entity Linking" containerElement={<Link to={'/entity_linking'} />} leftIcon={<ContentLink />} />
+            <ListItem value={2} primaryText="Versions" containerElement={<Link to={'/versions'} />} leftIcon={<ActionHistory />} />
+            <ListItem value={3} primaryText="Duplicates" containerElement={<Link to={'/duplicates'} />} leftIcon={<SocialGroup />} />
+            <ListItem value={4} primaryText="Graphs" containerElement={<Link to={'/graphs'} />} leftIcon={<GraphIcon />} />
+            <ListItem value={5} primaryText="Blocking&nbsp;Statistics" containerElement={<Link to={'/statistics/blocking'} />} leftIcon={<ActionAssessment />} />
+            <ListItem value={6} primaryText="Similarity&nbsp;Measure" containerElement={<Link to={'/statistics/simmeasure'} />} leftIcon={<ActionAssessment />} />
+            <ListItem value={7} primaryText="Entity Linking" containerElement={<Link to={'/entity_linking'} />} leftIcon={<ContentLink />} />
           </SelectableList>
           <Divider className={styles.sideDivider} />
           <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()} >
