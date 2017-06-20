@@ -119,13 +119,14 @@ class EntityLinkingRenderer extends Component {
         const title = node.attribs.hasOwnProperty('title') ? node.attribs.title : 'No title';
         const href = node.attribs.hasOwnProperty('href') ? node.attribs.href : 'No href';
         return (
-          <FlatButton
+          <a
+            style={{ fontWeight: 'bold' }}
             onClick={(event) => {
               this.handleLinkClick(event, title, href, children);
             }}
           >
             {children}
-          </FlatButton>
+          </a>
         );
       }
     },
