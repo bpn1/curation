@@ -30,7 +30,7 @@ module.exports = function (models, modelName, queryConfig) {
           } else {
             query[property] = getParams[property];
           }
-          if (queryConfig.like.indexOf(property) !== -1) {
+          if (queryConfig.like && queryConfig.like.indexOf(property) !== -1) {
             // prefix search
             query[property] = { $like: getParams[property] + '%' };
           }
