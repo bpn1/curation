@@ -187,21 +187,20 @@ class EntityLinkingRenderer extends Component {
           <Menu>
             {
               this.state.popOverElements && this.state.popOverElements.map((element) => {
-                const props =
-                  (element instanceof Array && element.length >= 2) ? {
-                    leftIcon: <WebIcon />,
-                    primaryText: element[0],
-                    href: element[1].trim(),
-                    target: '_blank',
-                    onTouchTap: this.closePopOver
-                  } : {
-                    leftIcon: <LocalIcon />,
-                    primaryText: element,
-                    onTouchTap: () => {
-                      this.loadArticle(element);
-                      this.closePopOver();
-                    }
-                  };
+                const props = (element instanceof Array && element.length >= 2) ? {
+                  leftIcon: <WebIcon />,
+                  primaryText: element[0],
+                  href: element[1].trim(),
+                  target: '_blank',
+                  onTouchTap: this.closePopOver
+                } : {
+                  leftIcon: <LocalIcon />,
+                  primaryText: element,
+                  onTouchTap: () => {
+                    this.loadArticle(element);
+                    this.closePopOver();
+                  }
+                };
 
                 return <MenuItem key={element} {...props} />;
               })
