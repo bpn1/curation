@@ -169,7 +169,7 @@ class EntityLinkingRenderer extends Component {
               text: 'title',
               value: 'title'
             }}
-            maxSearchResults={20}
+            maxSearchResults={12}
           />
         </div>
         { this.state.isLoadingTitles && <p>Loading titles...</p> }
