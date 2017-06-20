@@ -41,7 +41,7 @@ function replaceWithStaged(entity, staged, stagedAlternative) {
   return entity;
 }
 
-export const commitExtension = {
+export const commitExtension = (path) => ({
   types: ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE'],
 
   // TODO handle status of mutliple actions started simultaneously
@@ -131,4 +131,4 @@ export const commitExtension = {
       deleted: {},
       updated: {}
     })
-};
+});

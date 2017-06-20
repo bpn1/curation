@@ -2,7 +2,7 @@ import axios from 'axios';
 import createDuck, { apiPath, countParam, makeError, statuses } from './apiDuck';
 import { commitExtension } from './commitDuck';
 
-const findByNameExtension = {
+const findByNameExtension = (path) => ({
   types: ['FIND', 'FIND_PENDING', 'FIND_FULFILLED', 'FIND_REJECTED'],
 
   // TODO handle status of mutliple actions started simultaneously
@@ -35,7 +35,7 @@ const findByNameExtension = {
 
   creators: ({ types }) => ({
     findByName: (name, count) =>
-      ({ type: types.FIND, payload: axios.get(`/api/subjects?name=${name}&` + countParam(count)) })
+      ({ type: types.FIND, payload: axios.get(`${apiPath}${path}?name=${name}&` + countParam(count)) })
   }),
   // parent initialState is overwritten, so define all needed here
   initialState:
@@ -48,12 +48,12 @@ const findByNameExtension = {
       deleted: {},
       updated: {}
     })
-};
+});
 
 export const subjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects' })
 // extensions overwrite some parent attributes
-  .extend(findByNameExtension)
-  .extend(commitExtension);
+  .extend(findByNameExtension('/subjects'))
+  .extend(commitExtension('/subjects'));
 // Only use action creators and use subject reducer for all
 export const tempSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_temp' });
 export const dbpediaSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_dpbedia' });
