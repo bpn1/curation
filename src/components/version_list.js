@@ -15,6 +15,7 @@ import MergeIcon from 'material-ui/svg-icons/editor/merge-type';
 import ExploreIcon from 'material-ui/svg-icons/action/explore';
 import BusinessIcon from 'material-ui/svg-icons/places/business-center';
 import PCIcon from 'material-ui/svg-icons/hardware/desktop-windows';
+import PersonIcon from 'material-ui/svg-icons/social/person';
 
 import versionDuck from '../ducks/versionDuck';
 
@@ -23,6 +24,7 @@ const dataSourceIcons = {
   implisense: <BusinessIcon color="rgb(74, 138, 184)" />,
   wikidata: <ExploreIcon color="rgb(51, 153, 103)" />,
   dbpedia: <PCIcon color="rgb(220, 180, 30)" />,
+  human: <PersonIcon color="rgb(200, 70, 30)" />,
   none: <HistoryIcon color={grey600} />
 };
 
