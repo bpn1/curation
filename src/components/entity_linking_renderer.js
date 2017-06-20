@@ -120,7 +120,7 @@ class EntityLinkingRenderer extends Component {
         const href = node.attribs.hasOwnProperty('href') ? node.attribs.href : 'No href';
         return (
           <a
-            style={{ fontWeight: 'bold' }}
+            style={{ textDecoration: 'underline', fontWeight: 'bold' }}
             onClick={(event) => {
               this.handleLinkClick(event, title, href, children);
             }}
