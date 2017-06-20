@@ -4,7 +4,7 @@ import Duck from 'extensible-duck/dist/extensible-duck.min';
 
 export const apiPath = '/api';
 
-function countParam(count) {
+export function countParam(count) {
   return count ? `count=${count}` : '';
 }
 

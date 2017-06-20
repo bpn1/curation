@@ -17,15 +17,23 @@ module.exports = function (models, modelName, queryConfig) {
     const query = {};
     queryConfig.normal.forEach((property) => {
       if (getParams[property]) {
+        // if ',' contained, split and search for each element
         if (getParams[property].indexOf(',') !== -1) {
-          splitParams = getParams[property].split(',');
+          let splitParams = getParams[property].split(',');
           if (schema()[property].type === 'uuid') {
             splitParams = splitParams.map(models.timeuuidFromString);
           }
           query[property] = { $in: splitParams };
         } else {
-          query[property] =
-            schema()[property].type === 'uuid' ? models.timeuuidFromString(getParams[property]) : getParams[property];
+          if (schema()[property].type === 'uuid') {
+            query[property] = models.timeuuidFromString(getParams[property])
+          } else {
+            query[property] = getParams[property];
+          }
+          if (queryConfig.like.indexOf(property) !== -1) {
+            // prefix search
+            query[property] = { $like: getParams[property] + '%' };
+          }
         }
       }
     });

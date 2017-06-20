@@ -2,6 +2,7 @@ const queryConfig = {
   normal: ['id', 'category', 'name'],
   lists: ['aliases'],
   maps: ['properties', 'relations'],
+  like: ['name'],
   uniqueKey: 'id',
   custom_params: [
     {

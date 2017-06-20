@@ -326,8 +326,7 @@ function mapStateToProps(state, ownProps) {
     return { isLoading: false };
   }
   const subjectGetTag = 'curation/subject/GET';
-  const isLoading = state.subject.status.hasOwnProperty(subjectGetTag)
-    && state.subject.status[subjectGetTag] === statuses.LOADING;
+  const isLoading = state.subject.status[subjectGetTag] === statuses.LOADING;
 
   return {
     initialValues: state.subject.editableSubjects[ownProps.id],

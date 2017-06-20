@@ -33,6 +33,7 @@ class DuplicateTableCard extends Component {
               <SubjectTable
                 height={this.props.size.height - topAndBottomPadding}
                 fetchOnMount={false}
+                showNameFilter={false}
                 headers={headers}
               />
             </ContentCard>

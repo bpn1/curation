@@ -18,10 +18,13 @@ import EditIcon from 'material-ui/svg-icons/image/edit';
 import AddIcon from 'material-ui/svg-icons/action/note-add';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import SearchIcon from 'material-ui/svg-icons/action/search';
 
 import InteractiveTable from './interactive_table';
 import SubjectDialog from './subject_dialog';
 import { subjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
+import { AutoComplete } from 'material-ui';
+import { statuses } from '../ducks/apiDuck';
 
 class SubjectTable extends Component {
   constructor(props) {
@@ -38,6 +41,7 @@ class SubjectTable extends Component {
       deleteConfirmationOpen: false,
       multipleDeletions: false,
       toBeDeletedNames: [],
+      count: 500,
       settingsOpen: false,
       refreshStatus: props.fetchOnMount ? 'loading' : 'hide',
       selectedRows: []
@@ -99,6 +103,11 @@ class SubjectTable extends Component {
     }
   };
 
+  handleSearchRequest = (searchInput, index) => {
+    console.log(this.state.count);
+    this.props.actions.subject.findByName(searchInput, this.state.count);
+  };
+
   render() {
     const colors = this.props.muiTheme.palette;
 
@@ -109,10 +118,39 @@ class SubjectTable extends Component {
     const showSingleSelectionButtons = selectionCount === 1;
     const showMultipleSelectionButtons = selectionCount > 1;
 
-    // TODO add behaviour for graph button
     return (
       <Grid fluid>
-        <Row end="xs">
+        <Row between="xs">
+          <Col>
+            {this.props.showNameFilter && <Row middle="xs">
+              <Col xs={8}>
+                <Row middle="xs">
+                  <Col xs={1}>
+                    <SearchIcon
+                      style={{ position: 'relative', top: 4 }}
+                    />
+                  </Col>
+                  <Col xs={11}>
+                    <AutoComplete
+                      fullWidth
+                      hintText="Search by name..."
+                      onNewRequest={this.handleSearchRequest}
+                      dataSource={[]}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={2}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  hintText="Count"
+                  defaultValue={this.state.count}
+                  onChange={this.listeners.updateCount}
+                />
+              </Col>
+            </Row>}
+          </Col>
           <Col>
             <CustomButton
               tooltip="Edit selected"
@@ -197,7 +235,9 @@ class SubjectTable extends Component {
           modal
           actions={[
             <FlatButton
-              label="Cancel" primary={false} onTouchTap={this.listeners.closeDeleteConfirmation}
+              label="Cancel"
+              primary={false}
+              onTouchTap={this.listeners.closeDeleteConfirmation}
               keyboardFocused
             />,
             <FlatButton label="Submit" primary onTouchTap={this.listeners.deleteSelectedSubjects} />
@@ -301,12 +341,16 @@ class SubjectTable extends Component {
       const selectedIDs = this.state.selectedRows.map(row => row.id);
       window.location.hash = '#/graphs?nodes=' + selectedIDs.join(',');
       window.location.reload();
+    },
+    updateCount: (event, newValue) => {
+      this.setState({ count: Number(newValue) });
     }
   };
 }
 
 SubjectTable.defaultProps = {
   fetchOnMount: true,
+  showNameFilter: true,
   headers: [
     { key: 'id', name: 'ID' },
     { key: 'name', name: 'Name' },
@@ -320,6 +364,7 @@ SubjectTable.defaultProps = {
 SubjectTable.propTypes = {
   height: PropTypes.number.isRequired,
   fetchOnMount: PropTypes.bool,
+  showNameFilter: PropTypes.bool,
   headers: PropTypes.array
 };
 
@@ -340,11 +385,17 @@ function mapStateToProps(state) {
   if (tableData && state.duplicate.store && state.duplicate.store.candidateScores) {
     tableData.forEach(subject => subject.candidateScore = state.duplicate.store.candidateScores[subject.id]);
   }
+
+  const subjectFetchTag = 'curation/subject/FETCH';
+  const subjectFindTag = 'curation/subject/FIND';
+  const isLoading = state.subject.status[subjectFetchTag] === statuses.LOADING
+    || state.subject.status[subjectFindTag] === statuses.LOADING;
+
   return {
     tableData: tableData,
     error: state.subject.error,
     // TODO does not work for duplicates because status is cleared before finishing all tasks
-    loading: state.subject.status === 'LOADING'
+    loading: isLoading
   };
 }
 
