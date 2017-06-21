@@ -263,7 +263,7 @@ class InteractiveTable extends Component {
                         </a>);
                     }
                   } else {
-                    content = row[header.key].toString();
+                    content = row[header.key] ? row[header.key].toString() : 'No Score';
                   }
                   return (<TableRowColumn key={header.key}>{content}</TableRowColumn>);
                 })}
