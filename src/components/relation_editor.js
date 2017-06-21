@@ -67,6 +67,24 @@ class RelationEditor extends Component {
     // TODO: this.props.actions.graph.updateRelations(data);
   }
 
+  styles = {
+    errorStyle: errorColor => ({
+      padding: 5,
+      margin: 5,
+      borderRadius: 5,
+      border: '1px solid rgb(' + errorColor + ')',
+      backgroundColor: 'rgba(' + errorColor + ', 0.5)'
+    }),
+    name: {
+      whiteSpace: 'nowrap'
+    },
+    uuid: {
+      whiteSpace: 'nowrap',
+      fontFamily: 'monospace',
+      fontSize: '7pt'
+    }
+  };
+
   renderTextField = props => (
     <TextField
       errorText={props.meta.touched && props.meta.error}
@@ -129,24 +147,6 @@ class RelationEditor extends Component {
       </ul>
     );
   }
-
-  styles = {
-    errorStyle: errorColor => ({
-      padding: 5,
-      margin: 5,
-      borderRadius: 5,
-      border: '1px solid rgb(' + errorColor + ')',
-      backgroundColor: 'rgba(' + errorColor + ', 0.5)'
-    }),
-    name: {
-      whiteSpace: 'nowrap'
-    },
-    uuid: {
-      whiteSpace: 'nowrap',
-      fontFamily: 'monospace',
-      fontSize: '7pt'
-    }
-  };
 
   render() {
     const { pristine, submitting, handleSubmit, reset } = this.props;
