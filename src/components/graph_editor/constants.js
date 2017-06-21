@@ -22,11 +22,6 @@ export const SPECIAL_EDGE_TYPE = 'specialEdge';
 export const COOCCURRENCE_EDGE_TYPE = 'coOccurrenceEdge';
 export const NODE_KEY = 'id'; // Key used to identify nodes
 
-export const relationTypes = [
-  { type: COOCCURRENCE_EDGE_TYPE, name: 'co-occurrence' }
-  // 'partnership', 'owned by', 'master', ...
-];
-
 export const dataSources = [
   { type: EMPTY_SUBTYPE, color: '200, 70, 70', name: 'None' },
   { type: MERGING_SUBTYPE, color: '200, 0, 170', name: 'Merging' },
