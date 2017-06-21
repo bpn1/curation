@@ -178,7 +178,7 @@ class RelationEditor extends Component {
     uuid: {
       whiteSpace: 'nowrap',
       fontFamily: 'monospace',
-      fontSize: '10pt'
+      fontSize: '7pt'
     }
   };
 
@@ -193,11 +193,9 @@ class RelationEditor extends Component {
     return (
       <form onSubmit={handleSubmit(values => this.handleSubmit(values))}>
         <h1>Relations</h1>
-        <p style={this.styles.name}>{sourceName}<br />&rArr; {targetName}</p>
-        <p>
-          <span style={this.styles.uuid}>{this.state.sourceKey}</span><br />
-          &rArr; <span style={this.styles.uuid}>{this.state.targetKey}</span>
-        </p>
+        <p style={this.styles.name}>
+          {sourceName} - <span style={this.styles.uuid}>{this.state.sourceKey}</span><br />
+          &rArr; {targetName} - <span style={this.styles.uuid}>{this.state.targetKey}</span></p>
         <div>
           <FieldArray
             name="relations"
