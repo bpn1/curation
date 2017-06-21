@@ -148,7 +148,7 @@ class GraphEditor extends Component {
       centerKeys
     });
 
-    setTimeout(this.refs.graph.handleZoomToFit, 400);
+    setTimeout(this.graphView.handleZoomToFit, 1000);
   }
 
   extractNode(subject) {
@@ -610,7 +610,7 @@ class GraphEditor extends Component {
           />
         </div>
         <GraphView
-          ref="graph"
+          ref={g => this.graphView = g}
           style={graphStyle}
           primary="#777"
           light="#fff"
