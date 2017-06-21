@@ -18,25 +18,9 @@ import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import RemoveIcon from 'material-ui/svg-icons/content/remove-circle-outline';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
-// import { subjects } from '../ducks/subjectDuck';
 import graphDuck from '../ducks/graphDuck';
 import DirectionToggle from './direction_toggle';
 import DateRangeEditor from './date_range_editor';
-
-const relationTypes = [
-  'owningCompany',
-  'division',
-  'publisher',
-  'parentCompany',
-  'manufacturer',
-  'subsidiary',
-  'production',
-  'equity',
-  'assets',
-  'assetUnderManagement',
-  'successor',
-  'predecessor'
-];
 
 class RelationEditor extends Component {
   constructor(props) {
@@ -75,7 +59,6 @@ class RelationEditor extends Component {
 
   reload() {
     console.log('Load relations for', this.state.sourceKey, '->', this.state.targetKey);
-    // this.props.actions.subject.getSome([this.state.sourceKey, this.state.targetKey]);
     this.props.actions.graph.fetchRelations(this.state.sourceKey, this.state.targetKey);
   }
 
@@ -87,23 +70,6 @@ class RelationEditor extends Component {
   renderTextField = props => (
     <TextField
       errorText={props.meta.touched && props.meta.error}
-      {...props}
-    />
-  );
-
-  renderAutoCompleteField = props => (
-    <AutoComplete
-      errorText={props.meta.touched && props.meta.error}
-      onUpdateInput={(searchInput, dataSource, params) => props.input.onChange(searchInput)}
-      searchText={this.state.searchInput}
-      filter={AutoComplete.caseInsensitiveFilter}
-      openOnFocus
-      dataSource={props.dataSource}
-      dataSourceConfig={{
-        text: 'name',
-        value: 'key'
-      }}
-      maxSearchResults={15}
       {...props}
     />
   );
@@ -183,7 +149,7 @@ class RelationEditor extends Component {
   };
 
   render() {
-    const { width, pristine, submitting, handleSubmit, reset } = this.props;
+    const { pristine, submitting, handleSubmit, reset } = this.props;
     const { sourceSubject, targetSubject } = this.state;
     const sourceName = sourceSubject && sourceSubject.name && sourceSubject.name.length > 0
       ? sourceSubject.name : 'None';
@@ -274,8 +240,6 @@ const reduxConnectedForm = reduxForm({
 })(RelationEditor);
 
 // API connection (pull initial values from the graph duck)
-// TODO maybe use createSelector from package reselect to freeze relations object
-// TODO see: https://marmelab.com/blog/2017/02/06/react-is-slow-react-is-fast.html (Ctrl+F reselect)
 function mapStateToProps(state, ownProps) {
   return {
     initialValues: {
