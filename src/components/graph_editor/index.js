@@ -16,7 +16,7 @@ import GraphConfig from './graph_config';
 import {
   dataSources, IMPLISENSE_SUBTYPE, WIKIDATA_SUBTYPE, DBPEDIA_SUBTYPE, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, PERSON_TYPE,
   BUSINESS_TYPE, CITY_TYPE, ORGANIZATION_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE, COOCCURRENCE_EDGE_TYPE,
-  SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE
+  SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE, EMPTY_SUBTYPE
 } from './constants';
 
 const centerPointOffset = { x: 650, y: 650 };
@@ -152,15 +152,22 @@ class GraphEditor extends Component {
   extractNode(subject) {
     // extract data source from name history
     // TODO do this using given data source later
-    const dataSource = subject.name_history && subject.name_history.length > 0
+    let dataSource = subject.name_history && subject.name_history.length > 0
       ? subject.name_history[0].datasources[0]
       : 'empty';
+
+    dataSource = dataSource.split('_')[0] + SUBTYPE_POSTFIX;
+
+    if (dataSources.filter(source => source.type === dataSource).length === 0) {
+      console.error('Data source ' + dataSource + ' not found!');
+      dataSource = EMPTY_SUBTYPE;
+    }
 
     return {
       id: subject.id,
       title: subject.name,
       type: subject.category ? subject.category : NONE_TYPE,
-      subtype: dataSource + SUBTYPE_POSTFIX
+      subtype: dataSource
     };
   }
 
