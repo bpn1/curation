@@ -240,9 +240,9 @@ class SubjectEditor extends Component {
                 </InputListItem>,
                 <InputListItem key={'listItem' + 3}>
                   <Field
-                    name="type" component={this.renderSelectField}
-                    floatingLabelText="Type" floatingLabelFixed={false}
-                    hintText="Select a subject type..." style={fieldStyle}
+                    name="category" component={this.renderSelectField}
+                    floatingLabelText="Category" floatingLabelFixed={false}
+                    hintText="Select a subject category..." style={fieldStyle}
                   >
                     <MenuItem value="business" primaryText="Business" />
                     <MenuItem value="organization" primaryText="Organization" />
