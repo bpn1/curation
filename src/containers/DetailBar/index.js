@@ -79,7 +79,7 @@ class DetailBar extends Component {
               load
               enableReinitialize
               width={300}
-              editorType="edit"
+              editorType="database"
             /> }
             { showRelationEditor && <RelationEditor
               sourceKey={this.state.editorEdge.source}
