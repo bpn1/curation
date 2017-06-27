@@ -87,10 +87,6 @@ class VersionList extends Component {
     return groupedVersions;
   }
 
-  sortVersions(versionGroup) {
-    return versionGroup
-  }
-
   processProgramName(program) {
     const splitProgram = program.split('_');
     if (splitProgram.length === 3) splitProgram.pop();
@@ -119,7 +115,8 @@ class VersionList extends Component {
   }
 
   restoreCurrentVersion() {
-    // TODO start Spark job for restoration here
+    // start Spark job for restoring
+    this.props.actions.version.restoreVersion(this.state.selectedVersion.version);
     this.closeDialog();
   }
 
@@ -184,7 +181,8 @@ VersionList.propTypes = {
   versions: PropTypes.array,
   actions: PropTypes.shape({
     version: PropTypes.shape({
-      fetch: PropTypes.func
+      fetch: PropTypes.func,
+      restoreVersion: PropTypes.func
     })
   }).isRequired,
   height: PropTypes.number

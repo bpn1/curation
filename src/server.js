@@ -3,8 +3,10 @@ const express = require('express');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const path = require('path');
+const exec = require('child_process').exec;
 
 const config = require('../webpack.config.babel');
+const sparkJobs = require('../spark_jobs.config');
 const datalakeConfig = require('./api/keyspaceConfigs/datalake.config');
 const evaluationConfig = require('./api/keyspaceConfigs/evaluation.config');
 const wikidumpsConfig = require('./api/keyspaceConfigs/wikidumps.config');
@@ -79,6 +81,71 @@ router.use(function (req, res, next) {
 
 router.get('/', function (req, res) {
   res.json({ message: 'Welcome to the Ingestion & Curation API' });
+});
+
+router.param('job', function (req, res, next, job) {
+  const matchingJobs = Object.keys(sparkJobs).filter(correctJob => correctJob.toLowerCase() === job.toLowerCase());
+
+  if (matchingJobs.length > 0) {
+    req.job = sparkJobs[matchingJobs[0]];
+    next();
+  } else {
+    const error = 'No matching job found for: ' + job;
+    console.error(error);
+    res.send(error);
+  }
+});
+
+function isValidUUID(uuid) {
+  const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuid.match(regex);
+}
+
+router.param('args', function (req, res, next, argParam) {
+  const args = argParam.split(',');
+  console.log('Validating args:', args);
+  let argumentsValid = req.job.argumentCount === args.length;
+  let error = '';
+
+  if (!argumentsValid) {
+    error = `Argument count ${args.length} invalid, expected ${req.job.argumentCount} arguments!`;
+    console.error(error);
+    res.send(error);
+    return;
+  }
+
+  args.forEach((arg, i) => {
+    let argValid = false;
+    if (req.job.argumentTypes[i] === 'uuid') argValid = isValidUUID(arg);
+
+    if (!argValid) {
+      error += `\nArgument #${i + 1} invalid: ${arg}`;
+      console.error(error.trim());
+    }
+
+    argumentsValid = argumentsValid && argValid;
+  });
+
+  if (argumentsValid) {
+    req.args = args;
+    next();
+  } else {
+    res.send(error.trim());
+  }
+});
+
+function printOutput(error, stdout, stderr) {
+  if (error) console.error(error.stack.split('\n').splice(0, 2).join('\n'));
+  else if (stderr) console.error(stderr);
+  else console.log(stdout);
+}
+
+router.get('/run/:job/:args', function (req, res) {
+  const message = `Running Spark job ${req.job.jobName} with arguments ${req.args}`;
+  res.send('<pre>' + message + '</pre>');
+  console.log(message);
+  const joinedArgs = req.args.join(' ');
+  exec(`./run_job.sh ${req.job.jobName} ${joinedArgs}`, printOutput);
 });
 
 app.use('/api', router);
