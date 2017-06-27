@@ -161,6 +161,7 @@ app.use('/api/new_duplicates', modelRouter(evaluationModels, 'DBpedia_WikiData_D
 app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', blockingStatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 app.use('/api/wiki/linkedarticles', modelRouter(wikidumpsModels, 'LinkedArticles', linkedArticlesQueryConfig));
+app.use('/api/wiki/classifierstats', modelRouter(wikidumpsModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 
 app.listen(port, '0.0.0.0', function onStart(err) {
   if (err) {

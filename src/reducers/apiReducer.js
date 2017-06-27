@@ -4,7 +4,9 @@ import {
   FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_REJECTED,
   FETCH_SIM_MEASURE_STATS_DATA, FETCH_SIM_MEASURE_STATS_DATA_FULFILLED, FETCH_SIM_MEASURE_STATS_DATA_REJECTED,
   FETCH_BLOCKING_STATS_DATA, FETCH_BLOCKING_STATS_DATA_REJECTED, FETCH_BLOCKING_STATS_DATA_FULFILLED,
-  FETCH_SUBJECT, FETCH_SUBJECT_REJECTED, FETCH_SUBJECT_FULFILLED
+  FETCH_SUBJECT, FETCH_SUBJECT_REJECTED, FETCH_SUBJECT_FULFILLED, FETCH_CLASSIFIER_STATS,
+  FETCH_CLASSIFIER_STATS_REJECTED, FETCH_CLASSIFIER_STATS_FULFILLED, FETCH_CLASSIFIER_STATS_DATA,
+  FETCH_CLASSIFIER_STATS_DATA_REJECTED, FETCH_CLASSIFIER_STATS_DATA_FULFILLED
 } from '../constants/ActionTypes';
 import { getMillisecondsFromTimeUUID } from '../helpers/timeUUIDParser';
 
@@ -191,6 +193,46 @@ export default function reducer(state = {
           similarity: {
             ...state.stats.similarity,
             [similarityId]: similarityData
+          }
+        }
+      };
+    }
+    case FETCH_CLASSIFIER_STATS: {
+      return { ...state, fetching: true };
+    }
+    case FETCH_CLASSIFIER_STATS_REJECTED: {
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
+    }
+    case FETCH_CLASSIFIER_STATS_FULFILLED: {
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        statsIds: {
+          ...state.statsIds,
+          classifier: action.payload.sort((a, b) => getMillisecondsFromTimeUUID(b.id) - getMillisecondsFromTimeUUID(a.id))
+        }
+      };
+    }
+    case FETCH_CLASSIFIER_STATS_DATA: {
+      return { ...state, fetching: true };
+    }
+    case FETCH_CLASSIFIER_STATS_DATA_REJECTED: {
+      return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
+    }
+    case FETCH_CLASSIFIER_STATS_DATA_FULFILLED: {
+      const classifierId = action.payload.id;
+      const classifierData = action.payload.data
+        .sort((a, b) => (a.threshold > b.threshold) ? 1 : ((b.threshold > a.threshold) ? -1 : 0));
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        stats: {
+          ...state.stats,
+          classifier: {
+            ...state.stats.classifier,
+            [classifierId]: classifierData
           }
         }
       };

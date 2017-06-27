@@ -12,6 +12,7 @@ import BlockingStatisticsCard from './views/blockingStatisticsCard';
 import SimMeasureStatisticsCard from './views/simMeasureStatisticsCard';
 import GraphsCard from './views/graphsCard';
 import EntityLinkingCard from './views/entityLinkingCard';
+import ClassifierStatisticsCard from './views/classifierStatisticsCard';
 import DuplicateTableCard from './views/duplicateTableCard';
 
 const Root = ({ store }) => (
@@ -25,6 +26,7 @@ const Root = ({ store }) => (
         <Route path="statistics/simmeasure" component={SimMeasureStatisticsCard} />
         <Route path="/graphs" component={GraphsCard} />
         <Route path="/entity_linking" component={EntityLinkingCard} />
+        <Route path="/statistics/classifier" component={ClassifierStatisticsCard} />
       </Route>
     </Router>
   </Provider>

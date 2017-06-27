@@ -5,23 +5,23 @@ import connect from 'react-redux/es/connect/connect';
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import ContentLink from 'material-ui/svg-icons/content/link';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionHistory from 'material-ui/svg-icons/action/history';
-import ActionAssessment from "material-ui/svg-icons/action/assessment";
-import SocialGroup from "material-ui/svg-icons/social/group";
+import ActionAssessment from 'material-ui/svg-icons/action/assessment';
+import SocialGroup from 'material-ui/svg-icons/social/group';
 import GraphIcon from 'material-ui/svg-icons/social/share';
-import Link from "react-router/es/Link";
+import Link from 'react-router/es/Link';
 
 import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
 import image from '../../../logo.png';
-import {commerzbankYellow} from "../../themes/curation";
-import {grey700} from "material-ui/styles/colors";
-
+import { commerzbankYellow } from '../../themes/curation';
+import { grey700 } from 'material-ui/styles/colors';
 
 // Function copied from http://www.material-ui.com/#/components/list: Selectable list
 function wrapState(ComposedComponent) {
@@ -48,7 +48,7 @@ function wrapState(ComposedComponent) {
         <ComposedComponent
           value={this.state.selectedIndex}
           onChange={this.handleRequestChange}
-          selectedItemStyle={{color: commerzbankYellow, backgroundColor: grey700}}
+          selectedItemStyle={{ color: commerzbankYellow, backgroundColor: grey700 }}
         >
           {this.props.children}
         </ComposedComponent>
@@ -83,18 +83,17 @@ class SideBar extends Component {
           <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
             <ListItem value={1} primaryText="Subjects" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
             <ListItem value={2} primaryText="Versions" containerElement={<Link to={'/versions'} />} leftIcon={<ActionHistory />} />
-            <ListItem value={3} primaryText="Duplicates" containerElement={<Link to={'/duplicates'} />} leftIcon={<SocialGroup />} />
-            <ListItem value={4} primaryText="Graphs" containerElement={<Link to={'/graphs'} />} leftIcon={<GraphIcon />} />
+            <ListItem value={3} primaryText="Graphs" containerElement={<Link to={'/graphs'} />} leftIcon={<GraphIcon />} />
+            <Subheader>Deduplication</Subheader>
+            <Divider className={styles.sideDivider} />
+            <ListItem value={4} primaryText="Duplicates" containerElement={<Link to={'/duplicates'} />} leftIcon={<SocialGroup />} />
             <ListItem value={5} primaryText="Blocking&nbsp;Statistics" containerElement={<Link to={'/statistics/blocking'} />} leftIcon={<ActionAssessment />} />
             <ListItem value={6} primaryText="Similarity&nbsp;Measure" containerElement={<Link to={'/statistics/simmeasure'} />} leftIcon={<ActionAssessment />} />
+            <Subheader>Textmining</Subheader>
+            <Divider className={styles.sideDivider} />
             <ListItem value={7} primaryText="Entity Linking" containerElement={<Link to={'/entity_linking'} />} leftIcon={<ContentLink />} />
+            <ListItem value={8} primaryText="Classifier&nbsp;Statistics" containerElement={<Link to={'/statistics/classifier'} />} leftIcon={<ActionAssessment />} />
           </SelectableList>
-          <Divider className={styles.sideDivider} />
-          <List onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()} >
-            <ListItem primaryText="Settings" rightIcon={<ActionInfo />} />
-            <ListItem primaryText="Trash" rightIcon={<ActionInfo />} />
-            <ListItem primaryText="Info" rightIcon={<ActionInfo />} />
-          </List>
         </Drawer>
       </div>
     );

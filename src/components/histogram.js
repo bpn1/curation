@@ -32,7 +32,7 @@ const Histogram = ({ data, nameKey, keyList, height, showLabels, showGrid, showD
           const label = showLabels ? { fill: lineColor, fontSize: 20, dy: -10, textAnchor: 'middle' } : false;
           return (
             <Line
-              type="monotone"
+              type="linear"
               key={dataKey}
               dataKey={dataKey}
               stroke={lineColors[i]}

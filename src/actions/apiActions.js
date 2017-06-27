@@ -8,7 +8,9 @@ import {
   FETCH_BLOCKING_STATS, FETCH_BLOCKING_STATS_FULFILLED, FETCH_BLOCKING_STATS_REJECTED,
   FETCH_SIM_MEASURE_STATS, FETCH_SIM_MEASURE_STATS_FULFILLED, FETCH_SIM_MEASURE_STATS_REJECTED,
   FETCH_SIM_MEASURE_STATS_DATA_FULFILLED, FETCH_SIM_MEASURE_STATS_DATA_REJECTED, FETCH_SIM_MEASURE_STATS_DATA,
-  FETCH_BLOCKING_STATS_DATA_FULFILLED, FETCH_BLOCKING_STATS_DATA, FETCH_BLOCKING_STATS_DATA_REJECTED
+  FETCH_BLOCKING_STATS_DATA_FULFILLED, FETCH_BLOCKING_STATS_DATA, FETCH_BLOCKING_STATS_DATA_REJECTED,
+  FETCH_CLASSIFIER_STATS, FETCH_CLASSIFIER_STATS_FULFILLED, FETCH_CLASSIFIER_STATS_REJECTED,
+  FETCH_CLASSIFIER_STATS_DATA, FETCH_CLASSIFIER_STATS_DATA_FULFILLED, FETCH_CLASSIFIER_STATS_DATA_REJECTED
 } from '../constants/ActionTypes';
 
 const apiPath = '/api/';
@@ -131,6 +133,37 @@ export function fetchSimMeasureData(primaryKeys) {
   };
 }
 
+export function fetchClassifierStatsIds() {
+  return function (dispatch) {
+    dispatch({ type: FETCH_CLASSIFIER_STATS });
+    axios.get(apiPath + 'wiki/classifierstats?noData&count=200')
+      .then((response) => {
+        dispatch({ type: FETCH_CLASSIFIER_STATS_FULFILLED, payload: response.data });
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_CLASSIFIER_STATS_REJECTED, payload: err });
+      });
+  };
+}
+
+export function fetchClassifierData(primaryKeys) {
+  return function (dispatch) {
+    dispatch({ type: FETCH_CLASSIFIER_STATS_DATA });
+    axios.get(apiPath + 'wiki/classifierstats/' + primaryKeys.join('/'))
+      .then((response) => {
+        dispatch({ type: FETCH_CLASSIFIER_STATS_DATA_FULFILLED, payload: response.data });
+      })
+      .catch((err) => {
+        dispatch({ type: FETCH_CLASSIFIER_STATS_DATA_REJECTED, payload: err });
+      });
+  };
+}
+
 export const fetchStatsActions = {
-  fetchSimMeasureStatsIds, fetchSimMeasureData, fetchBlockingStatsIds, fetchBlockingStatsData
+  fetchSimMeasureStatsIds,
+  fetchSimMeasureData,
+  fetchBlockingStatsIds,
+  fetchBlockingStatsData,
+  fetchClassifierStatsIds,
+  fetchClassifierData
 };
