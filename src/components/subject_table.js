@@ -15,6 +15,7 @@ import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import MergeIcon from 'material-ui/svg-icons/editor/merge-type';
 import GraphIcon from 'material-ui/svg-icons/social/share';
 import EditIcon from 'material-ui/svg-icons/image/edit';
+import MapIcon from 'material-ui/svg-icons/maps/place';
 import AddIcon from 'material-ui/svg-icons/action/note-add';
 import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
@@ -165,6 +166,13 @@ class SubjectTable extends Component {
               onClick={evt => console.log('TODO: Add merge function')}
             >
               <MergeIcon color={colors.semiNegativeColor1} hoverColor={colors.semiNegativeColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Show on map"
+              visible={showSingleSelectionButtons}
+              onClick={this.listeners.showOnMap}
+            >
+              <MapIcon color={colors.secondInteractiveColor1} hoverColor={colors.secondInteractiveColor2} />
             </CustomButton>
             <CustomButton
               tooltip="Delete selected"
@@ -344,6 +352,27 @@ class SubjectTable extends Component {
     },
     updateCount: (event, newValue) => {
       this.setState({ count: Number(newValue) });
+    },
+    showOnMap: () => {
+      if (this.state.selectedRows.length !== 1) {
+        console.error('Wrong number of rows selected for showOnMap, expected 1!');
+        return;
+      }
+
+      // alternative: http://maps.google.com/maps/place/<name>/@<lat>,<long>,15z
+      // => see https://stackoverflow.com/a/33759316
+      let mapUrl = 'http://maps.google.com/maps?z=15&t=m&q=';
+
+      const props = this.state.selectedRows[0].properties;
+      if (props && props.geo_lat && props.geo_lng) {
+        mapUrl += 'loc:' + props.geo_lat + '+' + props.geo_lng; // also adapt here if new URL scheme is used
+      } else if (props && props.geo_street && props.geo_postal && props.geo_city && props.geo_country) {
+        mapUrl += encodeURIComponent([props.geo_street, props.geo_postal, props.geo_city, props.geo_country].join(' '));
+      } else {
+        mapUrl += encodeURIComponent(this.state.selectedRows[0].name);
+      }
+
+      window.open(mapUrl, '_blank');
     }
   };
 }

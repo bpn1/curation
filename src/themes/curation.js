@@ -1,6 +1,6 @@
 import { fade } from 'material-ui/utils/colorManipulator';
 import {
-  fullWhite, red600, green600, grey600, orange600
+  fullWhite, red600, green600, grey600, orange600, teal600
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import spacing from 'material-ui/styles/spacing';
@@ -42,7 +42,9 @@ const curationTheme = getMuiTheme({
     neutralColor1: grey600,
     neutralColor2: fade(grey600, highlightFade),
     interactiveColor1: commerzbankYellow,
-    interactiveColor2: fade(commerzbankYellow, highlightFade)
+    interactiveColor2: fade(commerzbankYellow, highlightFade),
+    secondInteractiveColor1: teal600,
+    secondInteractiveColor2: fade(teal600, highlightFade),
   }
 });
 
