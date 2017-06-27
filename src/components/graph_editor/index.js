@@ -22,32 +22,12 @@ import {
 const centerPointOffset = { x: 650, y: 650 };
 const clusterRadius = 225;
 const clusterColumnCount = 3;
-const sampleCenterNode = {
-  id: '0fbf120e-a140-4d7e-b51a-9d6042f5ba16',
-  title: 'Start subject',
-  type: NONE_TYPE,
-  subtype: WIKIDATA_SUBTYPE
-};
-const sampleOtherNodes = [
-  { id: uuid(), title: 'DBpedia subject', type: SPECIAL_TYPE, subtype: DBPEDIA_SUBTYPE },
-  { id: uuid(), title: 'ImpliSense subject', type: EMPTY_TYPE, subtype: IMPLISENSE_SUBTYPE },
-  { id: uuid(), title: 'WikiData subject', type: PERSON_TYPE, subtype: WIKIDATA_SUBTYPE },
-  { id: uuid(), title: 'DBpedia subject', type: BUSINESS_TYPE, subtype: DBPEDIA_SUBTYPE },
-  { id: uuid(), title: 'WikiData subject', type: CITY_TYPE, subtype: WIKIDATA_SUBTYPE },
-  { id: uuid(), title: 'ImpliSense subject', type: BUSINESS_TYPE, subtype: IMPLISENSE_SUBTYPE },
-  { id: uuid(), title: 'WikiData subject', type: ORGANIZATION_TYPE, subtype: WIKIDATA_SUBTYPE },
-  { id: uuid(), title: 'ImpliSense subject', type: PERSON_TYPE, subtype: IMPLISENSE_SUBTYPE }
-];
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
 
 const defaultLoadKeys = [
-  '44615941-644f-4384-a9c3-c654ad3cc96e',
-  '37268457-8520-4f1f-880e-ee64b385e27b',
-  'd960a95f-240b-4613-822b-830c73e39ab0',
-  // 'f3554407-4219-4443-ae8e-d4cf3e234102', // too many duplicates => long lines
+  'c9f222a1-64d6-488e-9c15-a12d5abae400',
+  '21a9baad-2c0a-474e-b3a7-c3ea31be7e3c',
+  '08391b72-d43b-4ed0-a0aa-9a18a97dce4a',
+  '95465e29-1049-4a47-9d1f-3aa135485667'
 ];
 
 class GraphEditor extends Component {
@@ -55,11 +35,7 @@ class GraphEditor extends Component {
   constructor(props) {
     super(props);
 
-    const nodes = this.calculateNodePositions(sampleCenterNode, sampleOtherNodes, centerPointOffset, clusterRadius);
-    const centerEdges = this.makeEdgesFromCenter(sampleCenterNode, sampleOtherNodes);
-    const randomEdges = this.makeRandomEdges(nodes);
-    const edges = centerEdges.concat(randomEdges);
-    const graph = { nodes, edges };
+    const graph = { nodes: [], edges: [] };
 
     let loadKeys = window.location.hash.indexOf('?') === -1 ? [] :
       window.location.hash
@@ -69,12 +45,11 @@ class GraphEditor extends Component {
         .filter(param => param[0] === 'nodes' && param.length > 1 && param[1] !== '')
         .map(param => param[1].split(',').map(key => key.trim()));
     loadKeys = loadKeys.length > 0 && loadKeys[0].length > 0 ? loadKeys[0] : defaultLoadKeys;
-    console.log('GraphEditor loadKeys:', loadKeys);
 
     this.state = {
       graph: graph,
-      selected: nodes[0],
-      centerKeys: [nodes[0][NODE_KEY]],
+      selected: {},
+      centerKeys: [],
       editorDrawerOpen: false,
       showDataSources: true,
       showAllEdges: true,
@@ -85,7 +60,8 @@ class GraphEditor extends Component {
       centerSubjects: [],
       neighborSubjects: [],
       isLoadingCenters: false,
-      isLoadingNeighbors: false
+      isLoadingNeighbors: false,
+      disableEditing: props.disableEditing
     };
 
     this.loadGraph = this.loadGraph.bind(this);
@@ -95,11 +71,13 @@ class GraphEditor extends Component {
     this.onCreateNode = this.onCreateNode.bind(this);
     this.onUpdateNode = this.onUpdateNode.bind(this);
     this.onDeleteNode = this.onDeleteNode.bind(this);
+    this.canDeleteEdge = this.canDeleteEdge.bind(this);
     this.onSelectEdge = this.onSelectEdge.bind(this);
     this.onCreateEdge = this.onCreateEdge.bind(this);
     this.onSwapEdge = this.onSwapEdge.bind(this);
     this.onDeleteEdge = this.onDeleteEdge.bind(this);
-    this.toggleDataSourceVisibility = this.toggleDataSourceVisibility.bind(this);
+    this.canDeleteEdge = this.canDeleteEdge.bind(this);
+    this.handleDataSourceChecked = this.handleDataSourceChecked.bind(this);
     this.isDataSourceShown = this.isDataSourceShown.bind(this);
     this.getFilteredGraph = this.getFilteredGraph.bind(this);
     this.getNodeNames = this.getNodeNames.bind(this);
@@ -124,7 +102,7 @@ class GraphEditor extends Component {
     centerSubjects.forEach((centerSubject) => {
       const centerNode = this.extractNode(centerSubject);
 
-      // filter out neighbors of current not that haven't been added to the graph yet
+      // filter out neighbors of current node that haven't been added to the graph yet
       const neighborNodes = neighborSubjects
         .filter(subject => this.filters.subjectsByNeighbor(subject, centerSubject))
         .filter(subject => nodes.filter(node => node[NODE_KEY] === subject.id).length === 0)
@@ -135,7 +113,9 @@ class GraphEditor extends Component {
         y: Math.floor(clusterIndex / clusterColumnCount) * centerPointOffset.y
       };
 
-      clusterIndex += 1;
+      // only move centerPoint if this cluster contained nodes
+      const centerNodeIsDuplicate = nodes.filter(node => node[NODE_KEY] === centerNode.id).length !== 0;
+      if (!centerNodeIsDuplicate || neighborNodes.length > 0) clusterIndex += 1;
 
       const positionedNodes = this.calculateNodePositions(centerNode, neighborNodes, centerPoint, clusterRadius);
       centerKeys.push(positionedNodes[0][NODE_KEY]);
@@ -148,7 +128,7 @@ class GraphEditor extends Component {
       centerKeys
     });
 
-    setTimeout(this.graphView.handleZoomToFit, 1000);
+    setTimeout(this.graphView.handleZoomToFit, 0);
   }
 
   extractNode(subject) {
@@ -178,8 +158,7 @@ class GraphEditor extends Component {
       if (!subject.relations) return [];
       return Object.keys(subject.relations).map(target => ({
         source: subject.id,
-        target: target,
-        // type: EMPTY_EDGE_TYPE // TODO add & map corresponding edge types
+        target: target
       }));
     });
 
@@ -214,8 +193,6 @@ class GraphEditor extends Component {
         count: edgeCount
       };
     });
-
-    console.log('Counted edges > 1', countedEdges.filter(edge => edge.count > 1));
 
     return countedEdges;
   }
@@ -273,7 +250,10 @@ class GraphEditor extends Component {
     // Deselect events will send Null viewNode
     if (viewNode) {
       this.setState({ selected: viewNode });
-      this.props.actions.detailBar.openDetailBar('subject', viewNode[NODE_KEY]);
+
+      if (!this.state.disableEditing) {
+        this.props.actions.detailBar.openDetailBar('subject', viewNode[NODE_KEY]);
+      }
     } else {
       this.setState({ selected: {} });
       this.props.actions.detailBar.closeDetailBar();
@@ -283,18 +263,15 @@ class GraphEditor extends Component {
   // Edge 'mouseUp' handler
   onSelectEdge(viewEdge) {
     this.setState({ selected: viewEdge });
-    this.props.actions.detailBar.openDetailBar('relation', viewEdge);
+
+    if (!this.state.disableEditing) {
+      this.props.actions.detailBar.openDetailBar('relation', viewEdge);
+    }
   }
 
   // Updates the graph with a new node
   onCreateNode(x, y) {
-    const graph = this.state.graph;
-
-    // This is just an example - any sort of logic
-    // could be used here to determine node type
-    // There is also support for subtypes. (see 'sample' above)
-    // The subtype geometry will underlay the 'type' geometry for a node
-    const type = Math.random() < 0.25 ? SPECIAL_TYPE : EMPTY_TYPE;
+    /* const graph = this.state.graph;
 
     const viewNode = {
       id: this.state.graph.nodes.length + 1,
@@ -305,13 +282,11 @@ class GraphEditor extends Component {
     };
 
     graph.nodes.push(viewNode);
-    this.setState({ graph: graph });
+    this.setState({ graph: graph }); */
   }
 
   // Deletes a node from the graph
   onDeleteNode(viewNode) {
-    if (this.props.disableDeletions) return;
-
     const graph = this.state.graph;
     const nodeIndex = this.getNodeIndex(viewNode);
     graph.nodes.splice(nodeIndex, 1);
@@ -321,6 +296,10 @@ class GraphEditor extends Component {
       edge.source !== viewNode[NODE_KEY] && edge.target !== viewNode[NODE_KEY]);
 
     this.setState({ graph: graph, selected: {} });
+  }
+
+  canDeleteNode(node) {
+    return !this.props.disableDeletions;
   }
 
   // Creates a new node between two edges
@@ -355,12 +334,14 @@ class GraphEditor extends Component {
 
   // Called when an edge is deleted
   onDeleteEdge(viewEdge) {
-    if (this.props.disableDeletions) return;
-
     const graph = this.state.graph;
     const i = this.getEdgeIndex(viewEdge);
     graph.edges.splice(i, 1);
     this.setState({ graph: graph, selected: {} });
+  }
+
+  canDeleteEdge(viewEdge) {
+    return !this.props.disableDeletions;
   }
 
   // Helper functions //
@@ -384,14 +365,9 @@ class GraphEditor extends Component {
     return this.state.graph.nodes[i];
   }
 
-  toggleDataSourceVisibility(dataSource) {
+  handleDataSourceChecked(dataSource, isChecked) {
     const dataSourceVisibility = this.state.dataSourceVisibility;
-
-    if (!dataSourceVisibility.hasOwnProperty(dataSource)) {
-      dataSourceVisibility[dataSource] = true;
-    }
-
-    dataSourceVisibility[dataSource] = !dataSourceVisibility[dataSource];
+    dataSourceVisibility[dataSource] = !isChecked;
     this.setState({ dataSourceVisibility });
   }
 
@@ -423,24 +399,6 @@ class GraphEditor extends Component {
 
     newNodes.unshift(newCenterNode); // add center node as first node
     return newNodes;
-  }
-
-  // creates edges from center node to each node in otherNodes
-  makeEdgesFromCenter(centerNode, otherNodes) {
-    return otherNodes.map(node => ({
-      source: centerNode[NODE_KEY],
-      target: node[NODE_KEY],
-      type: COOCCURRENCE_EDGE_TYPE // EMPTY_EDGE_TYPE
-    }));
-  }
-
-  // create random edges between nodes
-  makeRandomEdges(nodes) {
-    return nodes.map(node => ((Math.random() < 0.5) ? ({
-      source: node[NODE_KEY],
-      target: nodes[getRandomInt(0, nodes.length - 2)][NODE_KEY],
-      type: SPECIAL_EDGE_TYPE
-    }) : null)).filter(node => node !== null);
   }
 
   // edge or node filter lambdas (must return bool)
@@ -502,6 +460,9 @@ class GraphEditor extends Component {
       showAllEdges: isInputChecked,
       edgeFilter: isInputChecked ? this.filters.allEdges : this.filters.edgesByCenterNodes
     }),
+    handleEditorsCheck: (event, isInputChecked) => this.setState({
+      disableEditing: !isInputChecked
+    }),
     handleSearchRequest: (searchInput, index) => {
       // disable enter to search feature => must select from list
       if (index < 0 || !searchInput.hasOwnProperty('key')) return;
@@ -539,17 +500,10 @@ class GraphEditor extends Component {
       background: '#303030'
     };
 
-    const legendStyle = {
-      marginTop: 15,
-      position: 'fixed',
-      right: 15
-    };
     const legendEntryStyle = (color, subtype) => ({
       backgroundColor: 'rgba(' + color + ', ' + (this.isDataSourceShown(subtype) ? 0.5 : 0.2) + ')',
-      border: this.isDataSourceShown(subtype) ? '3px solid rgb(' + color + ')' : '0',
-      padding: 15,
-      margin: 5,
-      borderRadius: 15,
+      borderRadius: 5,
+      paddingLeft: 5,
       display: 'inline'
     });
     const controlsStyle = {
@@ -563,17 +517,6 @@ class GraphEditor extends Component {
 
     return (
       <div id="graph" style={containerStyle}>
-        <div id="legend" style={legendStyle}>
-          { this.state.showDataSources && dataSources.map(source => (
-            <p
-              key={source.type}
-              style={legendEntryStyle(source.color, source.type)}
-              onClick={() => this.toggleDataSourceVisibility(source.type)}
-            >
-              { source.name }
-            </p>
-          )) }
-        </div>
         <div id="controls" style={controlsStyle}>
           <SearchIcon
             color="#666"
@@ -602,12 +545,31 @@ class GraphEditor extends Component {
             onCheck={this.listeners.handleNeighborEdgesCheck}
           />
           <Checkbox
-            label="Data&nbsp;sources"
+            label="Open Editors"
+            defaultChecked
+            value={!this.state.disableEditing}
+            style={{ padding: 5 }}
+            onCheck={this.listeners.handleEditorsCheck}
+          />
+          <Checkbox
+            label="Data sources"
             defaultChecked
             value={this.state.showDataSources}
             style={{ padding: 5 }}
             onCheck={(event, isInputChecked) => this.setState({ showDataSources: isInputChecked })}
           />
+          { this.state.showDataSources && <hr style={{ borderColor: '#777' }} /> }
+          { this.state.showDataSources && dataSources.map(source => (
+            <Checkbox
+              key={source.type}
+              label={source.name}
+              labelStyle={legendEntryStyle(source.color, source.type)}
+              style={{ padding: 5 }}
+              defaultChecked
+              value={this.state.dataSourceVisibility[source.type]}
+              onCheck={(event, isInputChecked) => this.handleDataSourceChecked(source.type, isInputChecked)}
+            />
+          )) }
         </div>
         <GraphView
           ref={g => this.graphView = g}
@@ -632,6 +594,9 @@ class GraphEditor extends Component {
           onCreateEdge={this.onCreateEdge}
           onSwapEdge={this.onSwapEdge}
           onDeleteEdge={this.onDeleteEdge}
+          canDeleteNode={this.canDeleteNode}
+          canDeleteEdge={this.canDeleteEdge}
+          maxTitleChars={14}
         />
       </div>
     );
