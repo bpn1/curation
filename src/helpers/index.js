@@ -12,3 +12,12 @@ export function count(obj) {
 export function materialIcon(iconName, color) {
   return <FontIcon className="material-icons" color={color}>{iconName}</FontIcon>;
 }
+
+// from: http://stackoverflow.com/a/7638362
+export function randomColor() {
+  let c = '';
+  while (c.length < 6) {
+    c += (Math.random()).toString(16).substr(-6).substr(-1);
+  }
+  return '#' + c;
+}

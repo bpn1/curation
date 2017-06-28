@@ -7,6 +7,12 @@ module.exports = {
     comment: {
       type: 'text'
     },
+    xaxis: {
+      type: 'text'
+    },
+    yaxis: {
+      type: 'text'
+    },
     data: {
       type: 'list',
       typeDef: '<frozen<precisionrecalldatatuple>>'

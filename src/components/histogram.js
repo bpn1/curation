@@ -7,26 +7,20 @@ import XAxis from 'recharts/es6/cartesian/XAxis';
 import YAxis from 'recharts/es6/cartesian/YAxis';
 import Tooltip from 'recharts/es6/component/Tooltip';
 import Line from 'recharts/es6/cartesian/Line';
+import Legend from 'recharts/es6/component/Legend';
 
-// from: http://stackoverflow.com/a/7638362
-function randomColor() {
-  let c = '';
-  while (c.length < 6) {
-    c += (Math.random()).toString(16).substr(-6).substr(-1);
-  }
-  return '#' + c;
-}
 const lineColors = ['#F44336', '#2196F3', '#FF9800', '#9C27B0'];
-const Histogram = ({ data, nameKey, keyList, height, showLabels, showGrid, showDots }) => (
+const Histogram = ({ data, nameKey, keyList, height, domain, xLabel, yLabel, showLabels, showGrid, showDots }) => (
   <ResponsiveContainer height={height}>
     <LineChart
       data={data}
-      margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+      margin={{ top: 20, right: 80, left: 10, bottom: 0 }}
     >
       { showGrid ? <CartesianGrid stroke="#555" strokeDasharray="3 3" /> : '' }
-      <XAxis dataKey={nameKey} />
-      <YAxis />
+      <XAxis label={xLabel} dataKey={nameKey} />
+      <YAxis label={yLabel} domain={domain} />
       <Tooltip labelStyle={{ color: '#000' }} label="" />
+      <Legend verticalAlign="bottom" height={36} />
       {
         keyList.map((dataKey, i) => {
           const label = showLabels ? { fill: lineColor, fontSize: 20, dy: -10, textAnchor: 'middle' } : false;
@@ -38,7 +32,6 @@ const Histogram = ({ data, nameKey, keyList, height, showLabels, showGrid, showD
               stroke={lineColors[i]}
               dot={showDots}
               yAxisId={0}
-              legendType="diamond"
               label={label}
             />
           );
@@ -51,7 +44,9 @@ const Histogram = ({ data, nameKey, keyList, height, showLabels, showGrid, showD
 Histogram.defaultProps = {
   showLabels: true,
   showGrid: true,
-  showDots: true
+  showDots: true,
+  xLabel: '',
+  yLabel: '',
 };
 
 Histogram.propTypes = {
@@ -59,6 +54,9 @@ Histogram.propTypes = {
   keyList: PropTypes.array.isRequired,
   nameKey: PropTypes.string.isRequired,
   height: PropTypes.number.isRequired,
+  domain: PropTypes.array.isRequired,
+  xLabel: PropTypes.string,
+  yLabel: PropTypes.string,
   showDots: PropTypes.bool,
   showLabels: PropTypes.bool,
   showGrid: PropTypes.bool

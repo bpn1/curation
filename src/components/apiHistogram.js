@@ -31,30 +31,29 @@ class APIHistogram extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.statsData && this.state.histogramId) {
-      this.filterHistogramData(nextProps.statsData[this.histogramIdToKey(this.state.histogramId)],
-        this.state.max, this.state.min, this.state.excludeFilter)
+      const histogramKey = this.histogramIdToKey(this.state.histogramId);
+      this.filterHistogramData(nextProps.statsData[histogramKey],
+        this.state.max, this.state.min, this.state.excludeFilter);
+      this.setState({
+        xLabel: nextProps.xLabel[histogramKey],
+        yLabel: nextProps.yLabel[histogramKey],
+      });
     } else if (nextProps.statsIds) {
       const firstStatsEntry = nextProps.statsIds[0];
-      const histogramId = nextProps.primaryKeys.map((primaryKey) => firstStatsEntry[primaryKey]);
+      const histogramId = nextProps.primaryKeys.map(primaryKey => firstStatsEntry[primaryKey]);
       this.setState({
-        histogramId: histogramId
+        histogramId: histogramId,
       });
       this.props[this.props.fetchDataKey](histogramId);
     }
   }
 
-  // fetches only if statsdata is not already in redux state
-  fetchStatsData(histogramId) {
-    if (this.props.statsData && this.histogramIdToKey(histogramId) in this.props.statsData) {
-      this.filterHistogramData(this.props.statsData[this.histogramIdToKey(histogramId)],
-        this.state.max, this.state.min, this.state.excludeFilter);
-    } else {
-      this.props[this.props.fetchDataKey](histogramId);
-    }
-  }
-
   onDropDownChange = (event, index, value) => {
-    this.setState({ histogramId: this.keyToHistogramId(value) });
+    this.setState({
+      histogramId: this.keyToHistogramId(value),
+      xLabel: this.props.xLabel[value],
+      yLabel: this.props.yLabel[value],
+    });
     this.fetchStatsData(this.keyToHistogramId(value));
   };
 
@@ -79,6 +78,16 @@ class APIHistogram extends Component {
     this.filterHistogramData(this.state.histogramData, Number(newValue), this.state.min, this.state.excludeFilter);
   };
 
+  // fetches only if statsdata is not already in redux state
+  fetchStatsData(histogramId) {
+    if (this.props.statsData && this.histogramIdToKey(histogramId) in this.props.statsData) {
+      this.filterHistogramData(this.props.statsData[this.histogramIdToKey(histogramId)],
+        this.state.max, this.state.min, this.state.excludeFilter);
+    } else {
+      this.props[this.props.fetchDataKey](histogramId);
+    }
+  }
+
   filterHistogramData = (histogramData, max, min, excludes) => {
     const filteredData = histogramData
       .filter(entry => excludes.indexOf(entry[this.props.nameKey].toString().toLowerCase()) === -1
@@ -89,11 +98,9 @@ class APIHistogram extends Component {
     });
   };
 
-  filterMinMax = (entry, min, max) => {
-    return this.props.filterKeys.every(function (key) {
-      return !(entry[key] < min || entry[key] > max);
-    });
-  };
+  filterMinMax = (entry, min, max) => this.props.filterKeys.every(function (key) {
+    return !(entry[key] < min || entry[key] > max);
+  });
 
   histogramIdToKey(histogramId) {
     return histogramId ? histogramId.join('+') : histogramId;
@@ -112,35 +119,39 @@ class APIHistogram extends Component {
             <DropDownMenu
               autoWidth
               value={this.histogramIdToKey(this.state.histogramId)}
-              onChange={this.onDropDownChange}>
+              onChange={this.onDropDownChange}
+            >
               {
                 this.props.statsIds !== undefined
                 && this.props.statsIds.map(function (stat, i) {
-                  return <MenuItem
+                  return (<MenuItem
                     key={'stats_' + i}
-                    value={this.histogramIdToKey(this.props.primaryKeys.map((primaryKey) => stat[primaryKey]))}
-                    primaryText={this.props.dropDownText(stat)} />
+                    value={this.histogramIdToKey(this.props.primaryKeys.map(primaryKey => stat[primaryKey]))}
+                    primaryText={this.props.dropDownText(stat)}
+                  />);
                 }.bind(this))
               }
             </DropDownMenu>
           </Col>
           <Col xs={12} sm={4} lg={2}>
-            <Checkbox label="Show Dots"
-                      defaultChecked={false}
-                      value={this.state.showDots}
-                      onCheck={(event, isInputChecked) => this.setState({ showDots: isInputChecked })} />
+            <Checkbox
+              label="Show Dots"
+              defaultChecked={false}
+              value={this.state.showDots}
+              onCheck={(event, isInputChecked) => this.setState({ showDots: isInputChecked })}
+            />
           </Col>
           <Col xs={12} md={8} lg={3}>
             <ChipInput
               defaultValue={[]}
               onChange={chips => this.onExcludeFilterChange(chips)}
-              fullWidth={true}
+              fullWidth
               floatingLabelText="Excluded values"
             />
           </Col>
           <Col xs={6} md={2} lg={1}>
             <TextField
-              fullWidth={true}
+              fullWidth
               type="number"
               hintText="Minimum value"
               floatingLabelText="Minimum"
@@ -150,7 +161,7 @@ class APIHistogram extends Component {
           </Col>
           <Col xs={6} md={2} lg={1}>
             <TextField
-              fullWidth={true}
+              fullWidth
               type="number"
               hintText="Maximum value"
               floatingLabelText="Maximum"
@@ -164,6 +175,9 @@ class APIHistogram extends Component {
             <Histogram
               height={this.props.height - optionsBarHeight}
               data={this.state.filteredHistogramData}
+              xLabel={this.state.xLabel}
+              yLabel={this.state.yLabel}
+              domain={this.props.domain}
               keyList={this.state.keyList}
               nameKey={this.props.nameKey}
               showLabels={this.props.showLabels}
@@ -185,19 +199,23 @@ APIHistogram.propTypes = {
   nameKey: PropTypes.string.isRequired,
   primaryKeys: PropTypes.array.isRequired,
   dropDownText: PropTypes.func.isRequired,
+  domain: PropTypes.array,
   min: PropTypes.number,
   max: PropTypes.number,
   showLabels: PropTypes.bool
 };
 
 APIHistogram.defaultProps = {
-  showLabels: false
+  showLabels: false,
+  domain: [0, 'auto']
 };
 
 /* connection to Redux */
 function mapStateToProps(state, ownProps) {
   return {
     statsData: state.api.stats[ownProps.type],
+    xLabel: state.api.xAxis[ownProps.type],
+    yLabel: state.api.yAxis[ownProps.type],
     statsIds: state.api.statsIds[ownProps.type],
     error: state.api.error
   };

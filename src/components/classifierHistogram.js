@@ -12,6 +12,7 @@ class ClassifierHistogram extends Component {
       <APIHistogram
         type="classifier"
         height={this.props.height}
+        domain={[0, 1]}
         keyList={DATA_KEYS}
         filterKeys={DATA_KEYS}
         fetchIdKey={'fetchClassifierStatsIds'}

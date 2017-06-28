@@ -12,19 +12,22 @@ import { getMillisecondsFromTimeUUID } from '../helpers/timeUUIDParser';
 
 function makeError(actionType, payload) {
   let error = actionType;
-  error = error.replace(/_/g, " ").toLowerCase();         // spaces to underscore, all lower case
+  error = error.replace(/_/g, ' ').toLowerCase();         // spaces to underscore, all lower case
   error = error.charAt(0).toUpperCase() + error.slice(1); // first letter to upper case
 
-  if(payload !== null)
-    error += " ⇒ " + payload.toString();
+  if (payload !== null) {
+    error += ' ⇒ ' + payload.toString();
+  }
 
   return error;
 }
 
 export default function reducer(state = {
   subjects: [],
-  statsIds: [],
-  stats: [],
+  statsIds: {},
+  stats: {},
+  xAxis: {},
+  yAxis: {},
   fetching: false,
   fetched: false,
   status: 'ok',
@@ -54,15 +57,15 @@ export default function reducer(state = {
       return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_SUBJECT_FULFILLED: {
-      if(action.payload && action.payload.hasOwnProperty('length')) {
+      if (action.payload && action.payload.hasOwnProperty('length')) {
         return {
           ...state,
           fetching: false,
           fetched: false,
           subject: null,
-          error: "Server returned a string in API reducer (Action: "+action.type+")!",
+          error: 'Server returned a string in API reducer (Action: ' + action.type + ')!',
           status: 'warning'
-        }
+        };
       }
 
       // transform fetched subject to the SubjectEditor format
@@ -122,6 +125,12 @@ export default function reducer(state = {
       return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_BLOCKING_STATS_FULFILLED: {
+      const xAxis = [];
+      const yAxis = [];
+      action.payload.forEach((entry) => {
+        xAxis[entry.jobid + '+' + entry.schemetag] = entry.xaxis;
+        yAxis[entry.jobid + '+' + entry.schemetag] = entry.yaxis;
+      });
       return {
         ...state,
         fetching: false,
@@ -129,7 +138,9 @@ export default function reducer(state = {
         statsIds: {
           ...state.statsIds,
           blocking: action.payload.sort((a, b) => getMillisecondsFromTimeUUID(b.jobid) - getMillisecondsFromTimeUUID(a.jobid))
-        }
+        },
+        xAxis: { ...state.xAxis, blocking: xAxis },
+        yAxis: { ...state.yAxis, blocking: yAxis },
       };
     }
     case FETCH_BLOCKING_STATS_DATA: {
@@ -164,6 +175,12 @@ export default function reducer(state = {
       return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_SIM_MEASURE_STATS_FULFILLED: {
+      const xAxis = [];
+      const yAxis = [];
+      action.payload.forEach((entry) => {
+        xAxis[entry.id] = entry.xaxis;
+        yAxis[entry.id] = entry.yaxis;
+      });
       return {
         ...state,
         fetching: false,
@@ -171,7 +188,9 @@ export default function reducer(state = {
         statsIds: {
           ...state.statsIds,
           similarity: action.payload.sort((a, b) => getMillisecondsFromTimeUUID(b.id) - getMillisecondsFromTimeUUID(a.id))
-        }
+        },
+        xAxis: { ...state.xAxis, similarity: xAxis },
+        yAxis: { ...state.yAxis, similarity: yAxis },
       };
     }
     case FETCH_SIM_MEASURE_STATS_DATA: {
@@ -204,6 +223,12 @@ export default function reducer(state = {
       return { ...state, fetching: false, status: 'error', error: makeError(action.type, action.payload) };
     }
     case FETCH_CLASSIFIER_STATS_FULFILLED: {
+      const xAxis = [];
+      const yAxis = [];
+      action.payload.forEach((entry) => {
+        xAxis[entry.id] = entry.xaxis;
+        yAxis[entry.id] = entry.yaxis;
+      });
       return {
         ...state,
         fetching: false,
@@ -211,7 +236,9 @@ export default function reducer(state = {
         statsIds: {
           ...state.statsIds,
           classifier: action.payload.sort((a, b) => getMillisecondsFromTimeUUID(b.id) - getMillisecondsFromTimeUUID(a.id))
-        }
+        },
+        xAxis: { ...state.xAxis, classifier: xAxis },
+        yAxis: { ...state.yAxis, classifier: yAxis },
       };
     }
     case FETCH_CLASSIFIER_STATS_DATA: {

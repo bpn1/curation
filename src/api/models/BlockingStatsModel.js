@@ -10,6 +10,12 @@ module.exports = {
     comment: {
       type: 'text'
     },
+    xaxis: {
+      type: 'text'
+    },
+    yaxis: {
+      type: 'text'
+    },
     blockcount: {
       type: 'int'
     },

@@ -12,6 +12,7 @@ class SimilarityHistogram extends Component {
       <APIHistogram
         type="similarity"
         height={this.props.height}
+        domain={[0, 1]}
         keyList={DATA_KEYS}
         filterKeys={DATA_KEYS}
         fetchIdKey={'fetchSimMeasureStatsIds'}

@@ -7,7 +7,7 @@ const queryConfig = {
     {
       name: 'noData',
       options: {
-        select: ['id', 'comment']
+        select: ['id', 'comment', 'xaxis', 'yaxis']
       }
     },
   ]

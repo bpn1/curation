@@ -8,7 +8,7 @@ const queryConfig = {
     {
       name: 'noData',
       options: {
-        select: ['jobid', 'schemetag', 'comment', 'blockcount', 'comparisoncount', 'pairscompleteness']
+        select: ['jobid', 'schemetag', 'comment', 'blockcount', 'comparisoncount', 'pairscompleteness', 'xaxis', 'yaxis']
       }
     },
   ]
