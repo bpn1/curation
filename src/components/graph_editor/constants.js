@@ -22,6 +22,8 @@ export const SPECIAL_EDGE_TYPE = 'specialEdge';
 export const COOCCURRENCE_EDGE_TYPE = 'coOccurrenceEdge';
 export const NODE_KEY = 'id'; // Key used to identify nodes
 
+export const validCategories = [ORGANIZATION_TYPE, BUSINESS_TYPE, PERSON_TYPE, CITY_TYPE];
+
 export const dataSources = [
   { type: EMPTY_SUBTYPE, color: '200, 70, 70', name: 'None' },
   { type: MERGING_SUBTYPE, color: '200, 0, 170', name: 'Merging' },

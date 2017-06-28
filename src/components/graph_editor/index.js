@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
-import uuid from 'uuid/v4';
 
 import GraphView from 'react-digraph';
 import Checkbox from 'material-ui/Checkbox';
@@ -14,8 +13,7 @@ import { subjects } from '../../ducks/subjectDuck';
 import GraphConfig from './graph_config';
 
 import {
-  dataSources, IMPLISENSE_SUBTYPE, WIKIDATA_SUBTYPE, DBPEDIA_SUBTYPE, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, PERSON_TYPE,
-  BUSINESS_TYPE, CITY_TYPE, ORGANIZATION_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE, COOCCURRENCE_EDGE_TYPE,
+  dataSources, validCategories, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE,
   SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE, EMPTY_SUBTYPE
 } from './constants';
 
@@ -145,10 +143,12 @@ class GraphEditor extends Component {
       dataSource = EMPTY_SUBTYPE;
     }
 
+    const category = subject.category && validCategories.indexOf(subject.category) > -1 ? subject.category : NONE_TYPE;
+
     return {
       id: subject.id,
       title: subject.name,
-      type: subject.category ? subject.category : NONE_TYPE,
+      type: category,
       subtype: dataSource
     };
   }
