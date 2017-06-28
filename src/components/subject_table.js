@@ -38,6 +38,8 @@ class SubjectTable extends Component {
       tableData: [],
       hiddenColumns: defaultHiddenColumns,
       hiddenColumnsVal: defaultHiddenColumns.join(', '),
+      extractedProperties: [],
+      extractedPropertiesVal: '',
       editorOpen: false,
       deleteConfirmationOpen: false,
       multipleDeletions: false,
@@ -58,7 +60,7 @@ class SubjectTable extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.tableData) {
       this.setState({
-        tableData: nextProps.tableData
+        tableData: this.extractProperties(nextProps.tableData, this.state.extractedProperties)
       });
     }
 
@@ -69,6 +71,23 @@ class SubjectTable extends Component {
     }
   }
 
+  extractProperties(tableData, extractedProperties) {
+    if (extractedProperties.length === 0) return tableData;
+
+    return tableData.map((subject) => {
+      const extractedSubject = Object.assign({}, subject);
+      if (!subject.properties) return subject;
+      extractedProperties.forEach((prop) => {
+        if (prop.key) prop = prop.key;
+        if (!subject.hasOwnProperty(prop)) {
+          extractedSubject[prop] = subject.properties.hasOwnProperty(prop) ? subject.properties[prop].join('; ') : null;
+        }
+      });
+
+      return extractedSubject;
+    });
+  }
+
   preventSelection(evt, lambda) {
     lambda();
     evt.stopPropagation();
@@ -76,20 +95,8 @@ class SubjectTable extends Component {
   }
 
   styles = {
-    dialogTitle: {
-      display: 'inline-block',
-      verticalAlign: 'center',
-      marginTop: '30px'
-    },
     cogIcon: {
-      color: '#444',
-      borderRadius: '100px',
-      width: '30px',
-      height: '30px',
-      padding: '4px'
-    },
-    chiliIcon: {
-      color: '#E04C11',
+      color: '#aaa',
       borderRadius: '100px',
       width: '30px',
       height: '30px',
@@ -223,7 +230,7 @@ class SubjectTable extends Component {
               height={this.props.height - buttonBarHeight}
               ref="table"
               expandKey={'id'}
-              headers={this.props.headers}
+              headers={this.props.headers.concat(this.state.extractedProperties)}
               data={this.state.tableData}
               muiTheme={this.props.muiTheme}
               onSelectionChange={this.listeners.handleSelectionChange}
@@ -259,10 +266,7 @@ class SubjectTable extends Component {
           ref="settingsDialog"
           open={this.state.settingsOpen}
           backgroundColor
-          title={
-            <span style={this.styles.dialogTitle}>
-              <span style={this.styles.cogIcon}>⚙</span>️ TableSettings <span style={this.styles.chiliIcon}>🌶️</span>
-            </span>}
+          title={<div><span style={this.styles.cogIcon}>⚙</span>️ Table Settings</div>}
           modal
           actions={[
             <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
@@ -277,6 +281,15 @@ class SubjectTable extends Component {
             floatingLabelFixed={false}
             value={this.state.hiddenColumnsVal}
             onChange={this.listeners.hiddenColumnsChanged}
+          />
+          <TextField
+            style={{ maxWidth: '100%', width: '100%' }}
+            ref="setting_extractedProperties"
+            hintText="Enter extracted property names, comma-separated..."
+            floatingLabelText="Extracted properties"
+            floatingLabelFixed={false}
+            value={this.state.extractedPropertiesVal}
+            onChange={this.listeners.extractedPropertiesChanged}
           />
         </Dialog>
       </Grid>
@@ -334,16 +347,22 @@ class SubjectTable extends Component {
       this.setState({ settingsOpen: false });
     },
     saveSettings: () => {
-      // TODO add Redux action and connect it to this component
-      // TODO add Redux state component that contains the settings for this component (needs to be saved in server)
-      // TODO maybe use Redux connection in SubjectTable and keep this component clean
-      // TODO just add callback props that are called when the data should be saved
+      // TODO save settings to browser's localStorage
+      const { extractedPropertiesVal, hiddenColumnsVal } = this.state;
+      const hiddenColumns = hiddenColumnsVal.split(',').map(str => str.trim().toLowerCase());
+      const extractedProperties = extractedPropertiesVal.split(',')
+        .map(str => str.trim().toLowerCase())
+        .filter(str => str.length > 0)
+        .map(prop => ({ key: prop, name: prop }));
+      const tableData = this.extractProperties(this.props.tableData, extractedProperties);
+      this.setState({ tableData, hiddenColumns, extractedProperties });
       this.listeners.closeSettings();
     },
     hiddenColumnsChanged: (event) => {
-      const hiddenColumnsVal = event.target.value;
-      const hiddenColumns = hiddenColumnsVal.split(',').map(str => str.trim().toLowerCase());
-      this.setState({ hiddenColumns, hiddenColumnsVal });
+      this.setState({ hiddenColumnsVal: event.target.value });
+    },
+    extractedPropertiesChanged: (event) => {
+      this.setState({ extractedPropertiesVal: event.target.value });
     },
     showSelectionGraph: () => {
       const selectedIDs = this.state.selectedRows.map(row => row.id);
@@ -364,8 +383,9 @@ class SubjectTable extends Component {
       let mapUrl = 'http://maps.google.com/maps?z=15&t=m&q=';
 
       const props = this.state.selectedRows[0].properties;
-      if (props && props.geo_lat && props.geo_lng) {
-        mapUrl += 'loc:' + props.geo_lat + '+' + props.geo_lng; // also adapt here if new URL scheme is used
+      if (props && props.geo_coords && props.geo_coords.length >= 1) {
+        const [lat, lng] = props.geo_coords[0].split(';');
+        mapUrl += 'loc:' + lat + '+' + lng; // also adapt here if new URL scheme is used
       } else if (props && props.geo_street && props.geo_postal && props.geo_city && props.geo_country) {
         mapUrl += encodeURIComponent([props.geo_street, props.geo_postal, props.geo_city, props.geo_country].join(' '));
       } else {
