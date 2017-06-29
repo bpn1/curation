@@ -134,7 +134,7 @@ class VersionList extends Component {
       selectedVersionName = this.processProgramName(this.state.selectedVersion.program);
       selectedVersionDate = this.formatDate(new Date(this.state.selectedVersion.timestamp));
       selectedVersionDataSources = this.state.selectedVersion.datasources.join(', ');
-      selectedVersionTable = this.state.selectedVersion.subjecttable;
+      selectedVersionTable = this.state.selectedVersion.subjecttable || 'none';
     }
 
     return (
@@ -173,7 +173,7 @@ class VersionList extends Component {
         >
           Timestamp: <b>{selectedVersionDate}</b><br />
           Data source: <b>{selectedVersionDataSources}</b><br />
-          Table: <b>{selectedVersionTable}</b><br />
+          Target table: <b>{selectedVersionTable}</b><br />
           <br />
           Do you really want to restore the selected version?<br />
           This will result in resetting all subject data to the values available at the time!<br />
