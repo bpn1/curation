@@ -13,6 +13,9 @@ module.exports = {
     },
     timestamp: {
       type: 'timestamp'
+    },
+    subjecttable: {
+      type: 'text'
     }
   },
   key: ['version'],

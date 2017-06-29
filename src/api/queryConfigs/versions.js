@@ -1,5 +1,5 @@
 const queryConfig = {
-  normal: ['program'],
+  normal: ['program', 'subjecttable'],
   lists: ['datasources'],
   maps: [],
   uniqueKey: 'version'
