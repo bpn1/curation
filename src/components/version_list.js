@@ -126,12 +126,14 @@ class VersionList extends Component {
       .sort((a, b) => a[0] - b[0]);
 
     let selectedVersionName = '';
+    let selectedVersionID = '';
     let selectedVersionDate = '';
     let selectedVersionDataSources = '';
     let selectedVersionTable = '';
 
     if (this.state.selectedVersion) {
       selectedVersionName = this.processProgramName(this.state.selectedVersion.program);
+      selectedVersionID = this.state.selectedVersion.version;
       selectedVersionDate = this.formatDate(new Date(this.state.selectedVersion.timestamp));
       selectedVersionDataSources = this.state.selectedVersion.datasources.join(', ');
       selectedVersionTable = this.state.selectedVersion.subjecttable || 'none';
@@ -172,6 +174,7 @@ class VersionList extends Component {
           ]}
         >
           Timestamp: <b>{selectedVersionDate}</b><br />
+          Version ID: <b>{selectedVersionID}</b><br />
           Data source: <b>{selectedVersionDataSources}</b><br />
           Target table: <b>{selectedVersionTable}</b><br />
           <br />
