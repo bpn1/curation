@@ -131,6 +131,7 @@ class VersionList extends Component {
       ? this.formatDate(new Date(this.state.selectedVersion.timestamp)) : '';
     const selectedVersionDataSources = this.state.selectedVersion
       ? this.state.selectedVersion.datasources.join(', ') : '';
+    const selectedVersionTable = this.state.selectedVersion ? this.state.selectedVersion.subjecttable : '';
 
     return (
       <div>
@@ -168,6 +169,7 @@ class VersionList extends Component {
         >
           Timestamp: <b>{selectedVersionDate}</b><br />
           Data source: <b>{selectedVersionDataSources}</b><br />
+          Table: <b>{selectedVersionTable}</b><br />
           <br />
           Do you really want to restore the selected version?<br />
           This will result in resetting all subject data to the values available at the time!<br />
