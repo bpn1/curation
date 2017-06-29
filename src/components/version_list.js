@@ -62,7 +62,7 @@ class VersionList extends Component {
     versions.forEach((version) => {
       const date = new Date(version.timestamp);
       const currentDate = new Date();
-      const daysBetween = Math.floor((currentDate.getTime() - date.getTime()) / (1000 * 3600 * 24));
+      const daysBetween = Math.ceil((currentDate.getTime() - date.getTime()) / (1000 * 3600 * 24));
       let day = [0, date.toDateString()];
 
       if (daysBetween === 0) day = [1, 'Today'];
