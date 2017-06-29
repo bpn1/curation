@@ -125,13 +125,17 @@ class VersionList extends Component {
     const sortedVersionKeys = Object.keys(versions)
       .sort((a, b) => a[0] - b[0]);
 
-    const selectedVersionName = this.state.selectedVersion
-      ? this.processProgramName(this.state.selectedVersion.program) : '';
-    const selectedVersionDate = this.state.selectedVersion
-      ? this.formatDate(new Date(this.state.selectedVersion.timestamp)) : '';
-    const selectedVersionDataSources = this.state.selectedVersion
-      ? this.state.selectedVersion.datasources.join(', ') : '';
-    const selectedVersionTable = this.state.selectedVersion ? this.state.selectedVersion.subjecttable : '';
+    let selectedVersionName = '';
+    let selectedVersionDate = '';
+    let selectedVersionDataSources = '';
+    let selectedVersionTable = '';
+
+    if (this.state.selectedVersion) {
+      selectedVersionName = this.processProgramName(this.state.selectedVersion.program);
+      selectedVersionDate = this.formatDate(new Date(this.state.selectedVersion.timestamp));
+      selectedVersionDataSources = this.state.selectedVersion.datasources.join(', ');
+      selectedVersionTable = this.state.selectedVersion.subjecttable;
+    }
 
     return (
       <div>
