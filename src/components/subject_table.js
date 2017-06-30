@@ -387,7 +387,7 @@ class SubjectTable extends Component {
       if (props && props.geo_coords && props.geo_coords.length >= 1) {
         const [lat, lng] = props.geo_coords[0].split(';');
         mapUrl += 'loc:' + lat + '+' + lng; // also adapt here if new URL scheme is used
-      } else if (props && props.geo_street && props.geo_postal && props.geo_city && props.geo_country) {
+      } else if (props && (props.geo_street || props.geo_postal || props.geo_city || props.geo_country)) {
         mapUrl += encodeURIComponent([props.geo_street, props.geo_postal, props.geo_city, props.geo_country].join(' '));
       } else {
         mapUrl += encodeURIComponent(this.state.selectedRows[0].name);
