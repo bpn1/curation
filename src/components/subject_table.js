@@ -80,7 +80,8 @@ class SubjectTable extends Component {
       extractedProperties.forEach((prop) => {
         if (prop.key) prop = prop.key;
         if (!subject.hasOwnProperty(prop)) {
-          extractedSubject[prop] = subject.properties.hasOwnProperty(prop) ? subject.properties[prop].join('; ') : null;
+          extractedSubject[prop] = subject.properties.hasOwnProperty(prop) && subject.properties[prop] instanceof Array
+            ? subject.properties[prop].join('; ') : null;
         }
       });
 
