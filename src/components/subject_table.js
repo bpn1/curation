@@ -32,7 +32,7 @@ class SubjectTable extends Component {
     super(props);
 
     // TODO load from/ save to Redux settings?
-    const defaultHiddenColumns = ['id', 'aliases', 'category', 'master', 'relations'];
+    const defaultHiddenColumns = ['master', 'datasource', 'id', 'aliases', 'category', 'relations'];
 
     this.state = {
       tableData: [],
@@ -402,11 +402,12 @@ SubjectTable.defaultProps = {
   fetchOnMount: true,
   showNameFilter: true,
   headers: [
+    { key: 'master', name: 'Master' },
+    { key: 'datasource', name: 'Datasource' },
     { key: 'id', name: 'ID' },
     { key: 'name', name: 'Name' },
     { key: 'aliases', name: 'Aliases' },
     { key: 'category', name: 'Category' },
-    { key: 'master', name: 'Master' },
     { key: 'properties', name: 'Properties' },
     { key: 'relations', name: 'Relations' }
   ]

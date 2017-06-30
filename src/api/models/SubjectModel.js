@@ -1,8 +1,15 @@
 module.exports = {
   fields: {
+    master: {
+      type: 'uuid',
+      default: { $db_function: 'uuid()' }
+    },
     id: {
       type: 'uuid',
       default: { $db_function: 'uuid()' }
+    },
+    datasource: {
+      type: 'text'
     },
     aliases: {
       type: 'list',
@@ -16,6 +23,10 @@ module.exports = {
       type: 'text'
     },
     category_history: {
+      type: 'list',
+      typeDef: '<frozen<version>>'
+    },
+    master_history: {
       type: 'list',
       typeDef: '<frozen<version>>'
     },
@@ -43,6 +54,6 @@ module.exports = {
       typeDef: '<uuid, frozen<map<text, frozen<list<frozen<version>>>>>>'
     },
   },
-  key: ['id'],
+  key: ['master', 'id', 'datasource'],
   table_name: 'subject'
 };

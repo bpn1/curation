@@ -1,14 +1,14 @@
 const queryConfig = {
-  normal: ['id', 'category', 'name'],
+  normal: ['master', 'datasource', 'id', 'category', 'name'],
   lists: ['aliases'],
   maps: ['properties', 'relations'],
   like: ['name'],
-  uniqueKey: 'id',
+  uniqueKey: 'master',
   custom_params: [
     {
       name: 'noHistory',
       options: {
-        select: ['id', 'name', 'aliases', 'category', 'properties', 'relations']
+        select: ['master', 'id', 'datasource', 'name', 'aliases', 'category', 'properties', 'relations']
       }
     },
   ]

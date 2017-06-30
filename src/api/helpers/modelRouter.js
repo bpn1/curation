@@ -126,9 +126,13 @@ module.exports = function (models, modelName, queryConfig) {
 
   router.route('/:id')
     .get(function (req, res) {
+      const options = {
+        allow_filtering: true,
+        ttl: 86400
+      };
       const query = buildQuery(req.query, queryConfig);
       models.instance[modelName]
-        .findOneAsync(Object.assign(query, { [queryConfig.uniqueKey]: models.timeuuidFromString(req.params.id) }))
+        .findOneAsync(Object.assign(query, { [queryConfig.uniqueKey]: models.timeuuidFromString(req.params.id) }), options)
         .then((row) => {
           if (!row || row === '') {
             throw new Error(`UUID ${req.params.id} not found`);

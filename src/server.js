@@ -157,7 +157,6 @@ app.use('/api/eval/subjects_dbpedia', modelRouter(evaluationModels, 'Subject_DBp
 app.use('/api/eval/subjects_wikidata', modelRouter(evaluationModels, 'Subject_Wikidata', subjectsQueryConfig));
 app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryConfig));
 app.use('/api/duplicates', modelRouter(datalakeModels, 'Duplicates', duplicateCandidatesQueryConfig));
-app.use('/api/new_duplicates', modelRouter(evaluationModels, 'DBpedia_WikiData_Duplicates', duplicateCandidatesQueryConfig));
 app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', blockingStatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 app.use('/api/wiki/linkedarticles', modelRouter(wikidumpsModels, 'LinkedArticles', linkedArticlesQueryConfig));

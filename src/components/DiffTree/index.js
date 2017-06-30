@@ -6,6 +6,7 @@ import theme from './theme';
 
 class DiffTree extends Component {
   flattenJSON(obj) {
+    if (obj === null || obj === undefined) return obj;
     if (typeof obj === 'string') return obj;
     if (obj instanceof Array) {
       if (obj.length === 1) return obj[0];
