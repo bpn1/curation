@@ -58,7 +58,7 @@ class SubjectTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.tableData) {
+    if (nextProps.tableData && nextProps.tableData !== this.props.tableData) {
       this.setState({
         tableData: this.extractProperties(nextProps.tableData, this.state.extractedProperties)
       });
