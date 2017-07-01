@@ -27,19 +27,13 @@ class InteractiveTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data) {
-      // if the data has changed, clear the selection
-      let selectedRows = this.state.selectedRows;
-      if (nextProps.data !== this.state.tableData) {
-        selectedRows = [];
-      }
-
+    // when the data changes, clear the selection and reset filters
+    if (nextProps.data && nextProps.data !== this.state.tableData) {
       const data = this.validateAndFixData(nextProps.data);
-
       this.setState({
         filteredData: data,
         tableData: data,
-        selectedRows
+        selectedRows: []
       });
     }
   }
@@ -86,7 +80,7 @@ class InteractiveTable extends Component {
   onRowSelection(rows) {
     const selectedRows = [];
 
-    this.state.tableData.forEach((row, i) => {
+    this.state.filteredData.forEach((row, i) => {
       row.selected = rows.indexOf(i) > -1;
       if (row.selected) {
         selectedRows.push(row);
