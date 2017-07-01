@@ -26,7 +26,7 @@ module.exports = function (models, modelName, queryConfig) {
           query[property] = { $in: splitParams };
         } else {
           if (schema()[property].type === 'uuid') {
-            query[property] = models.timeuuidFromString(getParams[property])
+            query[property] = models.timeuuidFromString(getParams[property]);
           } else {
             query[property] = getParams[property];
           }

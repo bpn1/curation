@@ -58,6 +58,11 @@ const findByNameExtension = path => ({
       ({ type: types.FIND, payload: axios.get(`${apiPath}${path}?name=${name}&` + countParam(count)) }),
     getById: id =>
       ({ type: types.GET_BY_ID, payload: axios.get(`${apiPath}${path}?id=${id}&` + countParam(1)) })
+<<<<<<< HEAD
+    getSome: ids => ({
+      type: types.GET_MULTIPLE,
+      payload: axios.all(ids.map(id => axios.get(`${apiPath}${path}?id=${id}&` + countParam(1))))
+    }),
   }),
   // parent initialState is overwritten, so define all needed here
   initialState:

@@ -103,9 +103,18 @@ export const commitExtension = (path) => ({
           status: { ...state.status, [types.GET]: statuses.READY }
         };
       case types.GET_MULTIPLE_FULFILLED:
+        // concat entities fetched with axios.all
+        const fetchedEntities = action.payload
+          .filter((payload, i) => {
+            if (payload.data[0] === undefined) {
+              console.warn(payload.config.url.split('=')[1].replace('&count', '') + ' was not found');
+            }
+            return payload.data[0] !== undefined;
+          })
+          .map(payload => payload.data[0]);
         return {
           ...state,
-          entities: Object.values(state.created).concat(action.payload.data
+          entities: Object.values(state.created).concat(fetchedEntities
             .map(entity => replaceWithStaged(entity, state.updated))
             .filter(entity => !(entity.id in state.deleted))),
           status: { ...state.status, [types.GET_MULTIPLE]: statuses.READY }

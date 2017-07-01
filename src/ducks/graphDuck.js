@@ -59,10 +59,8 @@ export default createDuck({ namespace: 'curation', store: 'graph', path: apiRout
   reducer: (state, action, { types }) => {
     switch (action.type) {
       case types.FETCH_RELATIONS_FULFILLED:
-        const keys = action.payload.config.url.split('=')[1].split(',');
-        const sourceKey = keys[0];
-        const targetKey = keys[1];
-        const { source, target } = extractSourceAndTarget(action.payload.data, sourceKey, targetKey);
+        const source = action.payload[0].data[0];
+        const target = action.payload[1].data[0];
         if (!source && !target) {
           return {
             ...state,
@@ -76,7 +74,7 @@ export default createDuck({ namespace: 'curation', store: 'graph', path: apiRout
 
         const relations = state.relations;
         const extractedRelations = extractRelations(source, target);
-        relations[[keys[0], keys[1]]] = extractedRelations;
+        relations[[source.id, target.id]] = extractedRelations;
         console.log('Extracted relations', extractedRelations);
         const subjects = Object.assign({}, state.subjects);
         subjects[source.id] = source;
@@ -102,7 +100,10 @@ export default createDuck({ namespace: 'curation', store: 'graph', path: apiRout
   creators: ({ types }) => ({
     fetchRelations: (sourceKey, targetKey) => ({
       type: types.FETCH_RELATIONS,
-      payload: axios.get(`${apiPath}${apiRoute}?id=${sourceKey},${targetKey}`)
+      payload: axios.all([
+        axios.get(`${apiPath}${apiRoute}?id=${sourceKey}&count=1`),
+        axios.get(`${apiPath}${apiRoute}?id=${targetKey}&count=1`)
+      ])
     }),
     updateRelations: (data) => {
       console.log('TODO implement updateRelations in graphDuck!');
