@@ -368,7 +368,6 @@ class SubjectTable extends Component {
     showSelectionGraph: () => {
       const selectedIDs = this.state.selectedRows.map(row => row.id);
       window.location.hash = '#/graphs?nodes=' + selectedIDs.join(',');
-      window.location.reload();
     },
     updateCount: (event, newValue) => {
       this.setState({ count: Number(newValue) });

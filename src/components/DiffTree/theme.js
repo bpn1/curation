@@ -1,7 +1,7 @@
 const theme = {
   scheme: 'monokai',
   author: 'wimer hazenberg (http://www.monokai.nl)',
-  base00: '#0000', //'#272822',
+  base00: '#0000', // '#272822',
   base01: '#383830',
   base02: '#49483e',
   base03: '#75715e',
@@ -14,7 +14,7 @@ const theme = {
   base0A: '#f4bf75',
   base0B: '#a6e22e',
   base0C: '#a1efe4',
-  base0D: '#66d9ef',
+  base0D: '#fff', // '#66d9ef',
   base0E: '#ae81ff',
   base0F: '#cc6633'
 };

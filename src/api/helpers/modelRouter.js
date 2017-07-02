@@ -20,12 +20,12 @@ module.exports = function (models, modelName, queryConfig) {
         // if ',' contained, split and search for each element
         if (getParams[property].indexOf(',') !== -1) {
           let splitParams = getParams[property].split(',');
-          if (schema()[property].type === 'uuid') {
+          if (schema()[property].type === 'uuid' || schema()[property].type === 'timeuuid') {
             splitParams = splitParams.map(models.timeuuidFromString);
           }
           query[property] = { $in: splitParams };
         } else {
-          if (schema()[property].type === 'uuid') {
+          if (schema()[property].type === 'uuid' || schema()[property].type === 'timeuuid') {
             query[property] = models.timeuuidFromString(getParams[property]);
           } else {
             query[property] = getParams[property];

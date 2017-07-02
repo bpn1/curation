@@ -39,6 +39,11 @@ const schemaConfig = [
     model: require('../models/VersionModel'),
     table_name: 'version'
   },
+  {
+    name: 'VersionDiffs',
+    model: require('../models/VersionDiffModel'),
+    table_name: 'versiondiff'
+  }
 ];
 
 module.exports = schemaConfig;

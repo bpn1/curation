@@ -241,7 +241,7 @@ class InteractiveTable extends Component {
                         (<div>
                           {!expandTreeByDefault && <a
                             onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, false)}
-                            style={{ textDecoration: 'underline' }}
+                            style={{ textDecoration: 'underline', cursor: 'pointer' }}
                           >
                             Collapse
                           </a>}
@@ -251,7 +251,7 @@ class InteractiveTable extends Component {
                       content =
                         (<a
                           onClick={evt => this.expandObject(evt, row[this.props.expandKey], header.key, true)}
-                          style={{ textDecoration: 'underline' }}
+                          style={{ textDecoration: 'underline', cursor: 'pointer' }}
                         >
                           {Object.keys(row[header.key]).length} values
                         </a>);

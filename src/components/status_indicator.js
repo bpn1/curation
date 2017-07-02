@@ -96,13 +96,15 @@ function mapStateToProps(state) {
       ...state.duplicate.status,
       ...state.subject.status,
       ...state.graph.status,
-      ...state.linkedArticles.status
+      ...state.linkedArticles.status,
+      ...state.versiondiff.status
     },
     error: {
       ...state.duplicate.error,
       ...state.subject.error,
       ...state.graph.error,
-      ...state.linkedArticles.error
+      ...state.linkedArticles.error,
+      ...state.versiondiff.error
     }
   };
 }

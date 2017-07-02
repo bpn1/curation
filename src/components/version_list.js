@@ -8,9 +8,11 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
-import { red600, orange600, grey600 } from 'material-ui/styles/colors';
+import { red600, orange600, grey600, teal600, yellow600 } from 'material-ui/styles/colors';
 import HistoryIcon from 'material-ui/svg-icons/action/history';
 import RestoreIcon from 'material-ui/svg-icons/action/settings-backup-restore';
+import ChangeIcon from 'material-ui/svg-icons/action/change-history';
+import ZoomIcon from 'material-ui/svg-icons/action/zoom-in';
 import MergeIcon from 'material-ui/svg-icons/editor/merge-type';
 import ExploreIcon from 'material-ui/svg-icons/action/explore';
 import BusinessIcon from 'material-ui/svg-icons/places/business-center';
@@ -42,6 +44,9 @@ class VersionList extends Component {
     this.openDialog = this.openDialog.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.restoreCurrentVersion = this.restoreCurrentVersion.bind(this);
+    this.findPreviousVersion = this.findPreviousVersion.bind(this);
+    this.computeDifference = this.computeDifference.bind(this);
+    this.showDifference = this.showDifference.bind(this);
   }
 
   componentDidMount() {
@@ -120,6 +125,32 @@ class VersionList extends Component {
     this.closeDialog();
   }
 
+  findPreviousVersion(newVersion) {
+    // TODO add to filter: && version.subjecttable === 'subject'
+    const olderVersions = this.state.versions
+      .filter(version => new Date(version.timestamp) < new Date(newVersion.timestamp))
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    // if there are no older versions, use the same key (caught in job)
+    return olderVersions.length > 0 ? olderVersions[0] : newVersion;
+  }
+
+  // navigate to /versiondiff to show VersionDiffCard
+  showDifference() {
+    const newVersion = this.state.selectedVersion;
+    const oldVersion = this.findPreviousVersion(newVersion);
+    window.location.hash = '#/versiondiff?versions=' + oldVersion.version + ',' + newVersion.version;
+    this.closeDialog();
+  }
+
+  computeDifference() {
+    // start Spark job for calculating the VersionDiff
+    const newVersion = this.state.selectedVersion;
+    const oldVersion = this.findPreviousVersion(newVersion);
+    this.props.actions.version.computeDifference(newVersion.version, oldVersion.version);
+    this.closeDialog();
+  }
+
   render() {
     const versions = this.processVersions(this.state.versions);
     const sortedVersionKeys = Object.keys(versions)
@@ -166,6 +197,18 @@ class VersionList extends Component {
           actions={[
             <FlatButton label="Cancel" primary={false} onTouchTap={this.closeDialog} keyboardFocused />,
             <FlatButton
+              label="Show difference"
+              icon={<ZoomIcon />}
+              style={{ color: yellow600, marginLeft: 5 }}
+              onTouchTap={this.showDifference}
+            />,
+            <FlatButton
+              label="Compute difference"
+              icon={<ChangeIcon />}
+              style={{ color: teal600, marginLeft: 5 }}
+              onTouchTap={this.computeDifference}
+            />,
+            <FlatButton
               label="Restore"
               icon={<RestoreIcon />}
               style={{ color: red600, marginLeft: 5 }}
@@ -191,7 +234,8 @@ VersionList.propTypes = {
   actions: PropTypes.shape({
     version: PropTypes.shape({
       fetch: PropTypes.func,
-      restoreVersion: PropTypes.func
+      restoreVersion: PropTypes.func,
+      computeDifference: PropTypes.func
     })
   }).isRequired,
   height: PropTypes.number

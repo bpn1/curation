@@ -22,6 +22,7 @@ const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCand
 const blockingStatsQueryConfig = require('./api/queryConfigs/blockingstats');
 const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats');
 const linkedArticlesQueryConfig = require('./api/queryConfigs/linkedArticles');
+const versionDiffsQueryConfig = require('./api/queryConfigs/versiondiffs');
 
 // setup cassandra ORM
 const datalakeModels = modelLoader(datalakeConfig, datalakeSchemaConfig);
@@ -159,6 +160,7 @@ app.use('/api/versions', modelRouter(datalakeModels, 'Version', versionsQueryCon
 app.use('/api/duplicates', modelRouter(datalakeModels, 'Duplicates', duplicateCandidatesQueryConfig));
 app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', blockingStatsQueryConfig));
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
+app.use('/api/versiondiffs', modelRouter(datalakeModels, 'VersionDiffs', versionDiffsQueryConfig));
 app.use('/api/wiki/linkedarticles', modelRouter(wikidumpsModels, 'LinkedArticles', linkedArticlesQueryConfig));
 app.use('/api/wiki/classifierstats', modelRouter(wikidumpsModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 

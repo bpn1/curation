@@ -8,6 +8,7 @@ import hashHistory from 'react-router/es/hashHistory';
 import MainLayout from './layout';
 import SubjectsTableCard from './views/subjectsTableCard';
 import VersionCard from './views/versionCard';
+import VersionDiffCard from './views/versionDiffCard';
 import BlockingStatisticsCard from './views/blockingStatisticsCard';
 import SimMeasureStatisticsCard from './views/simMeasureStatisticsCard';
 import GraphsCard from './views/graphsCard';
@@ -22,6 +23,7 @@ const Root = ({ store }) => (
         <Route path="/" component={SubjectsTableCard} />
         <Route path="/duplicates" component={DuplicateTableCard} />
         <Route path="/versions" component={VersionCard} />
+        <Route path="/versiondiff" component={VersionDiffCard} />
         <Route path="statistics/blocking" component={BlockingStatisticsCard} />
         <Route path="statistics/simmeasure" component={SimMeasureStatisticsCard} />
         <Route path="/graphs" component={GraphsCard} />
