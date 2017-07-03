@@ -14,7 +14,7 @@ import GraphConfig from './graph_config';
 
 import {
   dataSources, validCategories, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE,
-  SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE, EMPTY_SUBTYPE
+  SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE, EMPTY_SUBTYPE, MASTER_SUBTYPE
 } from './constants';
 
 const centerPointOffset = { x: 650, y: 650 };
@@ -407,7 +407,7 @@ class GraphEditor extends Component {
       if (!neighborSubject.relations) return false;
       return (Object.keys(neighborSubject.relations).filter(target => target === subject.id).length > 0);
     },
-    edgesByDataSource: (edge, nodes) => {
+    masterEdgesByDataSource: (edge, nodes) => {
       const sourceNodes = nodes.filter(node => this.filters.nodesByKey(node, edge.source));
       const targetNodes = nodes.filter(node => this.filters.nodesByKey(node, edge.target));
 
@@ -415,7 +415,8 @@ class GraphEditor extends Component {
         sourceNodes.length !== 0 && targetNodes.length !== 0 &&
         sourceNodes[0] && targetNodes[0] &&
         this.isDataSourceShown(sourceNodes[0].subtype) &&
-        this.isDataSourceShown(targetNodes[0].subtype)
+        this.isDataSourceShown(targetNodes[0].subtype) &&
+        (sourceNodes[0].subtype === MASTER_SUBTYPE || targetNodes[0].subtype === MASTER_SUBTYPE)
       );
     }
   };
@@ -425,7 +426,8 @@ class GraphEditor extends Component {
     let nodes = this.state.graph.nodes.slice();
     const edges = this.state.graph.edges.slice()
       .filter(edge => (
-        this.filters.edgesByDataSource(edge, nodes) && this.state.edgeFilter(edge)
+        this.filters.masterEdgesByDataSource(edge, nodes) &&
+        this.state.edgeFilter(edge)
       ));
 
     nodes = nodes.filter(this.filters.nodesByDataSource);

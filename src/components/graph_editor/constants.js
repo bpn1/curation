@@ -25,9 +25,9 @@ export const NODE_KEY = 'id'; // Key used to identify nodes
 export const validCategories = [ORGANIZATION_TYPE, BUSINESS_TYPE, PERSON_TYPE, CITY_TYPE];
 
 export const dataSources = [
-  { type: EMPTY_SUBTYPE, color: '200, 0, 170', name: 'None' },
   { type: MASTER_SUBTYPE, color: '200, 70, 70', name: 'Master' },
   { type: IMPLISENSE_SUBTYPE, color: '74, 138, 184', name: 'ImpliSense' },
   { type: WIKIDATA_SUBTYPE, color: '51, 153, 103', name: 'WikiData' },
-  { type: DBPEDIA_SUBTYPE, color: '249, 159, 29', name: 'DBpedia' }
+  { type: DBPEDIA_SUBTYPE, color: '249, 159, 29', name: 'DBpedia' },
+  { type: EMPTY_SUBTYPE, color: '200, 0, 170', name: 'None' }
 ];
