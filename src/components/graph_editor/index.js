@@ -129,13 +129,7 @@ class GraphEditor extends Component {
   }
 
   extractNode(subject) {
-    // extract data source from name history
-    // TODO do this using given data source later
-    let dataSource = subject.name_history && subject.name_history.length > 0
-      ? subject.name_history[0].datasources[0]
-      : 'empty';
-
-    dataSource = dataSource.split('_')[0] + SUBTYPE_POSTFIX;
+    let dataSource = subject.datasource + SUBTYPE_POSTFIX;
 
     if (dataSources.filter(source => source.type === dataSource).length === 0) {
       console.error('Data source ' + dataSource + ' not found!');
