@@ -41,8 +41,8 @@ function replaceWithStaged(entity, staged, stagedAlternative) {
   return entity;
 }
 
-export const commitExtension = (path) => ({
-  types: ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE'],
+export const commitExtension = path => ({
+  types: ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE', 'RESET'],
 
   // TODO handle status of mutliple actions started simultaneously
 
@@ -78,6 +78,16 @@ export const commitExtension = (path) => ({
           status: { ...state.status, [types.DELETE]: statuses.SAVED },
           deleted,
           entities: state.entities.filter(entity => !(entity.id in deleted))
+        };
+      case types.RESET:
+        return {
+          status: {},
+          error: {},
+          entities: [],
+          editableSubjects: {},
+          created: {},
+          deleted: {},
+          updated: {}
         };
       case types.FETCH_FULFILLED:
         return {
@@ -136,6 +146,7 @@ export const commitExtension = (path) => ({
     create: newObj => ({ type: types.CREATE, createdObj: newObj }),
     update: newObj => ({ type: types.UPDATE, updatedObj: newObj }),
     delete: objs => ({ type: types.DELETE, deletedObjs: objs }),
+    reset: () => ({ type: types.RESET })
   }),
   // parent initialState is overwritten, so define all needed here
   initialState:

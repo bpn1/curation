@@ -5,13 +5,16 @@ import connect from 'react-redux/es/connect/connect';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import { Grid, Row } from 'react-flexbox-grid';
-import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
+import Snackbar from 'material-ui/Snackbar';
 import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
 
 import { materialIcon, count } from '../helpers/index';
 import SubjectDialog from './subject_dialog';
+import { subjects } from '../ducks/subjectDuck';
 
 const changeCountStyle = {
   marginRight: 8,
@@ -45,6 +48,7 @@ class CommitIndicator extends Component {
     this.state = {
       open: false,
       editorOpen: false,
+      snackbarOpen: false,
     };
   }
 
@@ -63,6 +67,13 @@ class CommitIndicator extends Component {
   };
 
   handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  handleCommit = () => {
+    this.props.actions.subject.reset();
     this.setState({
       open: false,
     });
@@ -185,6 +196,7 @@ class CommitIndicator extends Component {
               label="Commit"
               type="submit"
               disabled={totalCount === 0}
+              onTouchTap={this.handleCommit}
             />
           </div>
         </Dialog>
@@ -211,7 +223,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: {}
+    actions: {
+      subject: bindActionCreators(subjects.creators, dispatch)
+    }
   };
 }
 
