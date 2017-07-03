@@ -22,10 +22,8 @@ const clusterRadius = 225;
 const clusterColumnCount = 3;
 
 const defaultLoadKeys = [
-  'c9f222a1-64d6-488e-9c15-a12d5abae400',
-  '21a9baad-2c0a-474e-b3a7-c3ea31be7e3c',
-  '08391b72-d43b-4ed0-a0aa-9a18a97dce4a',
-  '95465e29-1049-4a47-9d1f-3aa135485667'
+  '2078fc19-db2c-4b08-b5bc-8a757164317c',
+  '1cca8348-5bc0-4303-8aec-1dafac183127'
 ];
 
 class GraphEditor extends Component {
@@ -100,10 +98,11 @@ class GraphEditor extends Component {
     centerSubjects.forEach((centerSubject) => {
       const centerNode = this.extractNode(centerSubject);
 
-      // filter out neighbors of current node that haven't been added to the graph yet
+      // filter out neighbors of current node that haven't been added to the graph yet and all centers
       const neighborNodes = neighborSubjects
         .filter(subject => this.filters.subjectsByNeighbor(subject, centerSubject))
         .filter(subject => nodes.filter(node => node[NODE_KEY] === subject.id).length === 0)
+        .filter(subject => centerSubjects.filter(center => subject.id === center.id).length === 0)
         .map(this.extractNode);
 
       const centerPoint = {
