@@ -87,7 +87,7 @@
     "webpack-config-utils": "^2.3.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-dev-server": "^2.5.0",
-    "webpack-hot-middleware": "^2.18.0"
+    "webpack-hot-middleware": "^2.18.1"
   },
   "scripts": {
     "prebuild": "rimraf dist",
