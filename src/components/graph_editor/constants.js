@@ -9,7 +9,7 @@ export const PERSON_TYPE = 'person';
 export const CITY_TYPE = 'city';
 export const SPECIAL_TYPE = 'special';
 export const EMPTY_SUBTYPE = 'emptyChild';
-export const MERGING_SUBTYPE = 'mergingChild';
+export const MASTER_SUBTYPE = 'masterChild';
 export const IMPLISENSE_SUBTYPE = 'implisenseChild';
 export const WIKIDATA_SUBTYPE = 'wikidataChild';
 export const DBPEDIA_SUBTYPE = 'dbpediaChild';
@@ -25,8 +25,8 @@ export const NODE_KEY = 'id'; // Key used to identify nodes
 export const validCategories = [ORGANIZATION_TYPE, BUSINESS_TYPE, PERSON_TYPE, CITY_TYPE];
 
 export const dataSources = [
-  { type: EMPTY_SUBTYPE, color: '200, 70, 70', name: 'None' },
-  { type: MERGING_SUBTYPE, color: '200, 0, 170', name: 'Merging' },
+  { type: EMPTY_SUBTYPE, color: '200, 0, 170', name: 'None' },
+  { type: MASTER_SUBTYPE, color: '200, 70, 70', name: 'Master' },
   { type: IMPLISENSE_SUBTYPE, color: '74, 138, 184', name: 'ImpliSense' },
   { type: WIKIDATA_SUBTYPE, color: '51, 153, 103', name: 'WikiData' },
   { type: DBPEDIA_SUBTYPE, color: '249, 159, 29', name: 'DBpedia' }
