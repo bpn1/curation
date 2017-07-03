@@ -84,7 +84,7 @@ class SubjectEditor extends Component {
   reload(id) {
     console.log('Load subject #', id);
     if (id && this.props.editorType !== 'new') {
-      this.props.actions.subject.get(id);
+      this.props.actions.subject.getById(id);
     }
   }
 

@@ -102,6 +102,14 @@ export const commitExtension = (path) => ({
           editableSubjects: { ...state.editableSubjects, ...convertToEditable(getEntity) },
           status: { ...state.status, [types.GET]: statuses.READY }
         };
+      case types.GET_BY_ID_FULFILLED:
+        const getIdEntity = Object.assign({}, replaceWithStaged(action.payload.data[0], state.updated, state.created));
+        return {
+          ...state,
+          entity: getIdEntity,
+          editableSubjects: { ...state.editableSubjects, ...convertToEditable(getIdEntity) },
+          status: { ...state.status, [types.GET_BY_ID]: statuses.READY }
+        };
       case types.GET_MULTIPLE_FULFILLED:
         // concat entities fetched with axios.all
         const fetchedEntities = action.payload
