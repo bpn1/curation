@@ -37,7 +37,7 @@ class RelationEditor extends Component {
   }
 
   componentDidMount() {
-    this.reload();
+    this.reload(this.props.sourceKey, this.props.targetKey);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,7 +45,7 @@ class RelationEditor extends Component {
 
     // reload if one of the edge keys has changed
     if (nextProps.sourceKey !== this.props.sourceKey || nextProps.targetKey !== this.props.targetKey) {
-      this.reload();
+      this.reload(nextProps.sourceKey, nextProps.targetKey);
       this.props.reset();
       nextState.sourceKey = nextProps.sourceKey;
       nextState.targetKey = nextProps.targetKey;
@@ -57,9 +57,9 @@ class RelationEditor extends Component {
     this.setState(nextState);
   }
 
-  reload() {
-    console.log('Load relations for', this.state.sourceKey, '->', this.state.targetKey);
-    this.props.actions.graph.fetchRelations(this.state.sourceKey, this.state.targetKey);
+  reload(sourceKey, targetKey) {
+    console.log('Load relations for', sourceKey, '->', targetKey);
+    this.props.actions.graph.fetchRelations(sourceKey, targetKey);
   }
 
   handleSubmit(data) {
