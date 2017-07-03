@@ -302,7 +302,7 @@ class SubjectTable extends Component {
       this.setState({ selectedRows });
     },
     reloadSubjects: () => {
-      this.props.actions.subject.fetch();
+      this.props.actions.subject.fetchOnlyMaster();
     },
     addSubject: () => {
       this.refs.subjectDialog.setState({ id: null, type: 'new' });
@@ -443,7 +443,7 @@ function mapStateToProps(state) {
     || state.subject.status[subjectFindTag] === statuses.LOADING;
 
   return {
-    tableData: tableData,
+    tableData: tableData.filter(row => row.datasource === 'master'),
     error: state.subject.error,
     // TODO does not work for duplicates because status is cleared before finishing all tasks
     loading: isLoading

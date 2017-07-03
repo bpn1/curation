@@ -27,7 +27,7 @@ class DiffTree extends Component {
   }
 
   render() {
-    const json = this.flattenJSON(this.props.json);
+    const json = this.flattenJSON(Object.assign({}, this.props.json));
 
     return (
       // TODO custom styling: add + and - icons, color accordingly for changes

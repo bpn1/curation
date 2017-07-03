@@ -55,7 +55,12 @@ const findByNameExtension = path => ({
 
   creators: ({ types }) => ({
     findByName: (name, count) =>
-      ({ type: types.FIND, payload: axios.get(`${apiPath}${path}?name=${name}&` + countParam(count)) }),
+      ({ type: types.FIND,
+        payload: axios.get(`${apiPath}${path}?name=${name}&` + countParam(count)) }),
+    fetchOnlyMaster: count => ({
+      type: types.FETCH,
+      payload: axios.get(`${apiPath}${path}?datasource=master&` + countParam(count))
+    }),
     getById: id =>
       ({ type: types.GET_BY_ID, payload: axios.get(`${apiPath}${path}?id=${id}&` + countParam(1)) }),
     getSome: ids => ({
