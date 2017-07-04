@@ -162,6 +162,7 @@ app.use('/api/blockingstats', modelRouter(datalakeModels, 'BlockingStats', block
 app.use('/api/simstats', modelRouter(evaluationModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 app.use('/api/versiondiffs', modelRouter(datalakeModels, 'VersionDiffs', versionDiffsQueryConfig));
 app.use('/api/wiki/linkedarticles', modelRouter(wikidumpsModels, 'LinkedArticles', linkedArticlesQueryConfig));
+app.use('/api/wiki/linkedarticles_new', modelRouter(wikidumpsModels, 'LinkedArticles_New', linkedArticlesQueryConfig));
 app.use('/api/wiki/classifierstats', modelRouter(wikidumpsModels, 'SimMeasureStats', simMeasureStatsQueryConfig));
 
 app.listen(port, '0.0.0.0', function onStart(err) {
