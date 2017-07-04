@@ -3,7 +3,7 @@ import connect from 'react-redux/es/connect/connect';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import PropTypes from 'prop-types';
 import muiThemable from 'material-ui/styles/muiThemeable';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
@@ -14,8 +14,7 @@ import toggleSideNav from '../../actions/index';
 class ToolBar extends Component {
   render() {
     const toolbarStyle = {
-      backgroundColor: this.props.muiTheme.palette.canvasColor,
-      //height: this.props.muiTheme.appBar.height
+      backgroundColor: this.props.muiTheme.palette.canvasColor
     };
 
     return (
@@ -23,10 +22,16 @@ class ToolBar extends Component {
         <Toolbar className={styles.toolbar} style={toolbarStyle}>
           <ToolbarGroup>
             <IconButton onTouchTap={() => this.props.toggleSideNav()}>
-              <MenuIcon className={this.props.showSideNav ? styles.rotate : ''} />
+              <MenuIcon
+                color={this.props.muiTheme.palette.textColor}
+                className={this.props.showSideNav ? styles.rotate : ''}
+              />
             </IconButton>
           </ToolbarGroup>
-          <ToolbarGroup className={styles.rightGroup}>
+          <ToolbarGroup>
+            <ToolbarTitle text="Curation" style={{ color: this.props.muiTheme.palette.textColor }} />
+          </ToolbarGroup>
+          <ToolbarGroup>
             {this.props.children}
           </ToolbarGroup>
         </Toolbar>

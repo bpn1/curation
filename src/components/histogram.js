@@ -10,13 +10,15 @@ import Line from 'recharts/es6/cartesian/Line';
 import Legend from 'recharts/es6/component/Legend';
 
 const lineColors = ['#F44336', '#2196F3', '#FF9800', '#9C27B0'];
+const darkStrokeColor='#555';
+const lightStrokeColor='#ccc';
 const Histogram = ({ data, nameKey, keyList, height, domain, xLabel, yLabel, showLabels, showGrid, showDots }) => (
   <ResponsiveContainer height={height}>
     <LineChart
       data={data}
       margin={{ top: 20, right: 80, left: 10, bottom: 0 }}
     >
-      { showGrid ? <CartesianGrid stroke="#555" strokeDasharray="3 3" /> : '' }
+      { showGrid && <CartesianGrid stroke={lightStrokeColor} strokeDasharray="3 3" /> }
       <XAxis label={xLabel} dataKey={nameKey} />
       <YAxis label={yLabel} domain={domain} />
       <Tooltip labelStyle={{ color: '#000' }} label="" />

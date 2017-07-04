@@ -120,6 +120,7 @@ class APIHistogram extends Component {
               autoWidth
               value={this.histogramIdToKey(this.state.histogramId)}
               onChange={this.onDropDownChange}
+              selectedMenuItemStyle={{fontWeight: 'bold'}}
             >
               {
                 this.props.statsIds !== undefined

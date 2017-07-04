@@ -167,8 +167,8 @@ class InteractiveTable extends Component {
             hintText={'Filter...'}
             floatingLabelText={name}
             floatingLabelFixed={false}
-            floatingLabelStyle={{ color: colors.interactiveColor1, fontWeight: 'bold' }}
-            floatingLabelFocusStyle={{ color: colors.interactiveColor1, fontWeight: 'normal' }}
+            floatingLabelStyle={{ color: colors.accent1Color, fontWeight: 'bold' }}
+            floatingLabelFocusStyle={{ color: colors.accent1Color, fontWeight: 'normal' }}
             value={filterValue}
             onChange={this.onFilterChange.bind(this, key)}
           />

@@ -81,7 +81,7 @@ class CommitIndicator extends Component {
 
   addIcon = materialIcon('add_box', this.props.muiTheme.palette.positiveColor1);
   warningIcon = materialIcon('warning');
-  updateIcon = materialIcon('mode_edit', this.props.muiTheme.palette.primary1Color);
+  updateIcon = materialIcon('mode_edit', this.props.muiTheme.palette.interactiveColor1);
   deleteIcon = materialIcon('delete', this.props.muiTheme.palette.negativeColor1);
 
   openEditor = (id, stage) => {
@@ -94,7 +94,7 @@ class CommitIndicator extends Component {
       return this.props.muiTheme.palette.positiveColor1;
     }
     if (type === 'updated') {
-      return this.props.muiTheme.palette.primary1Color;
+      return this.props.muiTheme.palette.interactiveColor1;
     }
     if (type === 'deleted') {
       return this.props.muiTheme.palette.negativeColor1;
@@ -191,7 +191,7 @@ class CommitIndicator extends Component {
           <div style={{ textAlign: 'right' }}>
             <RaisedButton
               style={{ marginTop: 10 }}
-              primary
+              backgroundColor={this.props.muiTheme.palette.interactiveColor1}
               icon={this.warningIcon}
               label="Commit"
               type="submit"

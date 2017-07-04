@@ -489,10 +489,9 @@ class GraphEditor extends Component {
     const NodeSubtypes = GraphConfig.NodeSubtypes;
     const EdgeTypes = GraphConfig.EdgeTypes;
 
-    const componentHeight = (window.innerHeight * (3 / 4)).toString() + 'px';
     const graphStyle = {
-      height: componentHeight,
-      background: '#303030'
+      height: this.props.height,
+      background: '#fff' //'#303030'
     };
 
     const legendEntryStyle = (color, subtype) => ({
@@ -503,7 +502,7 @@ class GraphEditor extends Component {
     });
     const controlsStyle = {
       position: 'fixed',
-      backgroundColor: 'rgba(33, 33, 33, 0.5)',
+      backgroundColor: 'rgba(222, 222, 222, 0.5)', // 'rgba(33, 33, 33, 0.5)',
       border: '1px solid #333',
       borderRadius: 15,
       padding: 10

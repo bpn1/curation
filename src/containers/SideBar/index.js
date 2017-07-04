@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
+import muiThemeable from "material-ui/styles/muiThemeable";
 import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
@@ -20,6 +21,7 @@ import toggleSideNav from '../../actions/index';
 import styles from './sidebar.css';
 import { layoutBreakpoint } from '../../layout';
 import image from '../../../logo.png';
+
 import { commerzbankYellow } from '../../themes/curation';
 import { grey700 } from 'material-ui/styles/colors';
 
@@ -48,7 +50,7 @@ function wrapState(ComposedComponent) {
         <ComposedComponent
           value={this.state.selectedIndex}
           onChange={this.handleRequestChange}
-          selectedItemStyle={{ color: commerzbankYellow, backgroundColor: grey700 }}
+          selectedItemStyle={this.props.selectedItemStyle}
         >
           {this.props.children}
         </ComposedComponent>
@@ -63,24 +65,30 @@ class SideBar extends Component {
   render() {
     // responsive sidebar styling
     const sideBarStyle = window.matchMedia(layoutBreakpoint).matches ?
-                                    { top: 'auto', position: 'relative', width: '100%', boxShadow: 'none' } :
-                                    { position: 'absolute', top: 'auto', boxShadow: 'none' };
+      { top: 'auto', position: 'relative', width: '100%', boxShadow: 'none' } :
+      { position: 'absolute', top: 'auto', boxShadow: 'none' };
     const overlayClass = !window.matchMedia(layoutBreakpoint).matches && this.props.showSideNav ?
-                                    styles.shadowedOverlay : styles.transparentOverlay;
+      styles.shadowedOverlay : styles.transparentOverlay;
+    const selectedItemStyle = {
+      backgroundColor: this.props.muiTheme.palette.selectedListItemColor
+    };
     return (
       <div className={styles.sidebarWrapper}>
-        <div className={overlayClass} onClick={() => this.props.toggleSideNav()} />
+        <div className={overlayClass} onClick={() => this.props.toggleSideNav()}/>
         <Drawer
           docked
           open={this.props.showSideNav}
           className={this.props.showSideNav && window.matchMedia(layoutBreakpoint).matches ? // The sidebar should not
-              styles.sideBarOpen : styles.sideBarClosed} // take any width in parent container on mobile devices
+            styles.sideBarOpen : styles.sideBarClosed} // take any width in parent container on mobile devices
           containerClassName={styles.sideNav}
-          containerStyle={sideBarStyle}
+          containerStyle={Object.assign(sideBarStyle, { backgroundColor: this.props.muiTheme.palette.backgroundColor })}
         >
           { !window.matchMedia(layoutBreakpoint).matches &&
             <div className={styles.avatarContainer}> <Avatar size={80} src={image} /> </div> }
-          <SelectableList defaultValue={1} onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
+          <SelectableList
+              defaultValue={1}
+              selectedItemStyle={selectedItemStyle}
+              onClick={window.matchMedia(layoutBreakpoint).matches ? () => {} : () => this.props.toggleSideNav()}>
             <ListItem value={1} primaryText="Subjects" containerElement={<Link to={'/'} />} leftIcon={<ContentInbox />} />
             <ListItem value={2} primaryText="Versions" containerElement={<Link to={'/versions'} />} leftIcon={<ActionHistory />} />
             <ListItem value={3} primaryText="Graphs" containerElement={<Link to={'/graphs'} />} leftIcon={<GraphIcon />} />
@@ -115,4 +123,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ toggleSideNav: toggleSideNav }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideBar);
+export default connect(mapStateToProps, mapDispatchToProps)(muiThemeable()(SideBar));
