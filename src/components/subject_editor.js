@@ -250,12 +250,6 @@ class SubjectEditor extends Component {
                     <MenuItem value="city" primaryText="City" />
                     <MenuItem value="person" primaryText="Person" />
                   </Field>
-                </InputListItem>,
-                <InputListItem key={'listItem' + 4}>
-                  <Field
-                    name="isMaster" label="Master node"
-                    component={this.renderCheckbox} style={this.styles.checkBox}
-                  />
                 </InputListItem>
               ]}
             />
