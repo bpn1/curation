@@ -414,6 +414,7 @@ SubjectTable.defaultProps = {
 
 SubjectTable.propTypes = {
   height: PropTypes.number.isRequired,
+  type: PropTypes.string.isRequired,
   fetchOnMount: PropTypes.bool,
   showNameFilter: PropTypes.bool,
   headers: PropTypes.array
@@ -430,11 +431,19 @@ const CustomButton = ({ tooltip, onClick, children, visible = true }) => (visibl
   </IconButton>);
 
 /* connection to Redux */
-function mapStateToProps(state) {
-  const tableData = state.subject.entities;
+function mapStateToProps(state, ownProps) {
+  const duplicateScoresLoaded =
+    state.duplicate.store && state.duplicate.store.candidateScores
+    && Object.keys(state.duplicate.store.candidateScores).length > 0;
+
+  let tableData = state.subject.entities;
   // load candidateScores from duplicate.store
-  if (tableData && state.duplicate.store && state.duplicate.store.candidateScores) {
+  if (tableData && ownProps.type === 'duplicates' && duplicateScoresLoaded) {
     tableData.forEach(subject => subject.candidateScore = state.duplicate.store.candidateScores[subject.id]);
+  }
+
+  if (ownProps.type === 'subjects') {
+    tableData = tableData.filter(row => row.datasource === 'master');
   }
 
   const subjectFetchTag = 'curation/subject/FETCH';
@@ -443,7 +452,7 @@ function mapStateToProps(state) {
     || state.subject.status[subjectFindTag] === statuses.LOADING;
 
   return {
-    tableData: tableData.filter(row => row.datasource === 'master'),
+    tableData: tableData,
     error: state.subject.error,
     // TODO does not work for duplicates because status is cleared before finishing all tasks
     loading: isLoading

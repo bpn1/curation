@@ -45,7 +45,7 @@ class DuplicateTable extends Component {
     const id = this.state.tableData[rowNumber].subject_id;
     const datasource = this.state.tableData[rowNumber].datasource;
     const candidateIds = [];
-    const candidateScores = [];
+    const candidateScores = {};
     this.state.tableData[rowNumber].candidates.forEach((entry) => {
       candidateIds.push(entry.id);
       candidateScores[entry.id] = entry.score;

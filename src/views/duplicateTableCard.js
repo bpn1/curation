@@ -35,6 +35,7 @@ class DuplicateTableCard extends Component {
                 fetchOnMount={false}
                 showNameFilter={false}
                 headers={headers}
+                type="duplicates"
               />
             </ContentCard>
           </Col>

@@ -121,10 +121,14 @@ export const commitExtension = path => ({
           status: { ...state.status, [types.GET_BY_ID]: statuses.READY }
         };
       case types.GET_MULTIPLE_FULFILLED:
+        let fetchedData = action.payload;
+        if (!(fetchedData instanceof Array)) {
+          fetchedData = [fetchedData];
+        }
         // concat entities fetched with axios.all
-        const fetchedEntities = action.payload
-          .filter((payload, i) => {
-            if (payload.data[0] === undefined) {
+        const fetchedEntities = fetchedData
+          .filter((payload) => {
+            if (payload && payload.data && payload.data[0] === undefined) {
               console.warn(payload.config.url.split('=')[1].replace('&count', '') + ' was not found');
             }
             return payload.data[0] !== undefined;

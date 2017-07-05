@@ -10,7 +10,7 @@ class SubjectsTableCard extends Component {
     const topAndBottomPadding = 2 * 16;
     return (
       <ContentCard>
-        <SubjectTable height={this.props.size.height - topAndBottomPadding} />
+        <SubjectTable type="subjects" height={this.props.size.height - topAndBottomPadding} />
       </ContentCard>
     );
   }
