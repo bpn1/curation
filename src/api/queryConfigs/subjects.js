@@ -11,6 +11,12 @@ const queryConfig = {
         select: ['master', 'id', 'datasource', 'name', 'aliases', 'category', 'properties', 'relations']
       }
     },
+    {
+      name: 'onlyMasterName',
+      options: {
+        select: ['master', 'name']
+      }
+    },
   ]
 };
 

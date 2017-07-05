@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
+import axios from 'axios';
 
 import GraphView from 'react-digraph';
 import Checkbox from 'material-ui/Checkbox';
@@ -25,6 +26,12 @@ const defaultLoadKeys = [
   '2078fc19-db2c-4b08-b5bc-8a757164317c',
   '1cca8348-5bc0-4303-8aec-1dafac183127'
 ];
+
+function sortByName(a, b) {
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+  return 0;
+}
 
 class GraphEditor extends Component {
 
@@ -52,6 +59,9 @@ class GraphEditor extends Component {
       edgeFilter: this.filters.allEdges,
       dataSourceVisibility: {},
       searchInput: '',
+      addInput: '',
+      addNodes: [],
+      autoCompleteTimerId: null,
       loadKeys: loadKeys,
       centerSubjects: [],
       neighborSubjects: [],
@@ -450,6 +460,13 @@ class GraphEditor extends Component {
     }));
   }
 
+  loadSubjectSuggestions(addInput) {
+    axios.get(`/api/subjects?onlyMasterName&datasource=master&name=${addInput}&count=50`).then((res, err) => {
+      res.data.sort(sortByName);
+      this.setState({ addNodes: res.data });
+    });
+  }
+
   listeners = {
     handleNeighborEdgesCheck: (event, isInputChecked) => this.setState({
       showAllEdges: isInputChecked,
@@ -475,6 +492,21 @@ class GraphEditor extends Component {
     handleSearchFocus: () => {
       // clear search field when clicked
       this.setState({ searchInput: '' });
+    },
+    handleAddRequest: (addInput, index) => {
+      // disable enter to search feature => must select from list
+      if (index < 0 || !addInput.hasOwnProperty('master')) return;
+
+      this.loadGraph(this.state.centerKeys.concat(addInput.master));
+    },
+    handleAddUpdate: (addInput) => {
+      clearTimeout(this.state.autoCompleteTimerId);
+      const autoCompleteTimerId = setTimeout(() => this.loadSubjectSuggestions(addInput), 1000);
+      this.setState({ addInput, autoCompleteTimerId });
+    },
+    handleAddFocus: () => {
+      // clear search field when clicked
+      this.setState({ addInput: '' });
     }
   };
 
@@ -491,7 +523,7 @@ class GraphEditor extends Component {
 
     const graphStyle = {
       height: this.props.height,
-      background: '#fff' //'#303030'
+      background: '#fff' // '#303030'
     };
 
     const legendEntryStyle = (color, subtype) => ({
@@ -517,10 +549,26 @@ class GraphEditor extends Component {
             style={{ position: 'relative', top: 7 }}
           />
           <AutoComplete
+            onFocus={this.listeners.handleAddFocus}
+            onUpdateInput={this.listeners.handleAddUpdate}
+            searchText={this.state.addInput}
+            hintText="Search business..."
+            filter={AutoComplete.caseInsensitiveFilter}
+            openOnFocus
+            onNewRequest={this.listeners.handleAddRequest}
+            dataSource={this.state.addNodes}
+            dataSourceConfig={{
+              text: 'name',
+              value: 'master'
+            }}
+            maxSearchResults={15}
+          />
+          {/* Enable for search in graph
+             <AutoComplete
             onFocus={this.listeners.handleSearchFocus}
             onUpdateInput={this.listeners.handleSearchUpdate}
             searchText={this.state.searchInput}
-            hintText="Search..."
+            hintText="Search in graph..."
             filter={AutoComplete.caseInsensitiveFilter}
             openOnFocus
             onNewRequest={this.listeners.handleSearchRequest}
@@ -530,7 +578,7 @@ class GraphEditor extends Component {
               value: 'key'
             }}
             maxSearchResults={15}
-          />
+          />*/}
           <Checkbox
             label="Neighbor edges"
             defaultChecked
