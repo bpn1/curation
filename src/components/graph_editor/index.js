@@ -104,6 +104,8 @@ class GraphEditor extends Component {
     const centerKeys = [];
     let clusterIndex = 0;
     let nodes = [];
+    const currentRowOffset = { x: 0, y: 0 };
+    const previousRowOffset = { x: 0, y: 0 };
 
     centerSubjects.forEach((centerSubject) => {
       const centerNode = this.extractNode(centerSubject);
@@ -115,6 +117,12 @@ class GraphEditor extends Component {
         .filter(subject => centerSubjects.filter(center => subject.id === center.id).length === 0)
         .map(this.extractNode);
 
+      if (clusterIndex % clusterColumnCount === 0) {
+        previousRowOffset.y = currentRowOffset.y;
+        currentRowOffset.x = 0;
+        currentRowOffset.y = 0;
+      }
+
       const centerPoint = {
         x: (clusterIndex % clusterColumnCount) * centerPointOffset.x,
         y: Math.floor(clusterIndex / clusterColumnCount) * centerPointOffset.y
@@ -124,7 +132,17 @@ class GraphEditor extends Component {
       const centerNodeIsDuplicate = nodes.filter(node => node[NODE_KEY] === centerNode.id).length !== 0;
       if (!centerNodeIsDuplicate || neighborNodes.length > 0) clusterIndex += 1;
 
-      const positionedNodes = this.calculateNodePositions(centerNode, neighborNodes, centerPoint, clusterRadius);
+      const { positionedNodes, finalRadius } =
+        this.calculateNodePositions(centerNode, neighborNodes, centerPoint, clusterRadius);
+      const radiusOvershoot = finalRadius - clusterRadius;
+      currentRowOffset.x += radiusOvershoot;
+      currentRowOffset.y = Math.max(previousRowOffset.y, radiusOvershoot);
+      positionedNodes.map((node) => {
+        node.x += currentRowOffset.x;
+        node.y += previousRowOffset.y + radiusOvershoot;
+        return node;
+      });
+
       centerKeys.push(positionedNodes[0][NODE_KEY]);
       nodes = nodes.concat(positionedNodes);
     });
@@ -136,6 +154,44 @@ class GraphEditor extends Component {
     });
 
     setTimeout(this.graphView.handleZoomToFit, 0);
+  }
+
+  // position otherNodes in circle around centerNode
+  calculateNodePositions(centerNode, otherNodes, centerPoint, radius) {
+    const nodeDiameter = 175;
+    let currentRadius = 0;
+    let positionedNodes = [];
+    let neighborNodes = [];
+    let startIndex = 0;
+
+    while (positionedNodes.length < otherNodes.length) {
+      currentRadius += radius;
+
+      const maxNodes = Math.floor((2 * Math.PI * currentRadius) / nodeDiameter);
+      neighborNodes = otherNodes.slice(startIndex, startIndex + maxNodes);
+
+      const surroundingNodeCount = neighborNodes.length;
+      const anglePerNode = (2 * Math.PI) / surroundingNodeCount;
+      let currentAngle = 0;
+
+      const newNodes = neighborNodes.map((originalNode) => {
+        const node = Object.assign({}, originalNode);
+        node.x = centerPoint.x + (Math.sin(currentAngle) * currentRadius);
+        node.y = centerPoint.y + (Math.cos(currentAngle) * currentRadius);
+
+        currentAngle += anglePerNode;
+        return node;
+      });
+
+      positionedNodes = positionedNodes.concat(newNodes);
+      startIndex += maxNodes;
+    }
+
+    const newCenterNode = Object.assign({}, centerNode);
+    newCenterNode.x = centerPoint.x;
+    newCenterNode.y = centerPoint.y;
+    positionedNodes.unshift(newCenterNode); // add center node as first node
+    return { positionedNodes, finalRadius: currentRadius };
   }
 
   extractNode(subject) {
@@ -176,7 +232,8 @@ class GraphEditor extends Component {
       return acc;
     }, {});
 
-    const countedEdges = mergedEdges.map((edge) => {
+    // count edges and only show them once
+    return mergedEdges.map((edge) => {
       let edgeCount = deduplicatedEdges[edge.source][edge.target];
 
       // if reverse edge exists, add its value as well
@@ -184,7 +241,6 @@ class GraphEditor extends Component {
         edgeCount += deduplicatedEdges[edge.target][edge.source];
       }
 
-      // const edgeCount = 10;
       let relationType = EMPTY_EDGE_TYPE;
       if (edgeCount >= 2) relationType = MULTIPLE_EDGE_TYPE;
       if (edgeCount >= 10) relationType = MANY_EDGE_TYPE;
@@ -196,13 +252,15 @@ class GraphEditor extends Component {
         count: edgeCount
       };
     });
-
-    return countedEdges;
   }
 
   extractNeighbors(sourceSubjects) {
     const idLists = sourceSubjects.map(subject => Object.keys(subject.relations));
-    return [].concat(...idLists); // merge arrays
+    const allNeighbors = [].concat(...idLists); // merge arrays
+    const seenNeighbors = {};
+    return allNeighbors.filter((neighbor) => {
+      return seenNeighbors.hasOwnProperty(neighbor) ? false : (seenNeighbors[neighbor] = true);
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -379,29 +437,6 @@ class GraphEditor extends Component {
       !this.state.dataSourceVisibility.hasOwnProperty(dataSource) ||
       !this.state.dataSourceVisibility[dataSource]
     );
-  }
-
-  // position otherNodes in circle around centerNode
-  calculateNodePositions(centerNode, otherNodes, centerPoint, radius) {
-    const surroundingNodeCount = otherNodes.length;
-    const anglePerNode = (2 * Math.PI) / surroundingNodeCount;
-    let currentAngle = 0;
-
-    const newCenterNode = Object.assign({}, centerNode);
-    newCenterNode.x = centerPoint.x;
-    newCenterNode.y = centerPoint.y;
-
-    const newNodes = otherNodes.map((originalNode) => {
-      const node = Object.assign({}, originalNode);
-      node.x = centerPoint.x + (Math.sin(currentAngle) * radius);
-      node.y = centerPoint.y + (Math.cos(currentAngle) * radius);
-
-      currentAngle += anglePerNode;
-      return node;
-    });
-
-    newNodes.unshift(newCenterNode); // add center node as first node
-    return newNodes;
   }
 
   // edge or node filter lambdas (must return bool)
