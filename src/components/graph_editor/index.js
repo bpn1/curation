@@ -77,12 +77,12 @@ class GraphEditor extends Component {
     this.onCreateNode = this.onCreateNode.bind(this);
     this.onUpdateNode = this.onUpdateNode.bind(this);
     this.onDeleteNode = this.onDeleteNode.bind(this);
+    this.canDeleteNode = this.canDeleteNode.bind(this);
     this.canDeleteEdge = this.canDeleteEdge.bind(this);
     this.onSelectEdge = this.onSelectEdge.bind(this);
     this.onCreateEdge = this.onCreateEdge.bind(this);
     this.onSwapEdge = this.onSwapEdge.bind(this);
     this.onDeleteEdge = this.onDeleteEdge.bind(this);
-    this.canDeleteEdge = this.canDeleteEdge.bind(this);
     this.handleDataSourceChecked = this.handleDataSourceChecked.bind(this);
     this.isDataSourceShown = this.isDataSourceShown.bind(this);
     this.getFilteredGraph = this.getFilteredGraph.bind(this);
