@@ -13,10 +13,6 @@ class DiffTree extends Component {
       return obj;
     }
 
-    if (Object.keys(obj).length === 1) {
-      return Object.keys(obj)[0] + ' ' + obj[Object.keys(obj)[0]];
-    }
-
     Object.keys(obj).forEach((key) => {
       if (obj.hasOwnProperty(key)) {
         obj[key] = this.flattenJSON(obj[key]);
