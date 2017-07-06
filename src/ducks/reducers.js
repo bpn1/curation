@@ -1,5 +1,5 @@
 import duplicatesDuck from './duplicateDuck';
-import { subjects } from './subjectDuck';
+import { subjects, graphSubjects } from './subjectDuck';
 import versionDuck from './versionDuck';
 import versionDiffDuck from './versionDiffDuck';
 import graphDuck from './graphDuck';
@@ -11,5 +11,6 @@ export default {
   version: versionDuck.reducer,
   versiondiff: versionDiffDuck.reducer,
   graph: graphDuck.reducer,
+  graphSubject: graphSubjects.reducer,
   linkedArticles: linkedArticlesDuck.reducer
 };

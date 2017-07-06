@@ -48,6 +48,31 @@ const findByNameExtension = path => ({
           status: { ...state.status, [types.GET_BY_ID]: statuses.ERROR },
           error: { ...state.error, [types.GET_BY_ID]: makeError(action.type, action.payload) }
         };
+      case types.GET_MULTIPLE_FULFILLED:
+        let fetchedData = action.payload;
+        if (!(fetchedData instanceof Array)) {
+          fetchedData = [fetchedData];
+        }
+        // concat entities fetched with axios.all
+        const fetchedEntities = fetchedData
+          .filter((payload) => {
+            if (payload && payload.data && payload.data[0] === undefined) {
+              console.warn(payload.config.url.split('=')[1].replace('&count', '') + ' was not found');
+            }
+            return payload.data[0] !== undefined;
+          })
+          .map(payload => payload.data[0]);
+        return {
+          ...state,
+          entities: fetchedEntities,
+          status: { ...state.status, [types.GET_MULTIPLE]: statuses.READY }
+        };
+      case types.GET_MULTIPLE_REJECTED:
+        return {
+          ...state,
+          status: { ...state.status, [types.GET_MULTIPLE]: statuses.ERROR },
+          error: { ...state.error, [types.GET_MULTIPLE]: makeError(action.type, action.payload) }
+        };
       default:
         return state;
     }
@@ -87,5 +112,7 @@ export const subjects = createDuck({ namespace: 'curation', store: 'subject', pa
   .extend(commitExtension('/subjects'));
 // Only use action creators and use subject reducer for all
 export const tempSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_temp' });
+export const graphSubjects = createDuck({ namespace: 'curation', store: 'graphSubject', path: '/subjects' })
+  .extend(findByNameExtension('/subjects'));
 export const dbpediaSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_dbpedia' });
 export const wikiDataSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_wikidata' });

@@ -15,7 +15,7 @@ import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 
 import { openDetailBar, closeDetailBar } from '../../actions/index';
-import { subjects } from '../../ducks/subjectDuck';
+import { graphSubjects } from '../../ducks/subjectDuck';
 import GraphConfig from './graph_config';
 
 import {
@@ -758,7 +758,7 @@ GraphEditor.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    fetchedSubjects: state.subject.entities
+    fetchedSubjects: state.graphSubject.entities
   };
 }
 
@@ -766,7 +766,7 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: {
       detailBar: bindActionCreators({ openDetailBar, closeDetailBar }, dispatch),
-      subject: bindActionCreators(subjects.creators, dispatch)
+      subject: bindActionCreators(graphSubjects.creators, dispatch)
     }
   };
 }
