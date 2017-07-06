@@ -105,6 +105,12 @@ class GraphEditor extends Component {
     this.props.actions.subject.getSome(centerNodes);
   }
 
+  loadWithAdditionalKey(key) {
+    const newKeys = this.state.centerKeys.concat(key);
+    window.location.hash = '#/graphs?nodes=' + newKeys.join(',');
+    this.loadGraph(newKeys);
+  }
+
   updateGraph(centerSubjects, neighborSubjects) {
     const allSubjects = [].concat(neighborSubjects).concat(centerSubjects);
     const edges = this.extractEdges(allSubjects);
@@ -507,12 +513,6 @@ class GraphEditor extends Component {
       res.data.sort(sortByName);
       this.setState({ addNodes: res.data });
     });
-  }
-
-  loadWithAdditionalKey(key) {
-    const newKeys = this.state.loadKeys.concat(key);
-    window.location.hash = '#/graphs?nodes=' + newKeys.join(',');
-    this.loadGraph(newKeys);
   }
 
   isNodeSelected() {
