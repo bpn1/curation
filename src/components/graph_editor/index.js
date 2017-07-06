@@ -23,7 +23,6 @@ import {
   SUBTYPE_POSTFIX, MULTIPLE_EDGE_TYPE, MANY_EDGE_TYPE, EMPTY_SUBTYPE, MASTER_SUBTYPE
 } from './constants';
 
-const centerPointOffset = { x: 650, y: 650 };
 const clusterRadius = 225;
 const nodeDiameter = 175;
 const clusterColumnCount = 3;
@@ -131,15 +130,12 @@ class GraphEditor extends Component {
         .map(this.extractNode);
 
       if (clusterIndex % clusterColumnCount === 0) {
-        previousRowOffset.y = currentRowOffset.y;
+        previousRowOffset.y += currentRowOffset.y;
         currentRowOffset.x = 0;
         currentRowOffset.y = 0;
       }
 
-      const centerPoint = {
-        x: (clusterIndex % clusterColumnCount) * centerPointOffset.x,
-        y: Math.floor(clusterIndex / clusterColumnCount) * centerPointOffset.y
-      };
+      const centerPoint = { x: 0, y: 0 };
 
       // only move centerPoint if this cluster contained nodes
       const centerNodeIsDuplicate = nodes.filter(node => node[NODE_KEY] === centerNode.id).length !== 0;
@@ -147,12 +143,12 @@ class GraphEditor extends Component {
 
       const { positionedNodes, finalRadius } =
         this.calculateNodePositions(centerNode, neighborNodes, centerPoint, clusterRadius);
-      const radiusOvershoot = finalRadius - clusterRadius + nodeDiameter;
-      currentRowOffset.x += radiusOvershoot;
-      currentRowOffset.y = Math.max(previousRowOffset.y, radiusOvershoot);
+      const clusterSize = finalRadius + (2 * clusterRadius) + nodeDiameter;
+      currentRowOffset.x += clusterSize;
+      currentRowOffset.y = Math.max(currentRowOffset.y, clusterSize);
       positionedNodes.map((node) => {
         node.x += currentRowOffset.x;
-        node.y += previousRowOffset.y + radiusOvershoot;
+        node.y += previousRowOffset.y;
         return node;
       });
 

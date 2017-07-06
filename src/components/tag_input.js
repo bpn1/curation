@@ -16,7 +16,7 @@ class TagInput extends Component {
   // automatically update tags if new ones are received
   componentWillReceiveProps(nextProps) {
     if (nextProps.input.value) {
-      console.log('TODO enable setting TagInput => New values: ', nextProps.input.value);
+      console.log('TagInput => New values: ', nextProps.input.value);
       this.setState({ tags: nextProps.input.value });
     }
   }
