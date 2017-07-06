@@ -5,20 +5,19 @@ import ChipInput from 'material-ui-chip-input';
 class TagInput extends Component {
   constructor(props) {
     super(props);
-
-    const startTags = props.initialValue ? props.initialValues : [];
+    console.log('taginput props', props);
 
     this.state = {
-      tags: startTags,
-      formValue: ""
+      tags: props.input.value,
+      formValue: ''
     };
   }
 
   // automatically update tags if new ones are received
   componentWillReceiveProps(nextProps) {
-    if(nextProps.value) {
-      console.log("TagInput => New values: ", nextProps.value);
-      this.setState({ tags: nextProps.value });
+    if (nextProps.input.value) {
+      console.log('TODO enable setting TagInput => New values: ', nextProps.input.value);
+      this.setState({ tags: nextProps.input.value });
     }
   }
 
@@ -30,14 +29,14 @@ class TagInput extends Component {
   }
 
   deleteTag(tag, index) {
-    let tags = [...this.state.tags];
+    const tags = [...this.state.tags];
 
-    if(tags.length > index) {
+    if (tags.length > index) {
       tags.splice(index, 1);
       this.setState({ tags });
     } else {
-      console.error("Couldn't delete tag", tag, "at index", index,
-        "because tag list only contains", tags.length, "elements!");
+      console.error("Couldn't delete tag", tag, 'at index', index,
+        'because tag list only contains', tags.length, 'elements!');
     }
 
     this.props.onChange(tags);
@@ -53,16 +52,17 @@ class TagInput extends Component {
     // ChipInput used controlled mode => value, onRequestAdd & onRequestDelete (stace syncing)
     return (
       <ChipInput
+        {...props}
         value={this.state.tags}
         onRequestAdd={(chip) => {
-          console.log("RequestAdd Tag", chip);
+          console.log('RequestAdd Tag', chip);
           this.addTag(chip);
         }}
         onRequestDelete={(chip, index) => {
-          console.log("RequestDelete Tag", chip, index);
-          this.deleteTag(chip, index)
+          console.log('RequestDelete Tag', chip, index);
+          this.deleteTag(chip, index);
         }}
-        {...props} />
+      />
     );
   }
 }
@@ -70,6 +70,10 @@ class TagInput extends Component {
 TagInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.array
+};
+
+TagInput.defaultProps = {
+  value: []
 };
 
 export default TagInput;
