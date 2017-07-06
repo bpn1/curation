@@ -5,7 +5,6 @@ import ChipInput from 'material-ui-chip-input';
 class TagInput extends Component {
   constructor(props) {
     super(props);
-    console.log('taginput props', props);
 
     this.state = {
       tags: props.input.value,
@@ -55,11 +54,9 @@ class TagInput extends Component {
         {...props}
         value={this.state.tags}
         onRequestAdd={(chip) => {
-          console.log('RequestAdd Tag', chip);
           this.addTag(chip);
         }}
         onRequestDelete={(chip, index) => {
-          console.log('RequestDelete Tag', chip, index);
           this.deleteTag(chip, index);
         }}
       />
@@ -69,11 +66,15 @@ class TagInput extends Component {
 
 TagInput.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.array
+  input: PropTypes.shape({
+    value: PropTypes.array
+  })
 };
 
 TagInput.defaultProps = {
-  value: []
+  input: {
+    value: []
+  }
 };
 
 export default TagInput;
