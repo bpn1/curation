@@ -18,7 +18,6 @@ function extractRelations(source, target) {
   let backwardRelations = target.relations[source.id];
 
   if (!forwardRelations && !backwardRelations) {
-    console.error('No relations found for subjects', source, target);
     return [];
   }
 
