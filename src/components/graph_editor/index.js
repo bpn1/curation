@@ -6,8 +6,13 @@ import axios from 'axios';
 
 import GraphView from 'react-digraph';
 import Checkbox from 'material-ui/Checkbox';
+import IconButton from 'material-ui/IconButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import SearchIcon from 'material-ui/svg-icons/action/search';
+import DeleteIcon from 'material-ui/svg-icons/content/remove-circle-outline';
+import ExploreIcon from 'material-ui/svg-icons/action/explore';
+import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 
 import { openDetailBar, closeDetailBar } from '../../actions/index';
 import { subjects } from '../../ducks/subjectDuck';
@@ -67,7 +72,8 @@ class GraphEditor extends Component {
       neighborSubjects: [],
       isLoadingCenters: false,
       isLoadingNeighbors: false,
-      disableEditing: props.disableEditing
+      disableEditing: props.disableEditing,
+      controlsShown: true
     };
 
     this.loadGraph = this.loadGraph.bind(this);
@@ -502,6 +508,16 @@ class GraphEditor extends Component {
     });
   }
 
+  loadWithAdditionalKey(key) {
+    const newKeys = this.state.centerKeys.concat(key);
+    window.location.hash = '#/graphs?nodes=' + newKeys.join(',');
+    this.loadGraph(newKeys);
+  }
+
+  isNodeSelected() {
+    return this.state.selected && this.state.selected.hasOwnProperty(NODE_KEY);
+  }
+
   listeners = {
     handleNeighborEdgesCheck: (event, isInputChecked) => this.setState({
       showAllEdges: isInputChecked,
@@ -532,7 +548,7 @@ class GraphEditor extends Component {
       // disable enter to search feature => must select from list
       if (index < 0 || !addInput.hasOwnProperty('master')) return;
 
-      this.loadGraph(this.state.centerKeys.concat(addInput.master));
+      this.loadWithAdditionalKey(addInput.master);
     },
     handleAddUpdate: (addInput) => {
       clearTimeout(this.state.autoCompleteTimerId);
@@ -542,13 +558,28 @@ class GraphEditor extends Component {
     handleAddFocus: () => {
       // clear search field when clicked
       this.setState({ addInput: '' });
+    },
+    handleHideButtonClick: () => {
+      this.setState({ controlsShown: !this.state.controlsShown });
+    },
+    handleDeleteButtonClick: () => {
+      if (this.isNodeSelected()) {
+        this.onDeleteNode(this.state.selected);
+        this.props.actions.detailBar.closeDetailBar();
+      }
+    },
+    handleExploreButtonClick: () => {
+      if (this.isNodeSelected()) {
+        this.loadWithAdditionalKey(this.state.selected[NODE_KEY]);
+        this.props.actions.detailBar.closeDetailBar();
+      }
     }
   };
 
   // main render method
   render() {
     const { nodes, edges } = this.getFilteredGraph();
-    const nodeNames = this.getNodeNames();
+    // const nodeNames = this.getNodeNames();
 
     const selected = this.state.selected;
 
@@ -569,87 +600,116 @@ class GraphEditor extends Component {
     });
     const controlsStyle = {
       position: 'fixed',
-      backgroundColor: 'rgba(222, 222, 222, 0.5)', // 'rgba(33, 33, 33, 0.5)',
-      border: '1px solid #333',
+      backgroundColor: 'rgba(222, 222, 222, 0.65)', // 'rgba(33, 33, 33, 0.5)',
       borderRadius: 15,
       padding: 10
     };
     const containerStyle = { height: '100%', width: '100%' };
+    const remainingControlsStyle = this.state.controlsShown ? {} : { display: 'none' };
+    const hideButtonTooltip = this.state.controlsShown ? 'Hide controls' : 'Show controls';
 
     return (
       <div id="graph" style={containerStyle}>
         <div id="controls" style={controlsStyle}>
-          <SearchIcon
-            color="#666"
-            style={{ position: 'relative', top: 7 }}
-          />
-          <AutoComplete
-            onFocus={this.listeners.handleAddFocus}
-            onUpdateInput={this.listeners.handleAddUpdate}
-            searchText={this.state.addInput}
-            hintText="Search business..."
-            filter={AutoComplete.caseInsensitiveFilter}
-            openOnFocus
-            onNewRequest={this.listeners.handleAddRequest}
-            dataSource={this.state.addNodes}
-            dataSourceConfig={{
-              text: 'name',
-              value: 'master'
-            }}
-            maxSearchResults={15}
-          />
-          {/* Enable for search in graph
-             <AutoComplete
-            onFocus={this.listeners.handleSearchFocus}
-            onUpdateInput={this.listeners.handleSearchUpdate}
-            searchText={this.state.searchInput}
-            hintText="Search in graph..."
-            filter={AutoComplete.caseInsensitiveFilter}
-            openOnFocus
-            onNewRequest={this.listeners.handleSearchRequest}
-            dataSource={nodeNames}
-            dataSourceConfig={{
-              text: 'name',
-              value: 'key'
-            }}
-            maxSearchResults={15}
-          />*/}
-          <Checkbox
-            label="Neighbor edges"
-            defaultChecked
-            value={this.state.showAllEdges}
-            style={{ padding: 5 }}
-            onCheck={this.listeners.handleNeighborEdgesCheck}
-          />
-          <Checkbox
-            label="Open Editors"
-            defaultChecked
-            value={!this.state.disableEditing}
-            style={{ padding: 5 }}
-            onCheck={this.listeners.handleEditorsCheck}
-          />
-          <Checkbox
-            label="Data sources"
-            defaultChecked
-            value={this.state.showDataSources}
-            style={{ padding: 5 }}
-            onCheck={(event, isInputChecked) => this.setState({ showDataSources: isInputChecked })}
-          />
-          { this.state.showDataSources && <hr style={{ borderColor: '#777' }} /> }
-          { this.state.showDataSources && dataSources.map(source => (
-            <Checkbox
-              key={source.type}
-              label={source.name}
-              labelStyle={legendEntryStyle(source.color, source.type)}
-              style={{ padding: 5 }}
-              defaultChecked
-              value={this.state.dataSourceVisibility[source.type]}
-              onCheck={(event, isInputChecked) => this.handleDataSourceChecked(source.type, isInputChecked)}
+          <div id="buttons">
+            <IconButton
+              tooltip={hideButtonTooltip}
+              touch
+              tooltipPosition="top-center"
+              onClick={this.listeners.handleHideButtonClick}
+            >
+              { this.state.controlsShown ? <DownArrow hoverColor="#aaa" /> : <RightArrow hoverColor="#aaa" /> }
+            </IconButton>
+            { this.isNodeSelected() && <IconButton
+              tooltip="Remove selection from graph"
+              touch
+              tooltipPosition="top-center"
+              onClick={this.listeners.handleDeleteButtonClick}
+            >
+              <DeleteIcon hoverColor="#aaa" />
+            </IconButton> }
+            { this.isNodeSelected() && <IconButton
+              tooltip="Explore neighbors"
+              touch
+              tooltipPosition="top-center"
+              onClick={this.listeners.handleExploreButtonClick}
+            >
+              <ExploreIcon hoverColor="#aaa" />
+            </IconButton> }
+          </div>
+          <div style={remainingControlsStyle}>
+            <SearchIcon
+              color="#666"
+              style={{ position: 'relative', top: 7 }}
             />
-          )) }
+            <AutoComplete
+              onFocus={this.listeners.handleAddFocus}
+              onUpdateInput={this.listeners.handleAddUpdate}
+              searchText={this.state.addInput}
+              hintText="Search business..."
+              filter={AutoComplete.caseInsensitiveFilter}
+              openOnFocus
+              onNewRequest={this.listeners.handleAddRequest}
+              dataSource={this.state.addNodes}
+              dataSourceConfig={{
+                text: 'name',
+                value: 'master'
+              }}
+              maxSearchResults={15}
+            />
+            {/* Enable for search in graph
+               <AutoComplete
+              onFocus={this.listeners.handleSearchFocus}
+              onUpdateInput={this.listeners.handleSearchUpdate}
+              searchText={this.state.searchInput}
+              hintText="Search in graph..."
+              filter={AutoComplete.caseInsensitiveFilter}
+              openOnFocus
+              onNewRequest={this.listeners.handleSearchRequest}
+              dataSource={nodeNames}
+              dataSourceConfig={{
+                text: 'name',
+                value: 'key'
+              }}
+              maxSearchResults={15}
+            />*/}
+            <Checkbox
+              label="Neighbor edges"
+              defaultChecked
+              value={this.state.showAllEdges}
+              style={{ padding: 5 }}
+              onCheck={this.listeners.handleNeighborEdgesCheck}
+            />
+            <Checkbox
+              label="Open Editors"
+              defaultChecked
+              value={!this.state.disableEditing}
+              style={{ padding: 5 }}
+              onCheck={this.listeners.handleEditorsCheck}
+            />
+            <Checkbox
+              label="Data sources"
+              defaultChecked
+              value={this.state.showDataSources}
+              style={{ padding: 5 }}
+              onCheck={(event, isInputChecked) => this.setState({ showDataSources: isInputChecked })}
+            />
+            { this.state.showDataSources && <hr style={{ borderColor: '#777' }} /> }
+            { this.state.showDataSources && dataSources.map(source => (
+              <Checkbox
+                key={source.type}
+                label={source.name}
+                labelStyle={legendEntryStyle(source.color, source.type)}
+                style={{ padding: 5 }}
+                defaultChecked
+                value={this.state.dataSourceVisibility[source.type]}
+                onCheck={(event, isInputChecked) => this.handleDataSourceChecked(source.type, isInputChecked)}
+              />
+            )) }
+          </div>
         </div>
         <GraphView
-          ref={g => this.graphView = g}
+          ref={g => (this.graphView = g)}
           style={graphStyle}
           primary="#777"
           light="#fff"
