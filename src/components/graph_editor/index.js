@@ -509,7 +509,7 @@ class GraphEditor extends Component {
   }
 
   loadWithAdditionalKey(key) {
-    const newKeys = this.state.centerKeys.concat(key);
+    const newKeys = this.state.loadKeys.concat(key);
     window.location.hash = '#/graphs?nodes=' + newKeys.join(',');
     this.loadGraph(newKeys);
   }
