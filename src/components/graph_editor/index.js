@@ -101,8 +101,8 @@ class GraphEditor extends Component {
   }
 
   loadGraph(centerNodes) {
+    this.setState({ isLoadingCenters: true, lastFetchedSubjects: this.props.fetchedSubjects });
     this.props.actions.subject.getSome(centerNodes);
-    this.setState({ isLoadingCenters: true });
   }
 
   updateGraph(centerSubjects, neighborSubjects) {
@@ -270,19 +270,20 @@ class GraphEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.fetchedSubjects && this.state.isLoadingCenters) {
+    if (nextProps.fetchedSubjects !== this.state.lastFetchedSubjects && this.state.isLoadingCenters) {
       const centerSubjects = nextProps.fetchedSubjects;
       const centerIDs = this.extractNeighbors(centerSubjects);
       this.props.actions.subject.getSome(centerIDs);
 
       this.setState({
         centerSubjects,
+        lastFetchedSubjects: centerSubjects,
         isLoadingCenters: false,
         isLoadingNeighbors: true
       });
     }
 
-    if (nextProps.fetchedSubjects && this.state.isLoadingNeighbors) {
+    if (nextProps.fetchedSubjects !== this.state.lastFetchedSubjects && this.state.isLoadingNeighbors) {
       const neighborSubjects = nextProps.fetchedSubjects;
       this.updateGraph(this.state.centerSubjects, neighborSubjects);
 
