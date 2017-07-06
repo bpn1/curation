@@ -19,7 +19,7 @@ function extractRelations(source, target) {
 
   if (!forwardRelations && !backwardRelations) {
     console.error('No relations found for subjects', source, target);
-    return { relations: [] };
+    return [];
   }
 
   if (!forwardRelations) forwardRelations = {};

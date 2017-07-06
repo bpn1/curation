@@ -243,7 +243,7 @@ const reduxConnectedForm = reduxForm({
 function mapStateToProps(state, ownProps) {
   return {
     initialValues: {
-      relations: state.graph.relations[[ownProps.sourceKey, ownProps.targetKey]]
+      relations: state.graph.relations[[ownProps.sourceKey, ownProps.targetKey]] || []
     },
     sourceSubject: state.graph.subjects[ownProps.sourceKey],
     targetSubject: state.graph.subjects[ownProps.targetKey]
