@@ -56,7 +56,7 @@ class StatusIndicator extends Component {
     const { error } = this.state;
     const hasErrorMessage = this.hasErrorMessage();
     const formattedError = hasErrorMessage ? Object.values(error).map(v => v && <div key={v}>{v}</div>) : '';
-    const tooltipPosition = hasErrorMessage ? 'top-left' : 'top-center';
+    const tooltipPosition = hasErrorMessage ? 'bottom-left' : 'bottom-center';
     const tooltip = formattedError;
 
     // TODO show dialog/ popup onClick
