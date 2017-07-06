@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import createDuck, { makeAxiosTypes, makeError, apiPath } from './apiDuck';
 
-const routePath = '/wiki/linkedarticles_new';
+const routePath = '/wiki/linkedarticles';
 
 export default createDuck({ namespace: 'curation', store: 'wiki', path: routePath }).extend({
   types: [
