@@ -25,6 +25,7 @@ import {
 
 const centerPointOffset = { x: 650, y: 650 };
 const clusterRadius = 225;
+const nodeDiameter = 175;
 const clusterColumnCount = 3;
 
 const defaultLoadKeys = [
@@ -140,7 +141,7 @@ class GraphEditor extends Component {
 
       const { positionedNodes, finalRadius } =
         this.calculateNodePositions(centerNode, neighborNodes, centerPoint, clusterRadius);
-      const radiusOvershoot = finalRadius - clusterRadius;
+      const radiusOvershoot = finalRadius - clusterRadius + nodeDiameter;
       currentRowOffset.x += radiusOvershoot;
       currentRowOffset.y = Math.max(previousRowOffset.y, radiusOvershoot);
       positionedNodes.map((node) => {
@@ -164,7 +165,6 @@ class GraphEditor extends Component {
 
   // position otherNodes in circle around centerNode
   calculateNodePositions(centerNode, otherNodes, centerPoint, radius) {
-    const nodeDiameter = 175;
     let currentRadius = 0;
     let positionedNodes = [];
     let neighborNodes = [];
