@@ -9,7 +9,6 @@ import bindActionCreators from 'redux/es/bindActionCreators';
 
 import { TextField } from 'redux-form-material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
-import AutoComplete from 'material-ui/AutoComplete';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui/svg-icons/content/add-circle';
@@ -21,6 +20,7 @@ import muiThemable from 'material-ui/styles/muiThemeable';
 import graphDuck from '../ducks/graphDuck';
 import DirectionToggle from './direction_toggle';
 import DateRangeEditor from './date_range_editor';
+import { openDetailBar, closeDetailBar } from '../actions/index';
 
 class RelationEditor extends Component {
   constructor(props) {
@@ -34,6 +34,7 @@ class RelationEditor extends Component {
     };
 
     this.renderRelationArray = this.renderRelationArray.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +65,7 @@ class RelationEditor extends Component {
 
   handleSubmit(data) {
     console.log('TODO: Update relations for', this.state.sourceKey, '->', this.state.targetKey, ':', data);
+    this.props.actions.detailBar.closeDetailBar();
     // TODO: this.props.actions.graph.updateRelations(data);
   }
 
@@ -253,7 +255,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: {
-      // subject: bindActionCreators(subjects.creators, dispatch),
+      detailBar: bindActionCreators({ openDetailBar, closeDetailBar }, dispatch),
       graph: bindActionCreators(graphDuck.creators, dispatch)
     }
   };
