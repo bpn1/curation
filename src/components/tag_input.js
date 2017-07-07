@@ -7,23 +7,23 @@ class TagInput extends Component {
     super(props);
 
     this.state = {
-      tags: props.input.value,
-      formValue: ''
+      tags: props.input.value
     };
+
+    this.addTag = this.addTag.bind(this);
+    this.deleteTag = this.deleteTag.bind(this);
   }
 
-  // automatically update tags if new ones are received
   componentWillReceiveProps(nextProps) {
-    if (nextProps.input.value) {
-      console.log('TagInput => New values: ', nextProps.input.value);
-      this.setState({ tags: nextProps.input.value });
+    const value = nextProps.input.value;
+    if (value && value !== this.state.tags) {
+      this.setState({ tags: value });
     }
   }
 
   addTag(tag) {
     const tags = [...this.state.tags, tag];
     this.setState({ tags });
-
     this.props.onChange(tags);
   }
 
@@ -33,9 +33,6 @@ class TagInput extends Component {
     if (tags.length > index) {
       tags.splice(index, 1);
       this.setState({ tags });
-    } else {
-      console.error("Couldn't delete tag", tag, 'at index', index,
-        'because tag list only contains', tags.length, 'elements!');
     }
 
     this.props.onChange(tags);
@@ -48,17 +45,12 @@ class TagInput extends Component {
     // TODO remove if not needed
     delete props.initialValue;
 
-    // ChipInput used controlled mode => value, onRequestAdd & onRequestDelete (stace syncing)
     return (
       <ChipInput
         {...props}
         value={this.state.tags}
-        onRequestAdd={(chip) => {
-          this.addTag(chip);
-        }}
-        onRequestDelete={(chip, index) => {
-          this.deleteTag(chip, index);
-        }}
+        onRequestAdd={this.addTag}
+        onRequestDelete={this.deleteTag}
       />
     );
   }
