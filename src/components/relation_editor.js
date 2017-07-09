@@ -18,6 +18,7 @@ import RemoveIcon from 'material-ui/svg-icons/content/remove-circle-outline';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
 import graphDuck from '../ducks/graphDuck';
+import { subjects } from '../ducks/subjectDuck';
 import DirectionToggle from './direction_toggle';
 import DateRangeEditor from './date_range_editor';
 import { openDetailBar, closeDetailBar } from '../actions/index';
@@ -66,7 +67,13 @@ class RelationEditor extends Component {
   handleSubmit(data) {
     console.log('TODO: Update relations for', this.state.sourceKey, '->', this.state.targetKey, ':', data);
     this.props.actions.detailBar.closeDetailBar();
-    // TODO: this.props.actions.graph.updateRelations(data);
+
+    const sourceRelations = data.relations.filter(relation => relation.isForward);
+    const targetRelations = data.relations.filter(relation => !relation.isForward);
+    this.props.sourceSubject.relations = sourceRelations;
+    this.props.targetSubject.relations = targetRelations;
+    this.props.actions.subject.update(this.props.sourceSubject);
+    this.props.actions.subject.update(this.props.targetSubject);
   }
 
   styles = {
@@ -256,7 +263,8 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: {
       detailBar: bindActionCreators({ openDetailBar, closeDetailBar }, dispatch),
-      graph: bindActionCreators(graphDuck.creators, dispatch)
+      graph: bindActionCreators(graphDuck.creators, dispatch),
+      subject: bindActionCreators(subjects.creators, dispatch)
     }
   };
 }

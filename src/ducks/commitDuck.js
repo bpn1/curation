@@ -17,7 +17,7 @@ function convertFromEditable(subject) {
   let newProps = {};
   if (subject.hasOwnProperty('properties')) {
     newProps = Object.entries(transformedSubject.properties).map(([key, value]) => ({
-      [key]: value.split('; ') // TODO display differently?
+      [key]: value instanceof String ? value.split('; ') : value // TODO display differently?
     }));
   }
   transformedSubject.properties = Object.assign({}, ...newProps);
