@@ -18,7 +18,7 @@ class SimilarityHistogram extends Component {
         fetchIdKey={'fetchSimMeasureStatsIds'}
         fetchDataKey={'fetchSimMeasureData'}
         primaryKeys={['id']}
-        dropDownText={stat => stat.comment + ': ' + getDateFromTimeUUID(stat.id).toLocaleString()}
+        renderDropDownText={stat => stat.comment + ': ' + getDateFromTimeUUID(stat.id).toLocaleString()}
         nameKey={'threshold'}
       />
     );

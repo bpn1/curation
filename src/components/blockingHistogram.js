@@ -17,13 +17,14 @@ class BlockingHistogram extends Component {
         fetchIdKey={'fetchBlockingStatsIds'}
         fetchDataKey={'fetchBlockingStatsData'}
         primaryKeys={['jobid', 'schemetag']}
-        dropDownText={stat =>
+        renderDropDownText={stat =>
           stat.comment.replace('Blocking', '').replace(';', '')
           + ' ' + stat.schemetag + ': '
-          + (stat.comparisoncount ? ('CC: ' + stat.comparisoncount + ', ') : '')
-          + (stat.pairscompleteness ? ('PC: ' + stat.pairscompleteness + ', ') : '')
-          + (stat.blockcount ? ('BC: ' + stat.blockcount + ', ') : '')
           + getDateFromTimeUUID(stat.jobid).toLocaleString()}
+        renderMenuItem={stat =>
+          (stat.comparisoncount ? ('Comparison Count: ' + stat.comparisoncount + ', ') : '')
+          + (stat.pairscompleteness ? ('Pairs Completeness: ' + stat.pairscompleteness + ', ') : '')
+          + (stat.blockcount ? ('Block Count: ' + stat.blockcount) : '')}
         nameKey={'key'}
         min={1000}
       />

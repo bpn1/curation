@@ -115,12 +115,12 @@ class APIHistogram extends Component {
     return (
       <Grid fluid>
         <Row middle="xs">
-          <Col xs={12} sm={8} lg={5}>
+          <Col xs={12} sm={8} lg={6}>
             <DropDownMenu
               autoWidth
               value={this.histogramIdToKey(this.state.histogramId)}
               onChange={this.onDropDownChange}
-              selectedMenuItemStyle={{fontWeight: 'bold'}}
+              selectedMenuItemStyle={{ fontWeight: '500' }}
             >
               {
                 this.props.statsIds !== undefined
@@ -128,15 +128,15 @@ class APIHistogram extends Component {
                   return (<MenuItem
                     key={'stats_' + i}
                     value={this.histogramIdToKey(this.props.primaryKeys.map(primaryKey => stat[primaryKey]))}
-                    primaryText={this.props.dropDownText(stat)}
-                  />);
+                    primaryText={this.props.renderDropDownText(stat)}
+                  >{this.props.renderMenuItem(stat)}</MenuItem>);
                 }.bind(this))
               }
             </DropDownMenu>
           </Col>
-          <Col xs={12} sm={4} lg={2}>
+          <Col xs={12} sm={4} lg={1}>
             <Checkbox
-              label="Show Dots"
+              label="Dots"
               defaultChecked={false}
               value={this.state.showDots}
               onCheck={(event, isInputChecked) => this.setState({ showDots: isInputChecked })}
@@ -199,7 +199,8 @@ APIHistogram.propTypes = {
   fetchDataKey: PropTypes.string.isRequired,
   nameKey: PropTypes.string.isRequired,
   primaryKeys: PropTypes.array.isRequired,
-  dropDownText: PropTypes.func.isRequired,
+  renderDropDownText: PropTypes.func.isRequired,
+  renderMenuItem: PropTypes.func,
   domain: PropTypes.array,
   min: PropTypes.number,
   max: PropTypes.number,
@@ -208,7 +209,8 @@ APIHistogram.propTypes = {
 
 APIHistogram.defaultProps = {
   showLabels: false,
-  domain: [0, 'auto']
+  domain: [0, 'auto'],
+  renderMenuItem: () => ''
 };
 
 /* connection to Redux */
