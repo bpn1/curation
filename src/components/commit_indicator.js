@@ -73,6 +73,12 @@ class CommitIndicator extends Component {
   };
 
   handleCommit = () => {
+    const changes = {
+      created: this.props.created,
+      updated: this.props.updated,
+      deleted: this.props.deleted,
+    };
+    this.props.actions.subject.commit(changes);
     this.props.actions.subject.reset();
     this.setState({
       open: false,

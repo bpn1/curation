@@ -1,4 +1,7 @@
+import axios from 'axios';
+
 import { statuses } from './apiDuck';
+
 // used for the SubjectEditor format, property lists get seperated by ';'
 function convertToEditable(subject) {
   const transformedSubject = Object.assign({}, subject);
@@ -42,7 +45,8 @@ function replaceWithStaged(entity, staged, stagedAlternative) {
 }
 
 export const commitExtension = path => ({
-  types: ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE', 'RESET'],
+  types:
+    ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE', 'COMMIT', 'RESET'],
 
   // TODO handle status of mutliple actions started simultaneously
 
@@ -150,6 +154,7 @@ export const commitExtension = path => ({
     create: newObj => ({ type: types.CREATE, createdObj: newObj }),
     update: newObj => ({ type: types.UPDATE, updatedObj: newObj }),
     delete: objs => ({ type: types.DELETE, deletedObjs: objs }),
+    commit: changes => ({ type: types.COMMIT, payload: axios.post('/api/run/commit/', changes) }),
     reset: () => ({ type: types.RESET })
   }),
   // parent initialState is overwritten, so define all needed here

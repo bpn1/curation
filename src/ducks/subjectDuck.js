@@ -84,13 +84,13 @@ const findByNameExtension = path => ({
         payload: axios.get(`${apiPath}${path}?noHistory&name=${name}&` + countParam(count)) }),
     fetchOnlyMaster: count => ({
       type: types.FETCH,
-      payload: axios.get(`${apiPath}${path}?datasource=master&` + countParam(count))
+      payload: axios.get(`${apiPath}${path}?noHistory&datasource=master&` + countParam(count))
     }),
     getById: id =>
-      ({ type: types.GET_BY_ID, payload: axios.get(`${apiPath}${path}?id=${id}&` + countParam(1)) }),
+      ({ type: types.GET_BY_ID, payload: axios.get(`${apiPath}${path}?noHistory&id=${id}&` + countParam(1)) }),
     getSome: ids => ({
       type: types.GET_MULTIPLE,
-      payload: axios.all(ids.map(id => axios.get(`${apiPath}${path}?id=${id}&` + countParam(1))))
+      payload: axios.all(ids.map(id => axios.get(`${apiPath}${path}?noHistory&id=${id}&` + countParam(1))))
     }),
   }),
   // parent initialState is overwritten, so define all needed here
