@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import { Grid, Col, Row } from 'react-flexbox-grid';
+import AutoComplete from 'material-ui/AutoComplete';
+import TextField from 'material-ui/TextField';
+import SearchIcon from 'material-ui/svg-icons/action/search';
 
 import InteractiveTable from './interactive_table';
 import duplicateDuck from '../ducks/duplicateDuck';
@@ -18,6 +22,7 @@ class DuplicateTable extends Component {
     super(props);
     this.state = {
       tableData: [],
+      count: 50
     };
   }
 
@@ -57,36 +62,77 @@ class DuplicateTable extends Component {
     this.props.actions.duplicate.store({ candidateScores });
   }
 
+  handleSearchRequest = (searchInput, index) => {
+    this.props.actions.duplicate.findByName(searchInput, this.state.count);
+  };
+
+  updateCount = (event, newValue) => {
+    this.setState({ count: Number(newValue) });
+  };
+
+
   render() {
     return (
-      <InteractiveTable
-        ref="table"
-        height={this.props.height}
-        expandKey={'subject_id'}
-        expandTreeByDefaultColumns={['subject']}
-        headers={this.headers}
-        data={this.state.tableData}
-        showCheckboxes={false}
-        multiSelectable={false}
-        selectable
-        onCellClick={(rowNumber, columnId) => this.handleCellClick(rowNumber)}
-        muiTheme={this.props.muiTheme}
-      />
+      <Grid fluid>
+        <Row middle="xs">
+          <Col xs={11}>
+            <Row middle="xs">
+              <Col xs={1}>
+                <SearchIcon
+                  style={{ position: 'relative', top: 4 }}
+                />
+              </Col>
+              <Col xs={11}>
+                <AutoComplete
+                  fullWidth
+                  hintText="Search by name..."
+                  onNewRequest={this.handleSearchRequest}
+                  dataSource={[]}
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col xs={1}>
+            <TextField
+              fullWidth
+              type="number"
+              hintText="Count"
+              defaultValue={this.state.count}
+              onChange={this.updateCount}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <InteractiveTable
+            ref="table"
+            height={this.props.height - 48}
+            expandKey={'subject_id'}
+            expandTreeByDefaultColumns={['subject']}
+            headers={this.headers}
+            data={this.state.tableData}
+            showCheckboxes={false}
+            multiSelectable={false}
+            selectable
+            onCellClick={(rowNumber, columnId) => this.handleCellClick(rowNumber)}
+            muiTheme={this.props.muiTheme}
+          />
+        </Row>
+      </Grid>
     );
   }
 
   listeners = {
     reloadDuplicates: () => {
-      this.props.actions.duplicate.fetch(100); // TODO make count a user option
+      this.props.actions.duplicate.fetch(this.state.count); // TODO make count a user option
     }
   };
-}
+  }
 
 DuplicateTable.propTypes = {
   height: PropTypes.number.isRequired
 };
 
-/* connection to Redux */
+    /* connection to Redux */
 function mapStateToProps(state) {
   return {
     tableData: state.duplicate.entities,
