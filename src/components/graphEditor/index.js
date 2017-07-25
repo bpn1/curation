@@ -43,10 +43,7 @@ const clusterRadius = 225;
 const nodeDiameter = 175;
 const clusterColumnCount = 3;
 
-const defaultLoadKeys = [
-  '2078fc19-db2c-4b08-b5bc-8a757164317c',
-  '1cca8348-5bc0-4303-8aec-1dafac183127'
-];
+const defaultLoadKeys = []; // add subject UUIDs here if they should be added to the graph by default
 
 function sortByName(a, b) {
   if (a.name < b.name) return -1;
