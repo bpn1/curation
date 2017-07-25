@@ -75,7 +75,7 @@ class TagInput extends Component {
 TagInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   input: PropTypes.shape({
-    value: PropTypes.array
+    value: PropTypes.oneOf(PropTypes.array, PropTypes.string)
   })
 };
 
