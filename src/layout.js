@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Avatar from 'material-ui/Avatar';
 
 import styles from './layout.css';
-import image from '../logo.png';
 
 import { curationLightTheme, curationDarkTheme } from './themes/curation';
-import RaisedButton from 'material-ui/RadioButton';
 
-import HeadBar from './components/HeadBar';
 import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
 import DetailBar from './containers/DetailBar';
@@ -53,5 +49,9 @@ class MainLayout extends Component {
     );
   }
 }
+
+MainLayout.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export default MainLayout;

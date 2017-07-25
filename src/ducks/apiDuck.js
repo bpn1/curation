@@ -124,12 +124,12 @@ export default function createDuck({ namespace, store, path, initialState = {} }
     creators: ({ types }) => ({
       fetch: count => ({
         type: types.FETCH,
-        payload: axios.get(`${apiPath}${path}?` + countParam(count))
+        payload: axios.get(`${apiPath}${path}?noHistory&` + countParam(count))
       }),
-      get: id => ({ type: types.GET, payload: axios.get(`${apiPath}${path}/${id}`) }),
+      get: id => ({ type: types.GET, payload: axios.get(`${apiPath}${path}/${id}?noHistory`) }),
       getSome: (ids, count) => ({
         type: types.GET_MULTIPLE,
-        payload: axios.get(`${apiPath}${path}?id=${ids.join(',')}&` + countParam(count))
+        payload: axios.get(`${apiPath}${path}?id=${ids.join(',')}&noHistory&` + countParam(count))
       }),
       post: () => ({ type: types.POST, payload: axios.post(`${apiPath}${path}`, obj) }),
       patch: id => ({ type: types.PATCH, payload: axios.patch(`${apiPath}${path}/${id}`, obj) })

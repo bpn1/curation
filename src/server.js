@@ -149,6 +149,14 @@ router.get('/run/:job/:args', function (req, res) {
   exec(`./run_job.sh ${req.job.jobName} ${joinedArgs}`, printOutput);
 });
 
+router.post('/run/:job', function (req, res) {
+  const stringifiedBody = JSON.stringify(req.body);
+  const message = `Running Spark job ${req.job.jobName} with data ${stringifiedBody}`;
+  res.send('<pre>' + message + '</pre>');
+  console.log(message);
+  exec(`./run_job.sh ${req.job.jobName} ${stringifiedBody}`, printOutput);
+});
+
 app.use('/api', router);
 app.use('/api/subjects', modelRouter(datalakeModels, 'Subject', subjectsQueryConfig));
 app.use('/api/subjects_temp', modelRouter(datalakeModels, 'Subject_Temp', subjectsQueryConfig));
