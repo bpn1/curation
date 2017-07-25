@@ -32,7 +32,7 @@ import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 
 import { openDetailBar, closeDetailBar } from '../../actions/index';
 import { graphSubjects } from '../../ducks/subjectDuck';
-import GraphConfig from './graph_config';
+import GraphConfig from './graphConfig';
 
 import {
   dataSources, validCategories, NONE_TYPE, SPECIAL_TYPE, EMPTY_TYPE, NODE_KEY, EMPTY_EDGE_TYPE, SPECIAL_EDGE_TYPE,

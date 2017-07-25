@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import { sizeMe } from 'react-sizeme';
 
 import ContentCard from '../components/contentCard';
-import GraphEditor from '../components/graph_editor';
+import GraphEditor from '../components/graphEditor';
 
 class GraphsCard extends Component {
   render() {
