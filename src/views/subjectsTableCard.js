@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { sizeMe } from 'react-sizeme';
 
-import SubjectTable from '../components/subject_table';
-import ContentCard from '../components/content_card';
+import SubjectTable from '../components/subjectTable';
+import ContentCard from '../components/contentCard';
 
 class SubjectsTableCard extends Component {
   render() {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 
-import SubjectEditor from './subject_editor';
+import SubjectEditor from './subjectEditor';
 
 class SubjectDialog extends Component {
   constructor(props) {

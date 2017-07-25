@@ -19,10 +19,10 @@ const modelRouter = require('./api/helpers/modelRouter');
 const subjectsQueryConfig = require('./api/queryConfigs/subjects');
 const versionsQueryConfig = require('./api/queryConfigs/versions');
 const duplicateCandidatesQueryConfig = require('./api/queryConfigs/duplicateCandidates');
-const blockingStatsQueryConfig = require('./api/queryConfigs/blockingstats');
+const blockingStatsQueryConfig = require('./api/queryConfigs/blockingStats');
 const simMeasureStatsQueryConfig = require('./api/queryConfigs/simMeasureStats');
 const linkedArticlesQueryConfig = require('./api/queryConfigs/linkedArticles');
-const versionDiffsQueryConfig = require('./api/queryConfigs/versiondiffs');
+const versionDiffsQueryConfig = require('./api/queryConfigs/versionDiffs');
 
 // setup cassandra ORM
 const datalakeModels = modelLoader(datalakeConfig, datalakeSchemaConfig);

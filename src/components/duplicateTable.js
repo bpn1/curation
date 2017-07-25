@@ -8,7 +8,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import TextField from 'material-ui/TextField';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 
-import InteractiveTable from './interactive_table';
+import InteractiveTable from './interactiveTable';
 import duplicateDuck from '../ducks/duplicateDuck';
 import { subjects, tempSubjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
 

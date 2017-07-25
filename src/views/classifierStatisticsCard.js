@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { sizeMe } from 'react-sizeme';
 
-import ContentCard from '../components/content_card';
+import ContentCard from '../components/contentCard';
 import ClassifierHistogram from '../components/classifierHistogram';
 
 class ClassifierStatisticsCard extends Component {

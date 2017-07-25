@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 
 import { materialIcon, count } from '../helpers/index';
-import SubjectDialog from './subject_dialog';
+import SubjectDialog from './subjectDialog';
 import { subjects } from '../ducks/subjectDuck';
 
 const changeCountStyle = {

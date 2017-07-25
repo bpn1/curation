@@ -4,7 +4,7 @@ import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import InteractiveTable from './interactive_table';
+import InteractiveTable from './interactiveTable';
 import versionDiffDuck from '../ducks/versionDiffDuck';
 
 const plainDataKeys = ['oldversion', 'newversion', 'id'];

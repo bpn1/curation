@@ -10,8 +10,8 @@ import ToolBar from './containers/ToolBar';
 import SideBar from './containers/SideBar';
 import DetailBar from './containers/DetailBar';
 
-import StatusIndicator from './components/status_indicator';
-import CommitIndicator from './components/commit_indicator';
+import StatusIndicator from './components/statusIndicator';
+import CommitIndicator from './components/commitIndicator';
 
 export const layoutBreakpoint = '(min-width: 769px)';
 

@@ -21,8 +21,8 @@ import RefreshIcon from 'material-ui/svg-icons/navigation/refresh';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import SearchIcon from 'material-ui/svg-icons/action/search';
 
-import InteractiveTable from './interactive_table';
-import SubjectDialog from './subject_dialog';
+import InteractiveTable from './interactiveTable';
+import SubjectDialog from './subjectDialog';
 import { subjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
 import { AutoComplete } from 'material-ui';
 import { statuses } from '../ducks/apiDuck';

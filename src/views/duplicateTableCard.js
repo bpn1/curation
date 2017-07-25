@@ -4,8 +4,8 @@ import { Col, Grid, Row } from 'react-flexbox-grid';
 import { sizeMe } from 'react-sizeme';
 
 import DuplicateTable from '../components/duplicateTable';
-import SubjectTable from '../components/subject_table';
-import ContentCard from '../components/content_card';
+import SubjectTable from '../components/subjectTable';
+import ContentCard from '../components/contentCard';
 
 const headers = [
   { key: 'id', name: 'ID' },

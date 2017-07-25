@@ -19,8 +19,8 @@ import muiThemable from 'material-ui/styles/muiThemeable';
 
 import graphDuck from '../ducks/graphDuck';
 import { subjects } from '../ducks/subjectDuck';
-import DirectionToggle from './direction_toggle';
-import DateRangeEditor from './date_range_editor';
+import DirectionToggle from './directionToggle';
+import DateRangeEditor from './dateRangeEditor';
 import { openDetailBar, closeDetailBar } from '../actions/index';
 
 class RelationEditor extends Component {

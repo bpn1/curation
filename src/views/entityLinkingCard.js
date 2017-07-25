@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { sizeMe } from 'react-sizeme';
 
-import ContentCard from '../components/content_card';
-import EntityLinkingRenderer from '../components/entity_linking_renderer';
+import ContentCard from '../components/contentCard';
+import EntityLinkingRenderer from '../components/entityLinkingRenderer';
 
 class EntityLinkingCard extends Component {
   render() {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { sizeMe } from 'react-sizeme';
 
-import ContentCard from '../components/content_card';
-import VersionList from '../components/version_list';
+import ContentCard from '../components/contentCard';
+import VersionList from '../components/versionList';
 
 class VersionCard extends Component {
   render() {

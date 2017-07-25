@@ -7,8 +7,8 @@ import Divider from 'material-ui/Divider';
 
 import { toggleDetailNav } from '../../actions/index';
 import { commerzbankYellow } from '../../themes/curation';
-import SubjectEditor from '../../components/subject_editor';
-import RelationEditor from '../../components/relation_editor';
+import SubjectEditor from '../../components/subjectEditor';
+import RelationEditor from '../../components/relationEditor';
 import styles from './detailbar.css';
 
 class DetailBar extends Component {

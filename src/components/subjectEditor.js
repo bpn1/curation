@@ -28,7 +28,7 @@ import muiThemable from 'material-ui/styles/muiThemeable';
 import { statuses } from '../ducks/apiDuck';
 import { subjects } from '../ducks/subjectDuck';
 
-import TagInput from './tag_input';
+import TagInput from './tagInput';
 
 const InputListItem = ({ children, ...props }) => (
   <ListItem innerDivStyle={{ padding: 0 }} disabled>

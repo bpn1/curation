@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { sizeMe } from 'react-sizeme';
 
-import ContentCard from '../components/content_card';
-import DiffTable from '../components/diff_table';
+import ContentCard from '../components/contentCard';
+import DiffTable from '../components/diffTable';
 
 class VersionDiffCard extends Component {
   render() {
