@@ -68,7 +68,7 @@ class EntityLinkingRenderer extends Component {
         articleTitle = filteredTitles[0];
       } else {
         console.error('Title for search', chosenRequest, 'not found!');
-        return;
+        // return; // still try to load
       }
     }
 
