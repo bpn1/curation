@@ -40,8 +40,8 @@ const Root = ({ store }) => (
         <Route path="/duplicates" component={DuplicateTableCard} />
         <Route path="/versions" component={VersionCard} />
         <Route path="/versiondiff" component={VersionDiffCard} />
-        <Route path="statistics/blocking" component={BlockingStatisticsCard} />
-        <Route path="statistics/simmeasure" component={SimMeasureStatisticsCard} />
+        <Route path="/statistics/blocking" component={BlockingStatisticsCard} />
+        <Route path="/statistics/simmeasure" component={SimMeasureStatisticsCard} />
         <Route path="/graphs" component={GraphsCard} />
         <Route path="/entity_linking" component={EntityLinkingCard} />
         <Route path="/statistics/classifier" component={ClassifierStatisticsCard} />
