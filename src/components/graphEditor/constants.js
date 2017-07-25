@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// These keys are arbitrary (but must match the config)
-// However, GraphView renders text differently for empty types
-// so this has to be passed in if that behavior is desired.
+export const NODE_KEY = 'id'; // Key used to identify nodes
 export const EMPTY_TYPE = 'empty'; // Empty node type
 export const NONE_TYPE = 'none'; // Empty type with icon
 export const ORGANIZATION_TYPE = 'organization';
@@ -30,13 +28,10 @@ export const IMPLISENSE_SUBTYPE = 'implisenseChild';
 export const WIKIDATA_SUBTYPE = 'wikidataChild';
 export const DBPEDIA_SUBTYPE = 'dbpediaChild';
 export const SUBTYPE_POSTFIX = 'Child';
-// export const SPECIAL_CHILD_SUBTYPE = 'specialChild';
 export const EMPTY_EDGE_TYPE = 'emptyEdge';
 export const MULTIPLE_EDGE_TYPE = 'multipleEdge';
 export const MANY_EDGE_TYPE = 'manyEdge';
 export const SPECIAL_EDGE_TYPE = 'specialEdge';
-export const COOCCURRENCE_EDGE_TYPE = 'coOccurrenceEdge';
-export const NODE_KEY = 'id'; // Key used to identify nodes
 
 export const validCategories = [ORGANIZATION_TYPE, BUSINESS_TYPE, PERSON_TYPE, CITY_TYPE];
 
