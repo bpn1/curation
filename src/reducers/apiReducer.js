@@ -264,10 +264,7 @@ export default function reducer(state = {
         }
       };
     }
-    default: {
-      // TODO maybe to rigorous => e.g. actions from forms also end up here
-      // return { ...state, error: "Unknown action type: " + action.type, status: 'warning' };
-    }
+    default: break;
   }
 
   return state;
