@@ -549,7 +549,7 @@ class GraphEditor extends Component {
     },
     handleAddUpdate: (addInput) => {
       clearTimeout(this.state.autoCompleteTimerId);
-      const autoCompleteTimerId = setTimeout(() => this.loadSubjectSuggestions(addInput), 1000);
+      const autoCompleteTimerId = setTimeout(() => this.loadSubjectSuggestions(addInput), 500);
       this.setState({ addInput, autoCompleteTimerId });
     },
     handleAddFocus: () => {
