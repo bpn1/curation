@@ -93,7 +93,6 @@ class GraphEditor extends Component {
     this.updateGraph = this.updateGraph.bind(this);
     this.getViewNode = this.getViewNode.bind(this);
     this.onSelectNode = this.onSelectNode.bind(this);
-    this.onCreateNode = this.onCreateNode.bind(this);
     this.onUpdateNode = this.onUpdateNode.bind(this);
     this.onDeleteNode = this.onDeleteNode.bind(this);
     this.canDeleteNode = this.canDeleteNode.bind(this);
@@ -279,9 +278,7 @@ class GraphEditor extends Component {
     const idLists = sourceSubjects.map(subject => Object.keys(subject.relations));
     const allNeighbors = [].concat(...idLists); // merge arrays
     const seenNeighbors = {};
-    return allNeighbors.filter((neighbor) => {
-      return seenNeighbors.hasOwnProperty(neighbor) ? false : (seenNeighbors[neighbor] = true);
-    });
+    return allNeighbors.filter(neighbor => seenNeighbors.hasOwnProperty(neighbor) ? false : (seenNeighbors[neighbor] = true));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -350,22 +347,6 @@ class GraphEditor extends Component {
     if (!this.state.disableEditing) {
       this.props.actions.detailBar.openDetailBar('relation', viewEdge);
     }
-  }
-
-  // Updates the graph with a new node
-  onCreateNode(x, y) {
-    /* const graph = this.state.graph;
-
-    const viewNode = {
-      id: this.state.graph.nodes.length + 1,
-      title: '',
-      type: type,
-      x: x,
-      y: y
-    };
-
-    graph.nodes.push(viewNode);
-    this.setState({ graph: graph }); */
   }
 
   // Deletes a node from the graph
@@ -518,7 +499,7 @@ class GraphEditor extends Component {
   }
 
   loadSubjectSuggestions(addInput) {
-    axios.get(`/api/subjects?onlyMasterName&datasource=master&name=${addInput}&count=50`).then((res, err) => {
+    axios.get(`/api/subjects?onlyMasterName&datasource=master&name=${addInput}&count=50`).then((res) => {
       res.data.sort(sortByName);
       this.setState({ addNodes: res.data });
     });
@@ -536,24 +517,6 @@ class GraphEditor extends Component {
     handleEditorsCheck: (event, isInputChecked) => this.setState({
       disableEditing: !isInputChecked
     }),
-    handleSearchRequest: (searchInput, index) => {
-      // disable enter to search feature => must select from list
-      if (index < 0 || !searchInput.hasOwnProperty('key')) return;
-
-      // select the first found node
-      const selectedNodes = this.state.graph.nodes
-        .filter(node => this.filters.nodesByKey(node, searchInput.key));
-      if (selectedNodes.length > 0) {
-        this.setState({ selected: selectedNodes[0] });
-      }
-    },
-    handleSearchUpdate: (searchInput) => {
-      this.setState({ searchInput });
-    },
-    handleSearchFocus: () => {
-      // clear search field when clicked
-      this.setState({ searchInput: '' });
-    },
     handleAddRequest: (addInput, index) => {
       // disable enter to search feature => must select from list
       if (index < 0 || !addInput.hasOwnProperty('master')) return;
@@ -589,7 +552,6 @@ class GraphEditor extends Component {
   // main render method
   render() {
     const { nodes, edges } = this.getFilteredGraph();
-    // const nodeNames = this.getNodeNames();
 
     const selected = this.state.selected;
 
@@ -667,22 +629,6 @@ class GraphEditor extends Component {
               }}
               maxSearchResults={15}
             />
-            {/* Enable for search in graph
-               <AutoComplete
-              onFocus={this.listeners.handleSearchFocus}
-              onUpdateInput={this.listeners.handleSearchUpdate}
-              searchText={this.state.searchInput}
-              hintText="Search in graph..."
-              filter={AutoComplete.caseInsensitiveFilter}
-              openOnFocus
-              onNewRequest={this.listeners.handleSearchRequest}
-              dataSource={nodeNames}
-              dataSourceConfig={{
-                text: 'name',
-                value: 'key'
-              }}
-              maxSearchResults={15}
-            />*/}
             <Checkbox
               label="Neighbor edges"
               defaultChecked
@@ -734,7 +680,7 @@ class GraphEditor extends Component {
           edgeTypes={EdgeTypes}
           getViewNode={this.getViewNode}
           onSelectNode={this.onSelectNode}
-          onCreateNode={this.onCreateNode}
+          onCreateNode={() => {}}
           onUpdateNode={this.onUpdateNode}
           onDeleteNode={this.onDeleteNode}
           onSelectEdge={this.onSelectEdge}
