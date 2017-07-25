@@ -24,7 +24,7 @@ import connect from 'react-redux/es/connect/connect';
 import bindActionCreators from 'redux/es/bindActionCreators';
 
 import LinearProgress from 'material-ui/LinearProgress';
-import { Checkbox, SelectField, TextField } from 'redux-form-material-ui';
+import { SelectField, TextField } from 'redux-form-material-ui';
 import MenuItem from 'material-ui/MenuItem';
 
 import uuid from 'uuid/v4';
@@ -46,7 +46,7 @@ import { subjects } from '../ducks/subjectDuck';
 
 import TagInput from './tagInput';
 
-const InputListItem = ({ children, ...props }) => (
+const InputListItem = ({ children }) => (
   <ListItem innerDivStyle={{ padding: 0 }} disabled>
     {children}
   </ListItem>
@@ -73,16 +73,6 @@ class SubjectEditor extends Component {
     }
   }
 
-  updateTheme(theme) {
-    // add theme to state so it will adapt on the fly when the theme changes
-    if (theme) {
-      this.setState({
-        colors: theme.palette,
-        theme: theme
-      });
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     this.updateTheme(nextProps.muiTheme);
 
@@ -97,12 +87,56 @@ class SubjectEditor extends Component {
     }
   }
 
+  updateTheme(theme) {
+    // add theme to state so it will adapt on the fly when the theme changes
+    if (theme) {
+      this.setState({
+        colors: theme.palette,
+        theme: theme
+      });
+    }
+  }
+
   reload(id) {
-    console.log('Load subject #', id);
     if (id && this.props.editorType !== 'new') {
       this.props.actions.subject.getById(id);
     }
   }
+
+  styles = {
+    checkBox: {
+      paddingTop: 15,
+      paddingBottom: 15
+    }
+  };
+
+  handleSubmit = (data) => {
+    const newData = Object.assign({}, data);
+    newData.id = this.state.id;
+
+    // rework properties FieldArray into an object
+    const newProps = {};
+    if (data.hasOwnProperty('properties')) {
+      data.properties.forEach((prop) => {
+        newProps[prop.name] = prop.value;
+      });
+    }
+
+    console.log('Updating subject #', this.state.id, ' with the data: ', data, ' and new properties:', newProps);
+
+    newData.properties = newProps;
+
+    // update an old subject or create a new one depending on the type of the editor (edit or add)
+    if (['database', 'created', 'updated'].indexOf(this.props.editorType) !== -1) {
+      this.props.actions.subject.update(newData);
+    } else if (this.props.editorType === 'new') {
+      this.props.actions.subject.create(newData);
+    } else {
+      console.error('No Redux action for the editorType ' + this.props.editorType + ' configured!');
+    }
+
+    this.props.onRequestClose();
+  };
 
   renderTextField = props => (
     <TextField
@@ -118,16 +152,6 @@ class SubjectEditor extends Component {
       hintText={props.label}
       errorText={props.touched && props.error}
       onChange={props.input.onChange}
-      {...props}
-    />
-  );
-
-  renderCheckbox = props => (
-    <Checkbox
-      disabled={this.state.disabled}
-      label={props.label}
-      checked={!!props.value}
-      onCheck={props.input.onChange}
       {...props}
     />
   );
@@ -150,8 +174,8 @@ class SubjectEditor extends Component {
         label="Add property"
         icon={<AddIcon color={this.state.colors.positiveColor1} hoverColor={this.state.colors.positiveColor2} />}
       />
-      {fields.map((field, index) => // (inputWidth / 2.0) - 30 | (inputWidth / 2.0) - 10
-        (<InputListItem index={index} key={index}>
+      {fields.map((field, index) =>
+        (<InputListItem key={index}>
           <Field
             name={`${field}.name`}
             type="text"
@@ -180,45 +204,10 @@ class SubjectEditor extends Component {
     </div>
   );
 
-  handleSubmit = (data) => {
-    const newData = Object.assign({}, data);
-    newData.id = this.state.id;
-
-    // rework properties FieldArray into an object
-    const newProps = {};
-    if (data.hasOwnProperty('properties')) {
-      data.properties.forEach((prop) => {
-        newProps[prop.name] = prop.value;
-      });
-    }
-
-    console.log('Updating subject #', this.state.id, ' with the data: ', data, ' and new properties:', newProps);
-
-    newData.properties = newProps;
-
-    // update an old subject or create a new one depending on the type of the editor (edit or add)
-    if (this.props.editorType === 'database' || this.props.editorType === 'created' || this.props.editorType === 'updated') {
-      this.props.actions.subject.update(newData);
-    } else if (this.props.editorType === 'new') {
-      this.props.actions.subject.create(newData);
-    } else {
-      console.error('No Redux action for the editorType ' + this.props.editorType + ' configured!');
-    }
-
-    this.props.onRequestClose();
-  };
-
-  styles = {
-    checkBox: {
-      paddingTop: 15,
-      paddingBottom: 15
-    }
-  };
-
   render() {
-    let { width, pristine, submitting, handleSubmit, reset, isLoading } = this.props;
+    const { pristine, submitting, handleSubmit, reset, isLoading } = this.props;
     const { id } = this.state;
-    width = width || 500;
+    const width = this.props.width || 500;
     const fieldStyle = { width };
 
     return (
@@ -234,31 +223,44 @@ class SubjectEditor extends Component {
               nestedItems={[
                 <InputListItem key={'listItem' + 0}>
                   <Field
-                    name="id" component={this.renderTextField}
+                    name="id"
+                    component={this.renderTextField}
                     hintStyle={{ whiteSpace: 'nowrap' }}
-                    floatingLabelText="ID" floatingLabelFixed
-                    hintText={id} disabled style={fieldStyle}
+                    floatingLabelText="ID"
+                    floatingLabelFixed
+                    hintText={id}
+                    disabled
+                    style={fieldStyle}
                   />
                 </InputListItem>,
                 <InputListItem key={'listItem' + 1}>
                   <Field
-                    name="name" component={this.renderTextField}
-                    floatingLabelText="Name" floatingLabelFixed={false}
-                    hintText="Enter a name..." style={fieldStyle}
+                    name="name"
+                    component={this.renderTextField}
+                    floatingLabelText="Name"
+                    floatingLabelFixed={false}
+                    hintText="Enter a name..."
+                    style={fieldStyle}
                   />
                 </InputListItem>,
                 <InputListItem key={'listItem' + 2}>
                   <Field
-                    name="aliases" component={this.renderTagInput}
-                    floatingLabelText="Aliases" floatingLabelFixed={false}
-                    hintText="Type and press Enter to add..." style={fieldStyle}
+                    name="aliases"
+                    component={this.renderTagInput}
+                    floatingLabelText="Aliases"
+                    floatingLabelFixed={false}
+                    hintText="Type and press Enter to add..."
+                    style={fieldStyle}
                   />
                 </InputListItem>,
                 <InputListItem key={'listItem' + 3}>
                   <Field
-                    name="category" component={this.renderSelectField}
-                    floatingLabelText="Category" floatingLabelFixed={false}
-                    hintText="Select a subject category..." style={fieldStyle}
+                    name="category"
+                    component={this.renderSelectField}
+                    floatingLabelText="Category"
+                    floatingLabelFixed={false}
+                    hintText="Select a subject category..."
+                    style={fieldStyle}
                   >
                     <MenuItem value="business" primaryText="Business" />
                     <MenuItem value="organization" primaryText="Organization" />
@@ -315,12 +317,26 @@ SubjectEditor.propTypes = {
   editorType: PropTypes.oneOf(['new', 'database', 'created', 'updated', 'deleted']).isRequired,
   onRequestClose: PropTypes.func,
   load: PropTypes.bool,
-  disabled: PropTypes.bool,
   id: PropTypes.string,
   width: PropTypes.number,
   isLoading: PropTypes.bool,
-  name: PropTypes.string,
-  master: PropTypes.string
+  initialValues: PropTypes.object,
+  muiTheme: PropTypes.shape({
+    palette: PropTypes.object
+  }),
+  actions: PropTypes.shape({
+    subject: PropTypes.shape({
+      update: PropTypes.func,
+      create: PropTypes.func,
+      getById: PropTypes.func
+    })
+  }),
+
+  // reduxForm-supplied props
+  pristine: PropTypes.bool,
+  submitting: PropTypes.bool,
+  handleSubmit: PropTypes.func,
+  reset: PropTypes.func
 };
 
 SubjectEditor.defaultProps = {
