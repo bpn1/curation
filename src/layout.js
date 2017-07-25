@@ -22,9 +22,9 @@ import styles from './layout.css';
 
 import { curationLightTheme, curationDarkTheme } from './themes/curation';
 
-import ToolBar from './containers/ToolBar';
-import SideBar from './containers/SideBar';
-import DetailBar from './containers/DetailBar';
+import ToolBar from './containers/toolBar';
+import SideBar from './containers/sideBar';
+import DetailBar from './containers/detailBar';
 
 import StatusIndicator from './components/statusIndicator';
 import CommitIndicator from './components/commitIndicator';
