@@ -17,12 +17,13 @@ limitations under the License.
 import axios from 'axios';
 import createDuck, { apiPath, countParam, makeError, statuses } from './apiDuck';
 import { commitExtension } from './commitDuck';
+import graphExtension from './graphExtension';
 
 const findByNameExtension = path => ({
   types: ['FIND', 'FIND_PENDING', 'FIND_FULFILLED', 'FIND_REJECTED',
     'GET_BY_ID', 'GET_BY_ID_PENDING', 'GET_BY_ID_FULFILLED', 'GET_BY_ID_REJECTED'],
 
-  // TODO handle status of mutliple actions started simultaneously
+  // TODO handle status of multiple actions started simultaneously
 
   reducer: (state, action, { types }) => {
     switch (action.type) {
@@ -116,6 +117,7 @@ const findByNameExtension = path => ({
       error: {},
       entities: [],
       editableSubjects: {},
+      relations: {},
       created: {},
       deleted: {},
       updated: {}
@@ -125,6 +127,7 @@ const findByNameExtension = path => ({
 export const subjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects' })
 // extensions overwrite some parent attributes
   .extend(findByNameExtension('/subjects'))
+  .extend(graphExtension('/subjects'))
   .extend(commitExtension('/subjects'));
 // Only use action creators and use subject reducer for all
 export const tempSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_temp' });

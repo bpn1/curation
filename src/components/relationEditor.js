@@ -33,7 +33,6 @@ import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import RemoveIcon from 'material-ui/svg-icons/content/remove-circle-outline';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
-import graphDuck from '../ducks/graphDuck';
 import { subjects } from '../ducks/subjectDuck';
 import DirectionToggle from './directionToggle';
 import DateRangeEditor from './dateRangeEditor';
@@ -77,11 +76,10 @@ class RelationEditor extends Component {
 
   reload(sourceKey, targetKey) {
     console.log('Load relations for', sourceKey, '->', targetKey);
-    this.props.actions.graph.fetchRelations(sourceKey, targetKey);
+    this.props.actions.subject.fetchRelations(sourceKey, targetKey);
   }
 
   handleSubmit(data) {
-    console.log('TODO: Update relations for', this.state.sourceKey, '->', this.state.targetKey, ':', data);
     this.props.actions.detailBar.closeDetailBar();
 
     const sourceRelations = data.relations.filter(relation => relation.isForward);
@@ -268,19 +266,18 @@ const reduxConnectedForm = reduxForm({
 function mapStateToProps(state, ownProps) {
   return {
     initialValues: {
-      relations: state.graph.relations[[ownProps.sourceKey, ownProps.targetKey]] || []
+      relations: state.subject.relations[[ownProps.sourceKey, ownProps.targetKey]] || []
     },
-    sourceSubject: state.graph.subjects[ownProps.sourceKey],
-    targetSubject: state.graph.subjects[ownProps.targetKey]
+    sourceSubject: state.subject.subjects[ownProps.sourceKey],
+    targetSubject: state.subject.subjects[ownProps.targetKey]
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: {
-      detailBar: bindActionCreators({ openDetailBar, closeDetailBar }, dispatch),
-      graph: bindActionCreators(graphDuck.creators, dispatch),
-      subject: bindActionCreators(subjects.creators, dispatch)
+      subject: bindActionCreators(subjects.creators, dispatch),
+      detailBar: bindActionCreators({ openDetailBar, closeDetailBar }, dispatch)
     }
   };
 }

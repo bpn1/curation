@@ -16,13 +16,12 @@ limitations under the License.
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
 
 import IconButton from 'material-ui/IconButton';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
-import ErrorIcon from 'material-ui/svg-icons/alert/error'; // TODO without -outline?
+import ErrorIcon from 'material-ui/svg-icons/alert/error';
 import WarningIcon from 'material-ui/svg-icons/alert/warning';
 import OkIcon from 'material-ui/svg-icons/navigation/check';
 
@@ -107,18 +106,15 @@ StatusIndicator.defaultProps = {
 function mapStateToProps(state) {
   return {
     // TODO better way to use multiple reducers/stores
-    // TODO change to a different reducer later (controllable from other reducers)?
     status: {
       ...state.duplicate.status,
       ...state.subject.status,
-      ...state.graph.status,
       ...state.linkedArticles.status,
       ...state.versiondiff.status
     },
     error: {
       ...state.duplicate.error,
       ...state.subject.error,
-      ...state.graph.error,
       ...state.linkedArticles.error,
       ...state.versiondiff.error
     }

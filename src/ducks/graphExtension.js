@@ -15,19 +15,7 @@ limitations under the License.
 */
 
 import axios from 'axios';
-import createDuck, { apiPath, makeError, makeAxiosTypes } from './apiDuck';
-
-function extractSourceAndTarget(fetchedSubjects, sourceKey, targetKey) {
-  const sourceSubjects = fetchedSubjects.filter(s => s.id === sourceKey);
-  const targetSubjects = fetchedSubjects.filter(s => s.id === targetKey);
-
-  if (!sourceSubjects.length || !targetSubjects.length) {
-    console.error('Source or target subject not found!', fetchedSubjects, sourceSubjects, targetSubjects);
-    return { source: null, target: null };
-  }
-
-  return { source: sourceSubjects[0], target: targetSubjects[0] };
-}
+import { apiPath, makeError, makeAxiosTypes } from './apiDuck';
 
 function extractRelations(source, target) {
   let forwardRelations = source.relations[target.id];
@@ -63,9 +51,7 @@ function extractRelations(source, target) {
   });
 }
 
-const apiRoute = '/subjects';
-
-export default createDuck({ namespace: 'curation', store: 'graph', path: apiRoute }).extend({
+const graphExtension = path => ({
   types: [
     ...makeAxiosTypes('FETCH_RELATIONS'),
     ...makeAxiosTypes('UPDATE_RELATIONS'),
@@ -116,14 +102,12 @@ export default createDuck({ namespace: 'curation', store: 'graph', path: apiRout
     fetchRelations: (sourceKey, targetKey) => ({
       type: types.FETCH_RELATIONS,
       payload: axios.all([
-        axios.get(`${apiPath}${apiRoute}?id=${sourceKey}&count=1`),
-        axios.get(`${apiPath}${apiRoute}?id=${targetKey}&count=1`)
+        axios.get(`${apiPath}${path}?id=${sourceKey}&count=1`),
+        axios.get(`${apiPath}${path}?id=${targetKey}&count=1`)
       ])
-    }),
-    updateRelations: (data) => {
-      console.log('TODO implement updateRelations in graphDuck!');
-      console.log('Edge data:', data);
-    }
+    })
   }),
   initialState: () => ({ relations: {}, subjects: {}, status: {}, error: {} })
 });
+
+export default graphExtension;
