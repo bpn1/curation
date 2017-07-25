@@ -30,6 +30,7 @@ class DiffTable extends Component {
   constructor(props) {
     super(props);
 
+    // extract two version TimeUUIDs from URL
     let versions = window.location.hash.indexOf('?') === -1 ? [] :
       window.location.hash
         .split('?')[1]
@@ -51,8 +52,9 @@ class DiffTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.tableData) {
-      const tableData = nextProps.tableData.map((entry) => {
-        Object.keys(entry).map((key) => {
+      const tableData = nextProps.tableData.map((row) => {
+        const entry = Object.assign({}, row);
+        Object.keys(entry).forEach((key) => {
           if (entry[key] && plainDataKeys.indexOf(key) < 0) {
             entry[key] = JSON.parse(entry[key]);
           }
@@ -73,10 +75,16 @@ class DiffTable extends Component {
     { key: 'relations', name: 'Relations' }
   ];
 
+  listeners = {
+    reloadDuplicates: () => {
+      // TODO make count a user option
+      this.props.actions.versionDiff.fetchChanges(this.state.versions[0], this.state.versions[1], 100);
+    }
+  };
+
   render() {
     return (
       <InteractiveTable
-        ref="table"
         height={this.props.height}
         expandKey="id"
         headers={this.headers}
@@ -88,17 +96,21 @@ class DiffTable extends Component {
       />
     );
   }
-
-  listeners = {
-    reloadDuplicates: () => {
-      // TODO make count a user option
-      this.props.actions.versionDiff.fetchChanges(this.state.versions[0], this.state.versions[1], 100);
-    }
-  };
 }
 
+DiffTable.defaultProps = {
+  tableData: [],
+};
+
 DiffTable.propTypes = {
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
+  muiTheme: PropTypes.object.isRequired,
+  actions: PropTypes.shape({
+    versionDiff: PropTypes.shape({
+      fetchChanges: PropTypes.func
+    })
+  }).isRequired,
+  tableData: PropTypes.array
 };
 
 /* connection to Redux */
