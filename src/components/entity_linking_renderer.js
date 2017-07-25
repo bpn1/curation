@@ -61,14 +61,12 @@ class EntityLinkingRenderer extends Component {
   handleSelection(chosenRequest, dataSourceIndex) {
     let articleTitle = chosenRequest;
 
+    // try to automatically complete the full title, otherwise use it directly
     if (dataSourceIndex === -1) {
       const filteredTitles = this.state.pageTitles.filter(title => this.titleFilter(chosenRequest, title));
 
       if (filteredTitles.length >= 1) {
         articleTitle = filteredTitles[0];
-      } else {
-        console.error('Title for search', chosenRequest, 'not found!');
-        // return; // still try to load
       }
     }
 
