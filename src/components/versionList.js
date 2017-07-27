@@ -46,6 +46,8 @@ const dataSourceIcons = {
   none: <HistoryIcon color={grey600} />
 };
 
+const topAndBottomPadding = 2 * 8;
+
 class VersionList extends Component {
   constructor(props) {
     super(props);
@@ -188,7 +190,7 @@ class VersionList extends Component {
 
     return (
       <div>
-        <List style={{ height: this.state.height, overflowY: 'auto' }}>
+        <List style={{ height: this.state.height - topAndBottomPadding, overflowY: 'auto' }}>
           { sortedVersionKeys.map(day => (
             <span key={day}>
               <Subheader>{day.split(',')[1]}</Subheader>
