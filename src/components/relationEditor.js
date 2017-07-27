@@ -79,13 +79,26 @@ class RelationEditor extends Component {
     this.props.actions.subject.fetchRelations(sourceKey, targetKey);
   }
 
+  // convert relations from form format to subject format
+  convertRelations(relations, targetSubject) {
+    const finalRelations = {};
+    relations.forEach((relation) => {
+      if (!finalRelations.hasOwnProperty(targetSubject.id)) {
+        finalRelations[targetSubject.id] = {};
+      }
+
+      finalRelations[targetSubject.id][relation.type] = relation.value;
+    });
+    return finalRelations;
+  }
+
   handleSubmit(data) {
     this.props.actions.detailBar.closeDetailBar();
 
     const sourceRelations = data.relations.filter(relation => relation.isForward);
     const targetRelations = data.relations.filter(relation => !relation.isForward);
-    this.props.sourceSubject.relations = sourceRelations;
-    this.props.targetSubject.relations = targetRelations;
+    this.props.sourceSubject.relations = this.convertRelations(sourceRelations, this.props.targetSubject);
+    this.props.targetSubject.relations = this.convertRelations(targetRelations, this.props.sourceSubject);
     this.props.actions.subject.update(this.props.sourceSubject);
     this.props.actions.subject.update(this.props.targetSubject);
   }
