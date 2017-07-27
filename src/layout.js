@@ -39,13 +39,9 @@ class MainLayout extends Component {
     };
   }
 
-  handleChangeMuiTheme = (muiTheme) => {
-    this.setState({
-      muiTheme: muiTheme,
-    });
-  };
-
   render() {
+    const backgroundColor = this.state.muiTheme.palette.backgroundColor;
+
     return (
       <MuiThemeProvider muiTheme={this.state.muiTheme}>
         <div className={styles.appLayout}>
@@ -53,7 +49,7 @@ class MainLayout extends Component {
             <CommitIndicator />
             <StatusIndicator />
           </ToolBar>
-          <section className={styles.appMainContainer} style={{ backgroundColor: this.state.muiTheme.palette.backgroundColor }}>
+          <section className={styles.appMainContainer} style={{ backgroundColor }}>
             <SideBar />
             <div style={{ padding: 10, width: '100%' }}>
               {this.props.children}
