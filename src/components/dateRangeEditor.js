@@ -28,7 +28,6 @@ class DateRangeEditor extends Component {
   constructor(props) {
     super(props);
 
-    console.log('DateRangeEditor value in constructor:', props.input.value, props.value);
     const currentDate = new Date();
     const hasInitialValue = props.startDate !== null || props.endDate !== null;
 
@@ -118,7 +117,7 @@ DateRangeEditor.propTypes = {
   }),
   input: PropTypes.shape({
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.arrayOf(String)
+    value: PropTypes.oneOf(PropTypes.arrayOf(String), PropTypes.string)
   }).isRequired,
   meta: PropTypes.shape({
     touched: PropTypes.bool,
