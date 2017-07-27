@@ -58,13 +58,14 @@ class TagInput extends Component {
     const props = Object.assign({}, this.props);
     delete props.input;
     delete props.meta;
-    // TODO remove if not needed
     delete props.initialValue;
+
+    const value = this.state.tags instanceof Array ? this.state.tags : [];
 
     return (
       <ChipInput
         {...props}
-        value={this.state.tags}
+        value={value}
         onRequestAdd={this.addTag}
         onRequestDelete={this.deleteTag}
       />
@@ -75,7 +76,7 @@ class TagInput extends Component {
 TagInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   input: PropTypes.shape({
-    value: PropTypes.oneOf([PropTypes.array, PropTypes.string])
+    value: PropTypes.oneOfType([PropTypes.array, PropTypes.string])
   })
 };
 
