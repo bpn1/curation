@@ -20,7 +20,7 @@ import muiThemable from 'material-ui/styles/muiThemeable';
 import JSONTree from 'react-json-tree';
 import theme from './theme';
 
-class DiffTree extends Component {
+class FlatJSONTree extends Component {
   flattenJSON(obj) {
     if (obj === null || obj === undefined) return obj;
     if (typeof obj === 'string') return obj;
@@ -42,7 +42,6 @@ class DiffTree extends Component {
     const json = this.flattenJSON(Object.assign({}, this.props.json));
 
     return (
-      // TODO custom styling: add + and - icons, color accordingly for changes
       <div onClick={e => e.stopPropagation()}>
         <JSONTree
           data={json}
@@ -58,12 +57,11 @@ class DiffTree extends Component {
   }
 }
 
-// TODO allow either array or object
-DiffTree.propTypes = {
+FlatJSONTree.propTypes = {
   json: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.array
   ]).isRequired,
 };
 
-export default muiThemable()(DiffTree);
+export default muiThemable()(FlatJSONTree);

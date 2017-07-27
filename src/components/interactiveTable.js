@@ -22,7 +22,7 @@ import IconButton from 'material-ui/IconButton';
 import UpArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import DownArrowIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
-import DiffTree from './diffTree';
+import DiffTree from './flatJSONTree';
 
 class InteractiveTable extends Component {
   constructor(props) {
