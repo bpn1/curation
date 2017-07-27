@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import axios from 'axios';
 // use minified version of package, normal import is 500kb big
 import Duck from 'extensible-duck/dist/extensible-duck.min';
+import axios from 'axios';
 
 export const apiPath = '/api';
 
@@ -26,7 +26,7 @@ export function countParam(count) {
 
 export function makeError(actionType, payload) {
   let error = actionType;
-  error = error.replace(/_/g, ' ').toLowerCase();         // spaces to underscore, all lower case
+  error = error.replace(/_/g, ' ').toLowerCase(); // spaces to underscore, all lower case
   error = error.charAt(0).toUpperCase() + error.slice(1); // first letter to upper case
 
   if (payload !== null) {
@@ -49,23 +49,23 @@ export function makeAxiosTypes(baseType) {
   return [baseType, baseType + '_PENDING', baseType + '_REJECTED', baseType + '_FULFILLED'];
 }
 
-export default function createDuck({ namespace, store, path, initialState = {} }) {
+export default function createDuck({ namespace, store, path }) {
   return new Duck({
     namespace,
     store,
 
     consts: { statuses },
     types: [
-      'GET', 'GET_PENDING', 'GET_FULFILLED', 'GET_REJECTED',
-      'GET_MULTIPLE', 'GET_MULTIPLE_PENDING', 'GET_MULTIPLE_FULFILLED', 'GET_MULTIPLE_REJECTED',
-      'FETCH', 'FETCH_PENDING', 'FETCH_FULFILLED', 'FETCH_REJECTED',
-      'POST', 'POST_PENDING', 'POST_FULFILLED', 'POST_REJECTED',
-      'PATCH', 'PATCH_PENDING', 'PATCH_FULFILLED', 'PATCH_REJECTED',
+      ...makeAxiosTypes('GET'),
+      ...makeAxiosTypes('GET_MULTIPLE'),
+      ...makeAxiosTypes('FETCH'),
+      ...makeAxiosTypes('POST'),
+      ...makeAxiosTypes('PATCH')
     ],
 
-    // TODO handle status of mutliple actions started simultaniously
+    // TODO handle status of multiple actions started simultaneously
 
-    reducer: (state, action, { types, initialState }) => {
+    reducer: (state, action, { types }) => {
       switch (action.type) {
         case types.FETCH_PENDING:
           return {
@@ -151,7 +151,6 @@ export default function createDuck({ namespace, store, path, initialState = {} }
       patch: id => ({ type: types.PATCH, payload: axios.patch(`${apiPath}${path}/${id}`, obj) })
     }),
 
-    initialState:
-      ({ statuses }) => ({ status: {}, error: {}, entities: [] })
+    initialState: () => ({ status: {}, error: {}, entities: [] })
   });
 }
