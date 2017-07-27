@@ -52,10 +52,8 @@ function extractRelations(source, target) {
   });
 }
 
-const graphExtension = path => ({
+const relationExtension = path => ({
   types: [
-    ...makeAxiosTypes('FETCH_RELATIONS'),
-    ...makeAxiosTypes('UPDATE_RELATIONS'),
     ...makeAxiosTypes('FETCH_RELATIONS')
   ],
   reducer: (state, action, { types }) => {
@@ -94,8 +92,6 @@ const graphExtension = path => ({
           status: { ...state.status, [types.FETCH_RELATIONS]: 'ERROR' },
           error: { ...state.error, [types.FETCH_RELATIONS]: makeError(action.type, action.payload) }
         };
-      case types.UPDATE_RELATIONS_FULFILLED:
-        return state; // TODO implement using commit reducer etc.
       default:
         return state;
     }
@@ -112,4 +108,4 @@ const graphExtension = path => ({
   initialState: () => ({ relations: {}, subjects: {}, status: {}, error: {} })
 });
 
-export default graphExtension;
+export default relationExtension;

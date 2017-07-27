@@ -17,7 +17,7 @@ limitations under the License.
 import axios from 'axios';
 import createDuck, { apiPath, countParam, makeError, statuses } from './apiDuck';
 import { commitExtension } from './commitDuck';
-import graphExtension from './graphExtension';
+import relationExtension from './relationExtension';
 
 const findByNameExtension = path => ({
   types: ['FIND', 'FIND_PENDING', 'FIND_FULFILLED', 'FIND_REJECTED',
@@ -127,7 +127,7 @@ const findByNameExtension = path => ({
 export const subjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects' })
 // extensions overwrite some parent attributes
   .extend(findByNameExtension('/subjects'))
-  .extend(graphExtension('/subjects'))
+  .extend(relationExtension('/subjects'))
   .extend(commitExtension('/subjects'));
 // Only use action creators and use subject reducer for all
 export const tempSubjects = createDuck({ namespace: 'curation', store: 'subject', path: '/subjects_temp' });
