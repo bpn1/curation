@@ -146,18 +146,6 @@ const ManyEdgeShape = (
   </symbol>
 );
 
-const CoOccurrenceEdgeShape = (
-  <symbol viewBox="0 0 50 50" id="coOccurenceEdge">
-    <rect transform="rotate(45)" x="25" y="-4.5" width="15" height="15" fill="currentColor" />
-    <text x="25" y="-4.5" width="15" height="15" stroke={symbolStroke} fill={symbolFill}>
-      <tspan>4</tspan>
-    </text>
-    <text textAnchor="middle" fill="#666" stroke="#fff">
-      <title>16</title>
-    </text>
-  </symbol>
-);
-
 export default {
   NodeTypes: {
     empty: {
@@ -213,10 +201,6 @@ export default {
     manyEdge: {
       shapeId: '#manyEdge',
       shape: ManyEdgeShape
-    },
-    coOccurrenceEdge: {
-      shapeId: '#coOccurenceEdge',
-      shape: CoOccurrenceEdgeShape
     }
   }
 };
