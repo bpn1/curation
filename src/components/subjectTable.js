@@ -20,6 +20,7 @@ import bindActionCreators from 'redux/es/bindActionCreators';
 import connect from 'react-redux/es/connect/connect';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 
+import AutoComplete from 'material-ui/AutoComplete';
 import Dialog from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -28,7 +29,6 @@ import TextField from 'material-ui/TextField';
 import muiThemable from 'material-ui/styles/muiThemeable';
 
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
-import MergeIcon from 'material-ui/svg-icons/editor/merge-type';
 import GraphIcon from 'material-ui/svg-icons/social/share';
 import EditIcon from 'material-ui/svg-icons/image/edit';
 import MapIcon from 'material-ui/svg-icons/maps/place';
@@ -39,15 +39,13 @@ import SearchIcon from 'material-ui/svg-icons/action/search';
 
 import InteractiveTable from './interactiveTable';
 import SubjectDialog from './subjectDialog';
-import { subjects, dbpediaSubjects, wikiDataSubjects } from '../ducks/subjectDuck';
-import { AutoComplete } from 'material-ui';
+import { subjects } from '../ducks/subjectDuck';
 import { statuses } from '../ducks/apiDuck';
 
 class SubjectTable extends Component {
   constructor(props) {
     super(props);
 
-    // TODO load from/ save to Redux settings?
     const defaultHiddenColumns = ['master', 'datasource', 'id', 'aliases', 'category', 'relations'];
 
     this.state = {
@@ -105,11 +103,9 @@ class SubjectTable extends Component {
     });
   }
 
-  preventSelection(evt, lambda) {
-    lambda();
-    evt.stopPropagation();
-    evt.preventDefault();
-  }
+  handleSearchRequest = (searchInput) => {
+    this.props.actions.subject.findByName(searchInput, this.state.count);
+  };
 
   styles = {
     cogIcon: {
@@ -127,191 +123,6 @@ class SubjectTable extends Component {
       marginLeft: '50%'
     }
   };
-
-  handleSearchRequest = (searchInput, index) => {
-    console.log(this.state.count);
-    this.props.actions.subject.findByName(searchInput, this.state.count);
-  };
-
-  render() {
-    const colors = this.props.muiTheme.palette;
-
-    const buttonBarHeight = 48;
-
-    const selectionCount = this.state.selectedRows.length;
-    const showSelectionButtons = selectionCount > 0;
-    const showSingleSelectionButtons = selectionCount === 1;
-    const showMultipleSelectionButtons = selectionCount > 1;
-
-    return (
-      <Grid fluid>
-        <Row between="xs">
-          <Col>
-            {this.props.showNameFilter && <Row middle="xs">
-              <Col xs={8}>
-                <Row middle="xs">
-                  <Col xs={1}>
-                    <SearchIcon
-                      style={{ position: 'relative', top: 4 }}
-                    />
-                  </Col>
-                  <Col xs={11}>
-                    <AutoComplete
-                      fullWidth
-                      hintText="Search by name..."
-                      onNewRequest={this.handleSearchRequest}
-                      dataSource={[]}
-                    />
-                  </Col>
-                </Row>
-              </Col>
-              <Col xs={2}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  hintText="Count"
-                  defaultValue={this.state.count}
-                  onChange={this.listeners.updateCount}
-                />
-              </Col>
-            </Row>}
-          </Col>
-          <Col>
-            <CustomButton
-              tooltip="Edit selected"
-              visible={showSingleSelectionButtons}
-              onClick={evt => this.preventSelection(evt, () => this.listeners.editSelectedSubject())}
-            >
-              <EditIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Merge selected"
-              visible={showMultipleSelectionButtons}
-              onClick={evt => console.log('TODO: Add merge function')}
-            >
-              <MergeIcon color={colors.semiNegativeColor1} hoverColor={colors.semiNegativeColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Show on map"
-              visible={showSingleSelectionButtons}
-              onClick={this.listeners.showOnMap}
-            >
-              <MapIcon color={colors.secondInteractiveColor1} hoverColor={colors.secondInteractiveColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Delete selected"
-              visible={showSelectionButtons}
-              onClick={this.listeners.openDeleteConfirmationIfSelected}
-            >
-              <DeleteIcon color={colors.negativeColor1} hoverColor={colors.negativeColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Show selection graph"
-              visible={showSelectionButtons}
-              onClick={this.listeners.showSelectionGraph}
-            >
-              <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Add new"
-              onClick={this.listeners.addSubject}
-            >
-              <AddIcon color={colors.positiveColor1} hoverColor={colors.positiveColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Reload"
-              onClick={this.listeners.reloadSubjects}
-            >
-              <RefreshIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
-            </CustomButton>
-            <CustomButton
-              tooltip="Settings"
-              onClick={this.listeners.showSettings}
-            >
-              <SettingsIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
-            </CustomButton>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <div style={this.styles.refreshContainer}>
-              <RefreshIndicator
-                status={this.state.refreshStatus}
-                style={this.styles.refreshIndicator}
-                size={40}
-                left={-20}
-                top={-50}
-              />
-            </div>
-            <InteractiveTable
-              height={this.props.height - buttonBarHeight}
-              ref="table"
-              expandKey={'id'}
-              headers={this.props.headers.concat(this.state.extractedProperties)}
-              data={this.state.tableData}
-              muiTheme={this.props.muiTheme}
-              onSelectionChange={this.listeners.handleSelectionChange}
-              hiddenColumns={this.state.hiddenColumns}
-            /></Col>
-        </Row>
-        {/* these elements are hidden by default */}
-        <SubjectDialog
-          ref="subjectDialog"
-          open={this.state.editorOpen}
-          onRequestClose={this.listeners.closeEditor}
-        />
-        <Dialog
-          ref="deleteConfirmationDialog"
-          open={this.state.deleteConfirmationOpen}
-          title="Are you sure?"
-          modal
-          actions={[
-            <FlatButton
-              label="Cancel"
-              primary={false}
-              onTouchTap={this.listeners.closeDeleteConfirmation}
-              keyboardFocused
-            />,
-            <FlatButton label="Submit" primary onTouchTap={this.listeners.deleteSelectedSubjects} />
-          ]}
-        >
-          Do you really want to delete the selected subject{this.state.multipleDeletions ? ' entries' : ''}?<br />
-          This will result in the loss of {this.state.multipleDeletions ? 'these subjects' : 'this subject'}:
-          <ul>{this.state.toBeDeletedNames.map(name => <li key={name}>{name}</li>)}</ul>
-        </Dialog>
-        <Dialog
-          ref="settingsDialog"
-          open={this.state.settingsOpen}
-          backgroundColor
-          title={<div><span style={this.styles.cogIcon}>⚙</span>️ Table Settings</div>}
-          modal
-          actions={[
-            <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
-            <FlatButton label="Save" primary onTouchTap={this.listeners.saveSettings} keyboardFocused />
-          ]}
-        >
-          <TextField
-            style={{ maxWidth: '100%', width: '100%' }}
-            ref="setting_hiddenColumns"
-            hintText="Enter column names, comma-separated..."
-            floatingLabelText="Hidden columns"
-            floatingLabelFixed={false}
-            value={this.state.hiddenColumnsVal}
-            onChange={this.listeners.hiddenColumnsChanged}
-          />
-          <TextField
-            style={{ maxWidth: '100%', width: '100%' }}
-            ref="setting_extractedProperties"
-            hintText="Enter extracted property names, comma-separated..."
-            floatingLabelText="Extracted properties"
-            floatingLabelFixed={false}
-            value={this.state.extractedPropertiesVal}
-            onChange={this.listeners.extractedPropertiesChanged}
-          />
-        </Dialog>
-      </Grid>
-    );
-  }
 
   listeners = {
     handleSelectionChange: (selectedRows) => {
@@ -394,8 +205,6 @@ class SubjectTable extends Component {
         return;
       }
 
-      // alternative: http://maps.google.com/maps/place/<name>/@<lat>,<long>,15z
-      // => see https://stackoverflow.com/a/33759316
       let mapUrl = 'http://maps.google.com/maps?z=15&t=m&q=';
 
       const props = this.state.selectedRows[0].properties;
@@ -411,7 +220,198 @@ class SubjectTable extends Component {
       window.open(mapUrl, '_blank');
     }
   };
+
+  render() {
+    const colors = this.props.muiTheme.palette;
+
+    const buttonBarHeight = 48;
+
+    const selectionCount = this.state.selectedRows.length;
+    const showSelectionButtons = selectionCount > 0;
+    const showSingleSelectionButtons = selectionCount === 1;
+
+    return (
+      <Grid fluid>
+        <Row between="xs">
+          <Col>
+            {this.props.showNameFilter && <Row middle="xs">
+              <Col xs={8}>
+                <Row middle="xs">
+                  <Col xs={1}>
+                    <SearchIcon
+                      style={{ position: 'relative', top: 4 }}
+                    />
+                  </Col>
+                  <Col xs={11}>
+                    <AutoComplete
+                      fullWidth
+                      hintText="Search by name..."
+                      onNewRequest={this.handleSearchRequest}
+                      dataSource={[]}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+              <Col xs={2}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  hintText="Count"
+                  defaultValue={this.state.count}
+                  onChange={this.listeners.updateCount}
+                />
+              </Col>
+            </Row>}
+          </Col>
+          <Col>
+            <CustomButton
+              tooltip="Edit selected"
+              visible={showSingleSelectionButtons}
+              onClick={this.listeners.editSelectedSubject}
+            >
+              <EditIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Show on map"
+              visible={showSingleSelectionButtons}
+              onClick={this.listeners.showOnMap}
+            >
+              <MapIcon color={colors.secondInteractiveColor1} hoverColor={colors.secondInteractiveColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Delete selected"
+              visible={showSelectionButtons}
+              onClick={this.listeners.openDeleteConfirmationIfSelected}
+            >
+              <DeleteIcon color={colors.negativeColor1} hoverColor={colors.negativeColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Show selection graph"
+              visible={showSelectionButtons}
+              onClick={this.listeners.showSelectionGraph}
+            >
+              <GraphIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Add new"
+              onClick={this.listeners.addSubject}
+            >
+              <AddIcon color={colors.positiveColor1} hoverColor={colors.positiveColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Reload"
+              onClick={this.listeners.reloadSubjects}
+            >
+              <RefreshIcon color={colors.interactiveColor1} hoverColor={colors.interactiveColor2} />
+            </CustomButton>
+            <CustomButton
+              tooltip="Settings"
+              onClick={this.listeners.showSettings}
+            >
+              <SettingsIcon color={colors.neutralColor1} hoverColor={colors.neutralColor2} />
+            </CustomButton>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div style={this.styles.refreshContainer}>
+              <RefreshIndicator
+                status={this.state.refreshStatus}
+                style={this.styles.refreshIndicator}
+                size={40}
+                left={-20}
+                top={-50}
+              />
+            </div>
+            <InteractiveTable
+              height={this.props.height - buttonBarHeight}
+              ref="table"
+              expandKey={'id'}
+              headers={this.props.headers.concat(this.state.extractedProperties)}
+              data={this.state.tableData}
+              muiTheme={this.props.muiTheme}
+              onSelectionChange={this.listeners.handleSelectionChange}
+              hiddenColumns={this.state.hiddenColumns}
+            /></Col>
+        </Row>
+        <SubjectDialog
+          ref="subjectDialog"
+          open={this.state.editorOpen}
+          onRequestClose={this.listeners.closeEditor}
+        />
+        <Dialog
+          ref="deleteConfirmationDialog"
+          open={this.state.deleteConfirmationOpen}
+          title="Are you sure?"
+          modal
+          actions={[
+            <FlatButton
+              label="Cancel"
+              primary={false}
+              onTouchTap={this.listeners.closeDeleteConfirmation}
+              keyboardFocused
+            />,
+            <FlatButton label="Submit" primary onTouchTap={this.listeners.deleteSelectedSubjects} />
+          ]}
+        >
+          Do you really want to delete the selected subject{this.state.multipleDeletions ? ' entries' : ''}?<br />
+          This will result in the loss of {this.state.multipleDeletions ? 'these subjects' : 'this subject'}:
+          <ul>{this.state.toBeDeletedNames.map(name => <li key={name}>{name}</li>)}</ul>
+        </Dialog>
+        <Dialog
+          ref="settingsDialog"
+          open={this.state.settingsOpen}
+          backgroundColor
+          title={<div><span style={this.styles.cogIcon}>⚙</span>️ Table Settings</div>}
+          modal
+          actions={[
+            <FlatButton label="Cancel" primary={false} onTouchTap={this.listeners.closeSettings} />,
+            <FlatButton label="Save" primary onTouchTap={this.listeners.saveSettings} keyboardFocused />
+          ]}
+        >
+          <TextField
+            style={{ maxWidth: '100%', width: '100%' }}
+            ref="setting_hiddenColumns"
+            hintText="Enter column names, comma-separated..."
+            floatingLabelText="Hidden columns"
+            floatingLabelFixed={false}
+            value={this.state.hiddenColumnsVal}
+            onChange={this.listeners.hiddenColumnsChanged}
+          />
+          <TextField
+            style={{ maxWidth: '100%', width: '100%' }}
+            ref="setting_extractedProperties"
+            hintText="Enter extracted property names, comma-separated..."
+            floatingLabelText="Extracted properties"
+            floatingLabelFixed={false}
+            value={this.state.extractedPropertiesVal}
+            onChange={this.listeners.extractedPropertiesChanged}
+          />
+        </Dialog>
+      </Grid>
+    );
+  }
 }
+
+SubjectTable.propTypes = {
+  height: PropTypes.number.isRequired,
+  type: PropTypes.string.isRequired,
+  fetchOnMount: PropTypes.bool,
+  showNameFilter: PropTypes.bool,
+  headers: PropTypes.array,
+  tableData: PropTypes.array,
+  loading: PropTypes.bool,
+  muiTheme: PropTypes.shape({
+    palette: PropTypes.object
+  }).isRequired,
+  actions: PropTypes.shape({
+    subject: PropTypes.shape({
+      delete: PropTypes.func,
+      findByName: PropTypes.func,
+      fetchOnlyMaster: PropTypes.func
+    })
+  }).isRequired
+};
 
 SubjectTable.defaultProps = {
   fetchOnMount: true,
@@ -425,15 +425,9 @@ SubjectTable.defaultProps = {
     { key: 'category', name: 'Category' },
     { key: 'properties', name: 'Properties' },
     { key: 'relations', name: 'Relations' }
-  ]
-};
-
-SubjectTable.propTypes = {
-  height: PropTypes.number.isRequired,
-  type: PropTypes.string.isRequired,
-  fetchOnMount: PropTypes.bool,
-  showNameFilter: PropTypes.bool,
-  headers: PropTypes.array
+  ],
+  tableData: [],
+  loading: false
 };
 
 const CustomButton = ({ tooltip, onClick, children, visible = true }) => (visible &&
@@ -452,8 +446,8 @@ function mapStateToProps(state, ownProps) {
     state.duplicate.store && state.duplicate.store.candidateScores
     && Object.keys(state.duplicate.store.candidateScores).length > 0;
 
-  let tableData = state.subject.entities;
   // load candidateScores from duplicate.store
+  let tableData = state.subject.entities;
   if (tableData && ownProps.type === 'duplicates' && duplicateScoresLoaded) {
     tableData.forEach(subject => subject.candidateScore = state.duplicate.store.candidateScores[subject.id]);
   }
@@ -470,7 +464,6 @@ function mapStateToProps(state, ownProps) {
   return {
     tableData: tableData,
     error: state.subject.error,
-    // TODO does not work for duplicates because status is cleared before finishing all tasks
     loading: isLoading
   };
 }
