@@ -72,13 +72,10 @@ class StatusIndicator extends Component {
     const hasErrorMessage = this.hasErrorMessage();
     const formattedError = hasErrorMessage ? Object.values(error).map(v => v && <div key={v}>{v}</div>) : '';
     const tooltipPosition = hasErrorMessage ? 'bottom-left' : 'bottom-center';
-    const tooltip = formattedError;
-
-    // TODO show dialog/ popup onClick
 
     return (
       <IconButton
-        tooltip={tooltip}
+        tooltip={formattedError}
         touch
         onClick={this.handleClick}
         tooltipPosition={tooltipPosition}
@@ -105,7 +102,6 @@ StatusIndicator.defaultProps = {
 /* connection to Redux */
 function mapStateToProps(state) {
   return {
-    // TODO better way to use multiple reducers/stores
     status: {
       ...state.duplicate.status,
       ...state.subject.status,
