@@ -117,7 +117,7 @@ DateRangeEditor.propTypes = {
   }),
   input: PropTypes.shape({
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.oneOf(PropTypes.arrayOf(String), PropTypes.string)
+    value: PropTypes.oneOf([PropTypes.arrayOf(PropTypes.string), PropTypes.string])
   }).isRequired,
   meta: PropTypes.shape({
     touched: PropTypes.bool,
