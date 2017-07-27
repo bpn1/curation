@@ -16,6 +16,7 @@ limitations under the License.
 
 import axios from 'axios';
 import { apiPath, makeError, makeAxiosTypes } from './apiDuck';
+import { replaceWithStaged } from './commitDuck';
 
 function extractRelations(source, target) {
   let forwardRelations = source.relations[target.id];
@@ -60,8 +61,9 @@ const graphExtension = path => ({
   reducer: (state, action, { types }) => {
     switch (action.type) {
       case types.FETCH_RELATIONS_FULFILLED:
-        const source = action.payload[0].data[0];
-        const target = action.payload[1].data[0];
+        // use staged versions from commitExtension if they exist
+        const source = Object.assign({}, replaceWithStaged(action.payload[0].data[0], state.updated, state.created));
+        const target = Object.assign({}, replaceWithStaged(action.payload[1].data[0], state.updated, state.created));
         if (!source && !target) {
           return {
             ...state,

@@ -51,7 +51,7 @@ function mapById(arr) {
 }
 
 // replace first with staged, if not found use alternative
-function replaceWithStaged(entity, staged, stagedAlternative) {
+export function replaceWithStaged(entity, staged, stagedAlternative) {
   if (staged && entity.id in staged) {
     return staged[entity.id];
   } else if (stagedAlternative && entity.id in stagedAlternative) {
@@ -64,7 +64,7 @@ export const commitExtension = path => ({
   types:
     ['FETCH_FULFILLED', 'GET_FULFILLED', 'GET_MULTIPLE_FULFILLED', 'CREATE', 'UPDATE', 'DELETE', 'COMMIT', 'RESET'],
 
-  // TODO handle status of mutliple actions started simultaneously
+  // TODO handle status of multiple actions started simultaneously
 
   reducer: (state, action, { types }) => {
     switch (action.type) {
