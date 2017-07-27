@@ -1,7 +1,9 @@
 # Curation
 A curation interface for the data produced by the [Ingestion](https://github.com/bpn1/ingestion) project.  
-Uses NodeJS to query data from Cassandra and the file system and serves it as a REST endpoint.  
-Uses React, Redux and MaterialUI to create a modern frontend for this data.
+For setup and development information, take a look at the [wiki](wiki).
+
+It uses NodeJS to query data from Cassandra and the file system and serves it as a REST endpoint,
+as well as React, Redux and MaterialUI to create a modern frontend for this data.
 
 This project uses the yarn package manager instead of npm. You can install it by executing:
 
@@ -32,7 +34,7 @@ To start only the NodeJS API, use:
 
     npm run server
     
-The interface will be served under http://localhost:8080
+The interface will be served under http://localhost:3000
 
 # Tests
 
