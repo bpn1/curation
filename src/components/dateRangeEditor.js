@@ -17,13 +17,10 @@ limitations under the License.
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Field from 'redux-form/es/Field';
 import DatePicker from 'material-ui/DatePicker';
 import IconButton from 'material-ui/IconButton';
 import DateIcon from 'material-ui/svg-icons/action/date-range';
 
-
-// TODO refactor to be a single field that returns an array of two Dates (or an object)
 class DateRangeEditor extends Component {
   constructor(props) {
     super(props);
@@ -40,26 +37,22 @@ class DateRangeEditor extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.input.value.hasOwnProperty(length) && newProps.input.value.length === 2) {
+    if (newProps.input.value && newProps.input.value.length === 2) {
       this.setState({ startDate: newProps.input.value[0], endDate: newProps.input.value[1] });
     }
   }
 
-  // onChange => function(null: undefined, date: object) => void
   toggleDatePickers() {
     this.setState({ isHidden: !this.state.isHidden });
   }
 
   handleDateChange(fieldKey, date) {
-    console.log('Date changed:', fieldKey, date);
-
     const newState = {
       startDate: this.state.startDate,
       endDate: this.state.endDate,
       hasValue: true
     };
     newState[fieldKey] = date;
-    console.log('New DateRangeEditor state:', newState);
 
     this.setState(newState);
     this.props.input.onChange([
