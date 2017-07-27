@@ -2,7 +2,7 @@
 A curation interface for the data produced by the [Ingestion](https://github.com/bpn1/ingestion) project.  
 For setup and development information, take a look at the [wiki](../../wiki).
 
-It uses NodeJS to query data from Cassandra and the file system and serves it as a REST endpoint,
+It uses NodeJS to query data from Cassandra and the file system and serves it as a REST endpoint,  
 as well as React, Redux and MaterialUI to create a modern frontend for this data.
 
 # Setup
@@ -35,12 +35,11 @@ To start only the NodeJS API, use:
 
     npm run server
     
-The interface will be served under http://localhost:3000
+The interface will be served under http://localhost:3000.  
 You can set the `PORT` environment variable to change this.
 
 # Connecting to Cassandra
-To connect to a Cassandra database, copy the [`cassandraAuth.config.default.js`](cassandraAuth.config.default.js) file to a file called `cassandraAuth.config.js` and enter your Cassandra
-username and password into it.
+To connect to a Cassandra database, copy the [`cassandraAuth.config.default.js`](cassandraAuth.config.default.js) file to a file called `cassandraAuth.config.js` and enter your Cassandra username and password into it.  
 Enter the hostnames or IPs of the Cassandra nodes into the setting
 `contactPoints` in each file in the folder [`src/api/keyspaceConfigs`](src/api/keyspaceConfigs).
 
