@@ -76,7 +76,6 @@ const relationExtension = path => ({
         const relations = state.relations;
         const extractedRelations = extractRelations(source, target);
         relations[[source.id, target.id]] = extractedRelations;
-        console.log('Extracted relations', extractedRelations);
         const subjects = Object.assign({}, state.subjects);
         subjects[source.id] = source;
         subjects[target.id] = target;
