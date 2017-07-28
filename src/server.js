@@ -166,7 +166,7 @@ router.get('/run/:job/:args', function (req, res) {
 });
 
 router.post('/run/:job', function (req, res) {
-  const stringifiedBody = JSON.stringify(req.body);
+  const stringifiedBody = "\"" + JSON.stringify(req.body).replace(/"/g, '\\"') + "\"";
   const message = `Running Spark job ${req.job.jobName} with data ${stringifiedBody}`;
   res.send('<pre>' + message + '</pre>');
   console.log(message);
